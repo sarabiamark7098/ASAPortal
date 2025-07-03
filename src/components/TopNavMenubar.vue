@@ -17,7 +17,7 @@
       <p class="ml-4 text-gray-700 font-medium">Logging out...</p>
     </div>
 
-    <!-- PrimeVue Menubar with submenus on the right -->
+    <!-- PrimeVue Menubar with router links -->
     <Menubar :model="menuItems" class="shadow-md" id="menubar">
       <!-- Brand/Logo -->
       <template #start>
@@ -28,6 +28,21 @@
           class="flex items-center gap-2 pr-8"
         >
           <img src="@/assets/DSWD_Only.png" alt="DSWD FO XI Logo" class="h-12 w-12" />
+        </a>
+      </template>
+
+      <!-- ROUTERLINK support for items -->
+      <template #item="{ item, props }">
+        <RouterLink
+          v-if="item.to"
+          v-bind="props.action"
+          :to="item.to"
+          class="flex items-center gap-2 px-3 py-2 w-full"
+        >
+          <span>{{ item.label }}</span>
+        </RouterLink>
+        <a v-else v-bind="props.action" class="flex items-center gap-2 px-3 py-2 w-full">
+          <span>{{ item.label }}</span>
         </a>
       </template>
 
@@ -52,10 +67,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import Menubar from 'primevue/menubar'
-import Button from 'primevue/button'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -80,31 +93,31 @@ const menuItems = ref([
     items: [
       {
         label: 'Request for TA Relative to Building and Grounds Management',
-        to: '/client/request-forms/request-ta-building-grounds',
-      },
-      {
-        label: 'Request for Use of DSWD Conference Room',
-        to: '/client/request-forms/request-use-conference-room',
+        to: '/request-forms/buildingAndGroundsTARequest',
       },
       {
         label: 'Request for Use of Vehicle',
-        to: '/client/request-forms/officialVehicleRequest',
+        to: '/request-forms/officialVehicleRequest',
+      },
+      {
+        label: 'Request for Use of DSWD Conference Room',
+        to: '/request-forms/conferenceRoomRequest',
       },
       {
         label: 'Request for Air Transport Order',
-        to: '/client/request-forms/request-air-transport-order',
+        to: '/request-forms/airTransportOrderRequest',
       },
       {
         label: 'Request for Entry to DSWD Premises',
-        to: '/client/request-forms/request-entry-dswd-premises',
+        to: '/request-forms/entryToDSWDPremisesRequest',
       },
       {
         label: 'Request for Overnight Parking',
-        to: '/client/request-forms/request-overnight-parking',
+        to: '/request-forms/overnightParkingRequest',
       },
       {
         label: 'Request for Janitorial Services',
-        to: '/client/request-forms/request-janitorial-services',
+        to: '/request-forms/janitorialServicesRequest',
       },
     ],
   },
@@ -113,43 +126,43 @@ const menuItems = ref([
     items: [
       {
         label: 'Technical Assistance Requests',
-        to: '/client/view-requests/technical-assistance',
+        to: '/view-requests/technical-assistance',
       },
       {
         label: 'Magiting Conference Room Requests',
-        to: '/client/view-requests/magiting-conference-room',
+        to: '/view-requests/magiting-conference-room',
       },
       {
         label: 'Maagap Conference Room Requests',
-        to: '/client/view-requests/maagap-conference-room',
+        to: '/view-requests/maagap-conference-room',
       },
       {
         label: 'Seminar Hall - Conference Room Requests',
-        to: '/client/view-requests/seminar-hall-conference-room',
+        to: '/view-requests/seminar-hall-conference-room',
       },
       {
         label: 'Vehicle Requests',
-        to: '/client/view-requests/vehicle-requests',
+        to: '/view-requests/vehicle-requests',
       },
       {
         label: 'Driver Travel Info',
-        to: '/client/view-requests/driver-travel-info',
+        to: '/view-requests/driver-travel-info',
       },
       {
         label: 'Air Transport Orders',
-        to: '/client/view-requests/air-transport-order',
+        to: '/view-requests/air-transport-order',
       },
       {
         label: 'Entry to DSWD Premises Requests',
-        to: '/client/view-requests/entry-dswd-premises',
+        to: '/view-requests/entry-dswd-premises',
       },
       {
         label: 'Overnight Parking Requests',
-        to: '/client/view-requests/overnight-parking',
+        to: '/view-requests/overnight-parking',
       },
       {
         label: 'Janitorial Services Requests',
-        to: '/client/view-requests/janitorial-services',
+        to: '/view-requests/janitorial-services',
       },
     ],
   },
@@ -158,23 +171,23 @@ const menuItems = ref([
     items: [
       {
         label: 'Vehicle Schedule',
-        to: '/client/calendar-views/vehicle-schedule',
+        to: '/calendar-views/vehicle-schedule',
       },
       {
         label: 'Maagap Conference Room Schedule',
-        to: '/client/calendar-views/maagap-conference-room',
+        to: '/calendar-views/maagap-conference-room',
       },
       {
         label: 'Magiting Conference Room Schedule',
-        to: '/client/calendar-views/magiting-conference-room',
+        to: '/calendar-views/magiting-conference-room',
       },
       {
         label: 'Seminar Hall - Conference Room Schedule',
-        to: '/client/calendar-views/seminar-hall-conference-room',
+        to: '/calendar-views/seminar-hall-conference-room',
       },
       {
         label: 'Air Transport Order Schedule',
-        to: '/client/calendar-views/air-transport-order',
+        to: '/calendar-views/air-transport-order',
       },
     ],
   },

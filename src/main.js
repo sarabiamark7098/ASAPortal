@@ -18,6 +18,7 @@ import Select from 'primevue/select'
 import Dialog from 'primevue/dialog'
 import FloatLabel from 'primevue/floatlabel'
 import DataView from 'primevue/dataview'
+import Menubar from 'primevue/menubar'
 
 import axios from 'axios'
 
@@ -36,6 +37,7 @@ app.use(PrimeVue, {
   },
   ripple: true,
   inputStyle: 'outlined',
+  router: true,
 })
 
 app.component('Button', Button)
@@ -45,5 +47,6 @@ app.component('Select', Select)
 app.component('Dialog', Dialog)
 app.component('FloatLabel', FloatLabel)
 app.component('DataView', DataView)
+app.component('Menubar', Menubar)
 
 app.mount('#app')
