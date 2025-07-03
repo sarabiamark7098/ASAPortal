@@ -6,6 +6,19 @@ import './assets/main.css'
 import App from './App.vue'
 import router from './router'
 
+import PrimeVue from 'primevue/config'
+
+import Aura from '@primeuix/themes/aura'
+import 'primeicons/primeicons.css'
+
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+import Card from 'primevue/card'
+import Select from 'primevue/select'
+import Dialog from 'primevue/dialog'
+import FloatLabel from 'primevue/floatlabel'
+import DataView from 'primevue/dataview'
+
 import axios from 'axios'
 
 axios.defaults.withCredentials = true
@@ -17,5 +30,20 @@ const app = createApp(App)
 
 app.use(createPinia())
 app.use(router)
+app.use(PrimeVue, {
+  theme: {
+    preset: Aura,
+  },
+  ripple: true,
+  inputStyle: 'outlined',
+})
+
+app.component('Button', Button)
+app.component('InputText', InputText)
+app.component('Card', Card)
+app.component('Select', Select)
+app.component('Dialog', Dialog)
+app.component('FloatLabel', FloatLabel)
+app.component('DataView', DataView)
 
 app.mount('#app')
