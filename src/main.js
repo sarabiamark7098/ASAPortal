@@ -19,6 +19,13 @@ import Dialog from 'primevue/dialog'
 import FloatLabel from 'primevue/floatlabel'
 import DataView from 'primevue/dataview'
 import Menubar from 'primevue/menubar'
+import Textarea from 'primevue/textarea'
+import DatePicker from 'primevue/datepicker'
+import InputMask from 'primevue/inputmask'
+import FileUpload from 'primevue/fileupload'
+import Checkbox from 'primevue/checkbox'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
 
 import axios from 'axios'
 
@@ -48,5 +55,12 @@ app.component('Dialog', Dialog)
 app.component('FloatLabel', FloatLabel)
 app.component('DataView', DataView)
 app.component('Menubar', Menubar)
+app.component('Textarea', Textarea)
+app.component('DatePicker', DatePicker)
+app.component('InputMask', InputMask)
+app.component('FileUpload', FileUpload)
+app.component('Checkbox', Checkbox)
+app.component('DataTable', DataTable)
+app.component('Column', Column)
 
 app.mount('#app')
