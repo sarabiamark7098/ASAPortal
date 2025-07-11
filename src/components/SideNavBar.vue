@@ -46,6 +46,23 @@ import { RouterLink } from 'vue-router'
           </svg>
           <span>Dashboard</span>
         </RouterLink>
+        <RouterLink to="/useraccounts" class="flex items-center gap-2 p-4 hover:bg-cyan-700 rounded-md">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-6 w-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 12h18m-9 9V3m0 18L3 12l9 9z"
+            />
+          </svg>
+          <span>User Accounts</span>
+        </RouterLink>
         <RouterLink to="/set" class="flex items-center gap-2 p-4 hover:bg-cyan-700 rounded-md">
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -1,10 +1,7 @@
 <template>
-  <div class="flex flex-col min-h-screen md:flex-row">
-    <!-- Sidebar (shown only if authenticated) -->
+  <div class="fixed top-0 left-0 right-0 flex flex-col min-h-screen md:flex-row">
     <SideNavBar class="w-full md:w-64" />
-
-    <!-- Main content -->
-    <main class="flex-1 w-screen md:w-auto bg-gray-100">
+      <main class="fixed top-0 left-64 right-0 flex-1 w-screen md:w-auto">
       <TopNavBar />
 
       <div class="p-4 overflow-auto">
@@ -16,5 +13,5 @@
 
 <script setup>
 import SideNavBar from '@/components/SideNavBar.vue'
-import TopNavBar from '@/components/TopNavBar.vue';
+import TopNavBar from '@/components/TopNavBar.vue'
 </script>
