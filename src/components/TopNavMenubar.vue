@@ -14,7 +14,7 @@
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
       </svg>
-      <p class="ml-4 text-gray-700 font-medium">Logging out...</p>
+      <p class="ml-4 text-gray-700 font-medium" aria-live="polite">Logging out...</p>
     </div>
 
     <!-- PrimeVue Menubar with router links -->
@@ -49,7 +49,9 @@
       <!-- Auth Info & Logout -->
       <template #end>
         <div class="flex items-center gap-4">
-          <span class="text-gray-700 text-sm hidden md:inline">Welcome, {{ auth.email }}</span>
+          <span class="text-gray-700 text-sm hidden md:inline"
+            >Welcome{{ auth.userEmail ? ', ' + auth.userEmail : '' }}</span
+          >
           <Button
             icon="pi pi-sign-out"
             severity="secondary"
@@ -66,7 +68,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
@@ -75,6 +77,7 @@ const router = useRouter()
 const logoutLoading = ref(false)
 
 const handleLogout = async () => {
+  if (logoutLoading.value) return
   logoutLoading.value = true
   try {
     await auth.logout()
@@ -86,8 +89,8 @@ const handleLogout = async () => {
   }
 }
 
-// Menubar items including submenus
-const menuItems = ref([
+// Base menu items (excluding Admin View)
+const baseMenuItems = [
   {
     label: 'Request Forms',
     items: [
@@ -95,103 +98,45 @@ const menuItems = ref([
         label: 'Request for TA Relative to Building and Grounds Management',
         to: '/request-forms/buildingAndGroundsTARequest',
       },
-      {
-        label: 'Request for Use of Vehicle',
-        to: '/request-forms/officialVehicleRequest',
-      },
+      { label: 'Request for Use of Vehicle', to: '/request-forms/officialVehicleRequest' },
       {
         label: 'Request for Use of DSWD Conference Room',
         to: '/request-forms/conferenceRoomRequest',
       },
-      {
-        label: 'Request for Air Transport Order',
-        to: '/request-forms/airTransportOrderRequest',
-      },
+      { label: 'Request for Air Transport Order', to: '/request-forms/airTransportOrderRequest' },
       {
         label: 'Request for Entry to DSWD Premises',
         to: '/request-forms/entryToDSWDPremisesRequest',
       },
-      {
-        label: 'Request for Overnight Parking',
-        to: '/request-forms/overnightParkingRequest',
-      },
-      {
-        label: 'Request for Janitorial Services',
-        to: '/request-forms/janitorialServicesRequest',
-      },
+      { label: 'Request for Overnight Parking', to: '/request-forms/overnightParkingRequest' },
+      { label: 'Request for Janitorial Services', to: '/request-forms/janitorialServicesRequest' },
     ],
   },
-  {
-    label: ' View Requests',
-    items: [
-      {
-        label: 'Technical Assistance Requests',
-        to: '/view-requests/technical-assistance',
-      },
-      {
-        label: 'Magiting Conference Room Requests',
-        to: '/view-requests/magiting-conference-room',
-      },
-      {
-        label: 'Maagap Conference Room Requests',
-        to: '/view-requests/maagap-conference-room',
-      },
-      {
-        label: 'Seminar Hall - Conference Room Requests',
-        to: '/view-requests/seminar-hall-conference-room',
-      },
-      {
-        label: 'Vehicle Requests',
-        to: '/view-requests/vehicle-requests',
-      },
-      {
-        label: 'Driver Travel Info',
-        to: '/view-requests/driver-travel-info',
-      },
-      {
-        label: 'Air Transport Orders',
-        to: '/view-requests/air-transport-order',
-      },
-      {
-        label: 'Entry to DSWD Premises Requests',
-        to: '/view-requests/entry-dswd-premises',
-      },
-      {
-        label: 'Overnight Parking Requests',
-        to: '/view-requests/overnight-parking',
-      },
-      {
-        label: 'Janitorial Services Requests',
-        to: '/view-requests/janitorial-services',
-      },
-    ],
-  },
+  { label: 'View Requests', to: '/view-requests' },
   {
     label: 'Calendar Views',
     items: [
-      {
-        label: 'Vehicle Schedule',
-        to: '/calendar-views/vehicle-schedule',
-      },
-      {
-        label: 'Maagap Conference Room Schedule',
-        to: '/calendar-views/maagap-conference-room',
-      },
+      { label: 'Vehicle Schedule', to: '/calendar-views/vehicle-schedule' },
+      { label: 'Maagap Conference Room Schedule', to: '/calendar-views/maagap-schedule' },
       {
         label: 'Magiting Conference Room Schedule',
-        to: '/calendar-views/magiting-conference-room',
+        to: '/calendar-views/magiting-schedule',
       },
       {
         label: 'Seminar Hall - Conference Room Schedule',
-        to: '/calendar-views/seminar-hall-conference-room',
-      },
-      {
-        label: 'Air Transport Order Schedule',
-        to: '/calendar-views/air-transport-order',
+        to: '/calendar-views/seminar-hall-schedule',
       },
     ],
   },
-])
+]
+
+// Conditionally add Admin View if user is admin
+const menuItems = computed(() => {
+  if (auth.userRole === 'superadmin') {
+    return [...baseMenuItems, { label: 'Admin View', to: '/dashboard' }]
+  }
+  return baseMenuItems
+})
 </script>
 
 <style scoped>
@@ -220,5 +165,16 @@ const menuItems = ref([
   padding: 0 24px;
   display: flex;
   align-items: center;
+  animation: fadeInDown 0.4s ease-in-out;
+}
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 </style>

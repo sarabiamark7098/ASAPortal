@@ -1,16 +1,16 @@
 <template>
   <div class="p-6">
-    <FullScreenLoader :visible="loading" message="Loading Users..." />
+    <FullScreenLoader :visible="loading" message="Loading Driver's..." />
 
     <div v-if="!loading">
-      <h1 class="text-2xl font-bold mb-4">User Accounts</h1>
-      <p class="mb-4">Manage user accounts and permissions.</p>
+      <h1 class="text-2xl font-bold mb-4">Driver's Management</h1>
+      <p class="mb-4">Manage drivers directory</p>
 
       <div class="flex flex-col md:flex-row gap-4 md:gap-8">
         <!-- Sidebar: User Data -->
         <div class="w-full md:w-1/3">
-          <div class="bg-white shadow-md rounded-lg p-4 md:p-6 inset-shadow-sm">
-            <h2 class="text-xl font-bold mb-4">User Data</h2>
+          <div class="bg-white shadow-md rounded-lg p-4 md:p-6">
+            <h2 class="text-xl font-bold mb-4">Driver Data</h2>
             <template v-if="selectedUserInfo">
               <p class="mb-2">
                 First Name: {{ selectedUserInfo?.account_detail?.first_name || 'N/A' }}
@@ -34,37 +34,13 @@
               </p>
               <p class="mb-2">Role: {{ selectedUserInfo?.role?.name || 'N/A' }}</p>
             </template>
-            <template v-else>
-              <p class="mb-2">
-                First Name: {{ selectedUserInfo?.account_detail?.first_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Middle Name: {{ selectedUserInfo?.account_detail?.middle_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Last Name: {{ selectedUserInfo?.account_detail?.last_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Extension Name: {{ selectedUserInfo?.account_detail?.extension_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Position: {{ selectedUserInfo?.account_detail?.position || 'N/A' }}
-              </p>
-              <p class="mb-2">Email: {{ selectedUserInfo?.email || 'N/A' }}</p>
-              <p class="mb-2">Username: {{ selectedUserInfo?.username || 'N/A' }}</p>
-              <p class="mb-2">
-                Section: {{ selectedUserInfo?.account_detail?.section?.name || 'N/A' }}
-              </p>
-              <p class="mb-2">Role: {{ selectedUserInfo?.role?.name || 'N/A' }}</p>
-            </template>
+            <p v-else class="text-gray-400 italic">Click a user row to view details.</p>
           </div>
         </div>
 
         <!-- Main: DataTable -->
         <div class="w-full md:flex-1 overflow-x-auto">
-          <div
-            class="bg-white rounded-lg p-4 md:p-6 max-h-[500px] min-h-[500px] shadow-md inset-shadow-sm"
-          >
+          <div class="bg-white shadow-md inset-shadow-sm rounded-lg p-4 md:p-6">
             <DataTable
               :value="userData"
               dataKey="id"
@@ -88,7 +64,7 @@
             >
               <template #header>
                 <div class="flex flex-wrap gap-2 items-center justify-between">
-                  <h4 class="m-0">Manage Users</h4>
+                  <h4 class="m-0">Manage Driver's</h4>
                   <IconField>
                     <InputIcon>
                       <i class="pi pi-search" />
@@ -222,7 +198,7 @@ const editedUser = ref({})
 const selectedUserInfo = ref(null)
 
 const filters = ref({
-  global: { value: '', matchMode: 'contains' },
+  global: { value: '', matchMode: 'contains' }, 
 })
 
 const selectUser = (event) => {

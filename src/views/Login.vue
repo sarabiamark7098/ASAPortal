@@ -27,46 +27,64 @@
 
       <form @submit.prevent="handleLogin" class="flex flex-col gap-6">
         <!-- Username -->
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-2 relative">
           <label class="text-xl font-semibold" for="username">Username</label>
           <InputText
-            class="outline-none px-4 py-2 rounded-full bg-transparent border-2 text-black"
+            class="outline-none px-4 py-2 rounded-full bg-transparent border-2 text-black w-full"
             type="text"
-            v-model="username"
+            v-model.trim="username"
             id="username"
             autocomplete="username"
             required
           />
+          <!-- Popup error -->
+          <div
+            v-if="showErrors && !username"
+            class="absolute top-full left-0 mt-1 bg-red-500 text-white text-sm px-3 py-1 rounded shadow-lg z-20"
+          >
+            Username is required.
+          </div>
         </div>
 
         <!-- Password -->
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-2 relative">
           <label class="text-xl font-semibold" for="password">Password</label>
-          <InputText
-            class="outline-none px-4 py-2 rounded-full bg-transparent border-2 text-black"
-            type="password"
-            v-model="password"
-            autocomplete="current-password"
-            id="password"
-            required
-          />
+          <div class="relative">
+            <InputText
+              :type="showPassword ? 'text' : 'password'"
+              v-model.trim="password"
+              id="password"
+              class="w-full"
+              autocomplete="current-password"
+              required
+            />
+            <button
+              type="button"
+              @click="showPassword = !showPassword"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+            >
+              <i :class="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+            </button>
+            <div
+              v-if="showErrors && !password"
+              class="absolute top-full left-0 mt-1 bg-red-500 text-white text-sm px-3 py-1 rounded shadow-lg z-20"
+            >
+              Password is required.
+            </div>
+          </div>
         </div>
 
-        <!-- Remember + Forgot -->
+        <!-- Remember Me + Register -->
         <div class="flex flex-col sm:flex-row justify-between items-center gap-2 text-sm">
           <label for="rememberMe" class="flex items-center gap-2">
             <input type="checkbox" v-model="rememberMe" id="rememberMe" />
             Remember Me
           </label>
-          <RouterLink class="hover:underline text-blue-400" to="/forgot-password">
-            Forgot Password?
-          </RouterLink>
-
-          <RouterLink class="hover:underline text-blue-400" to="/register"> Register </RouterLink>
+          <RouterLink class="hover:underline text-blue-400" to="/register">Register</RouterLink>
         </div>
 
-        <!-- Login Button -->
-        <button
+        <!-- Submit Button -->
+        <Button
           type="submit"
           :disabled="loading"
           class="relative bg-blue-600 border-blue-500 text-white px-4 py-2 rounded-md text-lg w-full border-2 transition duration-200"
@@ -95,7 +113,7 @@
             </svg>
             Logging in...
           </span>
-        </button>
+        </Button>
       </form>
     </div>
   </div>
@@ -108,16 +126,25 @@ import { useAuthStore } from '@/stores/auth'
 
 const username = ref('')
 const password = ref('')
+const showPassword = ref(false)
 const rememberMe = ref(false)
 const loading = ref(false)
+const showErrors = ref(false)
 const errorMessage = ref('')
 
 const router = useRouter()
 const auth = useAuthStore()
 
 const handleLogin = async () => {
-  loading.value = true
+  showErrors.value = false
   errorMessage.value = ''
+
+  if (!username.value || !password.value) {
+    showErrors.value = true
+    return
+  }
+
+  loading.value = true
 
   try {
     await auth.login({ login: username.value, password: password.value })

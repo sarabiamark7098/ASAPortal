@@ -19,168 +19,200 @@
     <div
       class="relative z-10 max-w-screen-lg mx-auto mt-0 p-4 sm:p-6 bg-gray-50 shadow-lg rounded-lg overflow-y-auto max-h-[90vh]"
     >
-      <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
-      <form @submit.prevent="register" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="sm:col-span-2">
-          <label for="username" class="font-medium block mb-1">Username</label>
-          <InputText
-            v-model="form.username"
-            type="text"
-            id="username"
-            required
-            class="w-full input"
-          />
-        </div>
-        <div class="sm:col-span-2">
-          <label for="email" class="font-medium block mb-1">Email</label>
-          <InputText v-model="form.email" type="email" id="email" required class="w-full input" />
-        </div>
-        <div class="sm:col-span-2">
-          <label for="password" class="font-medium block mb-1">Password</label>
-          <Password
-            id="password"
-            v-model="form.password"
-            toggleMask
-            promptLabel="Enter password"
-            weakLabel="Weak"
-            mediumLabel="Medium"
-            strongLabel="Strong"
-            required
-            class="w-full"
-          />
-        </div>
-        <div class="sm:col-span-2">
-          <label for="password_confirmation" class="font-medium block mb-1">Confirm Password</label>
-          <Password
-            id="password_confirmation"
-            v-model="form.password_confirmation"
-            toggleMask
-            promptLabel="Enter password"
-            weakLabel="Weak"
-            mediumLabel="Medium"
-            strongLabel="Strong"
-            required
-            class="w-full"
-          />
-        </div>
-        <div>
-          <label for="firstName" class="font-medium block mb-1">First Name</label>
-          <InputText
-            v-model="form.firstName"
-            type="text"
-            id="firstName"
-            required
-            class="w-full input"
-          />
-        </div>
-        <div>
-          <label for="middleName" class="font-medium block mb-1">Middle Name</label>
-          <InputText v-model="form.middleName" type="text" id="middleName" class="w-full input" />
-        </div>
-        <div>
-          <label for="lastName" class="font-medium block mb-1">Last Name</label>
-          <InputText
-            v-model="form.lastName"
-            type="text"
-            id="lastName"
-            required
-            class="w-full input"
-          />
-        </div>
-        <div>
-          <label for="extensionName" class="font-medium block mb-1">Extension Name</label>
-          <InputText
-            v-model="form.extensionName"
-            type="text"
-            id="extensionName"
-            class="w-full input"
-          />
-        </div>
-        <div class="sm:col-span-2">
-          <label for="birthDate" class="font-medium block mb-1">Birth Date</label>
-          <Calendar
-            v-model="form.birthDate"
-            inputId="birthDate"
-            showIcon
-            dateFormat="yy-mm-dd"
-            required
-            placeholder="Select a date"
-            class="w-full"
-          />
-        </div>
-        <div class="sm:col-span-1">
-          <label for="contactNumber" class="font-medium block mb-1">Contact Number</label>
-          <InputText
-            v-model="form.contactNumber"
-            type="text"
-            id="contactNumber"
-            required
-            class="w-full input"
-          />
-        </div>
-        <div class="sm:col-span-1">
-          <label for="position" class="font-medium block mb-1">Position</label>
-          <InputText
-            v-model="form.position"
-            type="text"
-            id="position"
-            required
-            class="w-full input"
-          />
-        </div>
-        <div class="sm:col-span-2">
-          <label for="division" class="font-medium block mb-1">Division</label>
-          <Dropdown
-            v-model="form.division"
-            :options="divisionList"
-            option-label="name"
-            option-value="id"
-            placeholder="Select a Division"
-            id="division"
-            required
-            class="w-full input"
-          />
-        </div>
-        <div class="sm:col-span-2">
-          <label for="office" class="font-medium block mb-1">Office</label>
-          <Dropdown
-            v-model="form.office"
-            :options="officeList"
-            option-label="name"
-            option-value="id"
-            placeholder="Select a Office"
-            id="office"
-            required
-            class="w-full input"
-            :disabled="!form.division"
-          />
-        </div>
+      <h2 class="text-2xl font-bold mb-12 text-center">Register</h2>
+      <form @submit.prevent="register" class="flex flex-col gap-8">
+        <div class="flex flex-col gap-8">
+          <div class="flex flex-col sm:flex-row gap-6">
+            <FloatLabel class="flex-1">
+              <InputText
+                v-model="authStore.username"
+                type="text"
+                id="username"
+                autocomplete="username"
+                required
+                class="w-full input"
+                :class="{ 'p-invalid': error && !authStore.username && !authStore.email }"
+              />
+              <label for="username" class="font-medium block mb-1">Username</label>
+            </FloatLabel>
 
-        <div class="sm:col-span-2 col-span-full mt-4">
-          <Button
-            label="Back to Home"
-            icon="pi pi-home"
-            severity="info"
-            @click="router.push('/')"
-            class="w-full bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 px-4 rounded"
-          />
-        </div>
-        <div class="sm:col-span-2 col-span-full mt-4">
-          <Button
-            label="Register"
-            icon="pi pi-check"
-            severity="success"
-            type="submit"
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
-          />
-        </div>
+            <FloatLabel class="flex-1">
+              <InputText
+                v-model="authStore.email"
+                type="email"
+                id="email"
+                required
+                class="w-full input"
+                :class="{ 'p-invalid': error && !authStore.username && !authStore.email }"
+              />
+              <label for="email" class="font-medium block mb-1">Email</label>
+            </FloatLabel>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-6">
+            <FloatLabel class="flex-1 relative">
+              <InputText
+                :type="showPassword ? 'text' : 'password'"
+                v-model="authStore.password"
+                id="password"
+                autocomplete="new-password"
+                required
+                class="w-full pr-12"
+              />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+              >
+                <i :class="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+              </button>
+              <label for="password" class="font-medium block mb-1">Password</label>
+            </FloatLabel>
 
-        <p
-          v-if="error || dropdownStore.error"
-          class="text-red-600 text-center sm:col-span-full col-span-full mt-2"
-        >
-          {{ error || dropdownStore.error }}
-        </p>
+            <FloatLabel class="flex-1 relative">
+              <InputText
+                :type="showPassword1 ? 'text' : 'password'"
+                v-model="authStore.password_confirmation"
+                id="password_confirmation"
+                class="w-full pr-12"
+                autocomplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                @click="showPassword1 = !showPassword1"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+              >
+                <i :class="showPassword1 ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+              </button>
+              <label for="password_confirmation" class="font-medium block mb-1">
+                Confirm Password
+              </label>
+            </FloatLabel>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-6">
+            <FloatLabel class="flex-1">
+              <InputText
+                v-model="authStore.firstName"
+                type="text"
+                id="firstName"
+                required
+                class="w-full input"
+              />
+              <label for="firstName" class="font-medium block mb-1">First Name</label>
+            </FloatLabel>
+
+            <FloatLabel class="flex-1">
+              <InputText
+                v-model="authStore.middleName"
+                type="text"
+                id="middleName"
+                class="w-full input"
+              />
+              <label for="middleName" class="font-medium block mb-1">Middle Name</label>
+            </FloatLabel>
+
+            <FloatLabel class="flex-1">
+              <InputText
+                v-model="authStore.lastName"
+                type="text"
+                id="lastName"
+                required
+                class="w-full input"
+              />
+              <label for="lastName" class="font-medium block mb-1">Last Name</label>
+            </FloatLabel>
+
+            <FloatLabel class="flex-1">
+              <label for="extensionName" class="font-medium block mb-1">Extension Name</label>
+              <InputText
+                v-model="authStore.extensionName"
+                type="text"
+                id="extensionName"
+                class="w-full input"
+              />
+            </FloatLabel>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-6">
+            <FloatLabel class="flex-1">
+              <DatePicker
+                v-model="authStore.birthDate"
+                inputId="birthDate"
+                showIcon
+                required
+                class="w-full"
+              />
+              <label for="birthDate" class="font-medium block mb-1">Birth Date</label>
+            </FloatLabel>
+
+            <FloatLabel class="flex-1">
+              <InputMask
+                v-model="authStore.contactNumber"
+                id="contactNumber"
+                required
+                class="w-full"
+                mask="0999 999 9999"
+              />
+              <label for="contactNumber" class="font-medium block mb-1">Contact Number</label>
+            </FloatLabel>
+
+            <FloatLabel class="flex-1">
+              <InputText
+                v-model="authStore.position"
+                type="text"
+                id="position"
+                required
+                class="w-full input"
+              />
+              <label for="position" class="font-medium block mb-1">Position</label>
+            </FloatLabel>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-6">
+            <FloatLabel class="flex-1">
+              <Select
+                v-model="authStore.division"
+                :options="divisionList"
+                option-label="name"
+                option-value="id"
+                id="division"
+                required
+                class="w-full input"
+              />
+              <label for="division" class="font-medium block mb-1">Division</label>
+            </FloatLabel>
+
+            <FloatLabel class="flex-1">
+              <Select
+                v-model="authStore.office"
+                :options="officeList"
+                option-label="name"
+                option-value="id"
+                id="office"
+                required
+                class="w-full input"
+                :disabled="!authStore.division"
+              />
+              <label for="office" class="font-medium block mb-1">Office</label>
+            </FloatLabel>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-6">
+            <Button
+              label="Back to Login"
+              icon="pi pi-home"
+              severity="info"
+              @click="router.push('/')"
+              class="flex-1 w-full bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 px-4 rounded"
+            />
+            <Button
+              type="submit"
+              label="Register"
+              icon="pi pi-check"
+              severity="success"
+              class="flex-1 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+              :loading="submitting"
+              :disabled="submitting"
+            />
+          </div>
+        </div>
       </form>
     </div>
   </div>
@@ -190,41 +222,21 @@
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-
+import dayjs from 'dayjs'
 // Stores
 import { useDropdownStore } from '@/stores/dropdown'
 import { useAuthStore } from '@/stores/auth'
-
-// PrimeVue Components
-import InputText from 'primevue/inputtext'
-import Button from 'primevue/button'
-import Dropdown from 'primevue/dropdown'
-import Calendar from 'primevue/calendar'
-import Password from 'primevue/password'
 
 // Router
 const router = useRouter()
 
 // State
+const showPassword = ref(false)
+const showPassword1 = ref(false)
 const loading = ref(true)
 const error = ref('')
 
-// Form state
-const form = ref({
-  username: '',
-  email: '',
-  password: '',
-  password_confirmation: '',
-  firstName: '',
-  middleName: '',
-  lastName: '',
-  extensionName: '',
-  birthDate: '',
-  position: '',
-  division: null,
-  office: null,
-  contactNumber: '',
-})
+const submitting = ref(false)
 
 // Stores
 const authStore = useAuthStore()
@@ -237,30 +249,63 @@ const register = async () => {
   error.value = ''
   dropdownStore.error = null
 
-  if (form.value.password !== form.value.password_confirmation) {
+  const auth = authStore
+  const errors = []
+  if (!auth.username) errors.push('Username is required.')
+  if (!auth.email) errors.push('Email is required.')
+  // Simple email regex check
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (auth.email && !emailRegex.test(auth.email)) errors.push('Invalid email format.')
+  if (!auth.password) errors.push('Password is required.')
+  if (auth.password !== auth.password_confirmation) errors.push('Passwords do not match.')
+  if (!auth.firstName) errors.push('First Name is required.')
+  if (!auth.lastName) errors.push('Last Name is required.')
+
+  if (errors.length > 0) {
+    error.value = errors.join(' ')
+    submitting.value = false
+    return
+  }
+
+  if (authStore.password !== authStore.password_confirmation) {
     error.value = 'Passwords do not match.'
     return
   }
 
   // Define registration payload
   const payload = {
-    username: form.value.username,
-    email: form.value.email,
-    password: form.value.password,
-    password_confirmation: form.value.password_confirmation,
-    firstName: form.value.firstName,
-    middleName: form.value.middleName,
-    lastName: form.value.lastName,
-    extensionName: form.value.extensionName,
-    birthDate: form.value.birthDate,
-    position: form.value.position,
-    division: form.value.division,
-    office: form.value.office,
-    contactNumber: form.value.contactNumber,
+    username: authStore.username,
+    email: authStore.email,
+    password: authStore.password,
+    first_name: authStore.firstName,
+    middle_name: authStore.middleName,
+    last_name: authStore.lastName,
+    // extension_name: authStore.extensionName,
+    position: authStore.position,
+    // division: authStore.division,
+    birth_date: authStore.birthDate ? dayjs(authStore.birthDate).format('YYYY-MM-DD') : null,
+    // office: authStore.office,
+    contact_number: authStore.contactNumber,
   }
 
   try {
+    submitting.value = true
     await authStore.register(payload)
+    submitting.value = false
+    // Reset form fields
+    authStore.username = ''
+    authStore.email = ''
+    authStore.password = ''
+    authStore.password_confirmation = ''
+    authStore.firstName = ''
+    authStore.middleName = ''
+    authStore.lastName = ''
+    authStore.extensionName = ''
+    authStore.birthDate = ''
+    authStore.position = ''
+    authStore.division = null
+    authStore.office = null
+    authStore.contactNumber = ''
     // console.log('Registration successful:', payload)
   } catch (err) {
     console.error('Registration error:', err)
@@ -269,7 +314,7 @@ const register = async () => {
 
     // Optional: log field-specific validation errors
     if (apiError?.errors) {
-      console.warn('Validation errors:', apiError.errors)
+      error.value = Object.values(apiError.errors).flat().join(' ')
     }
   }
 }
@@ -283,14 +328,14 @@ onMounted(async () => {
 
 // Watch division change to load offices
 watch(
-  () => form.value.division,
+  () => authStore.division,
   async (newDivisionId) => {
     if (newDivisionId) {
-      form.value.office = null
+      authStore.office = null
       await fetchOfficesByDivision(newDivisionId)
     } else {
       dropdownStore.office = []
-      form.value.office = null
+      authStore.office = null
     }
   },
 )

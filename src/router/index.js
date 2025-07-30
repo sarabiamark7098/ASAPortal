@@ -5,7 +5,7 @@ import GuestLayout from '@/layouts/GuestLayout.vue'
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import Login from '@/views/Login.vue'
-import Dashboard from '@/views/Dashboard.vue'
+import Dashboard from '@/views/Admin/Dashboard.vue'
 import Register from '@/views/Register.vue'
 import UserAccounts from '@/views/Admin/UserAccounts.vue'
 import ClientView from '@/views/Client/ClientView.vue'
@@ -16,6 +16,22 @@ import RequestAirTransportOrder from '@/views/Requests/RequestAirTransportOrder.
 import RequestEntryToDSWDPremises from '@/views/Requests/RequestEntryToDSWDPremises.vue'
 import RequestOvernightParking from '@/views/Requests/RequestOvernightParking.vue'
 import RequestJanitorialServices from '@/views/Requests/RequestJanitorialServices.vue'
+import ViewRequest from '@/views/Client/RequestsView.vue'
+import VehicleSchedule from '@/views/Calendar/VehicleSchedule.vue'
+import MaagapSchedule from '@/views/Calendar/MaagapSchedule.vue'
+import MagitingSchedule from '@/views/Calendar/MagitingSchedule.vue'
+import SeminarHallSchedule from '@/views/Calendar/SeminarSchedule.vue'
+import Drivers from '@/views/Admin/Management/Drivers.vue'
+import TARequest from '@/views/Admin/Requests/TechnicalAssistance.vue'
+import VehicleRequest from '@/views/Admin/Requests/Vehicle.vue'
+import MaagapRequest from '@/views/Admin/Requests/Maagap.vue'
+import MagitingRequest from '@/views/Admin/Requests/Magiting.vue'
+import SeminarRequest from '@/views/Admin/Requests/Seminar.vue'
+import AirTravelOrderRequest from '@/views/Admin/Requests/AirTravelOrder.vue'
+import EntryRequest from '@/views/Admin/Requests/Entry.vue'
+import ParkingRequest from '@/views/Admin/Requests/Parking.vue'
+import JanitorialRequest from '@/views/Admin/Requests/Janitorial.vue'
+import Vehicles from '@/views/Admin/Management/Vehicles.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +61,18 @@ const router = createRouter({
       ],
     },
     {
+      path: '/useraccounts',
+      component: AdminLayout,
+      meta: { requiresAuth: true, role: ['superadmin'] },
+      children: [
+        {
+          path: '',
+          name: 'useraccounts',
+          component: UserAccounts,
+        },
+      ],
+    },
+    {
       path: '/dashboard',
       component: AdminLayout,
       meta: { requiresAuth: true, role: ['superadmin', 'supervisor', 'manager'] },
@@ -57,14 +85,71 @@ const router = createRouter({
       ],
     },
     {
-      path: '/useraccounts',
+      path: '/manage',
       component: AdminLayout,
       meta: { requiresAuth: true, role: ['superadmin', 'supervisor', 'manager'] },
       children: [
         {
-          path: '',
-          name: 'useraccounts',
-          component: UserAccounts,
+          path: 'drivers',
+          name: 'drivers',
+          component: Drivers,
+        },
+        {
+          path: 'vehicles',
+          name: 'vehicles',
+          component: Vehicles,
+        },
+      ],
+    },
+    {
+      path: '/request',
+      component: AdminLayout,
+      meta: { requiresAuth: true, role: ['superadmin', 'supervisor', 'manager'] },
+      children: [
+        {
+          path: 'ta',
+          name: 'TARequest',
+          component: TARequest,
+        },
+        {
+          path: 'vehicle',
+          name: 'VehicleRequest',
+          component: VehicleRequest,
+        },
+        {
+          path: 'maagap',
+          name: 'MaagapRequest',
+          component: MaagapRequest,
+        },
+        {
+          path: 'magiting',
+          name: 'MagitingRequest',
+          component: MagitingRequest,
+        },
+        {
+          path: 'seminar',
+          name: 'SeminarRequest',
+          component: SeminarRequest,
+        },
+        {
+          path: 'ato',
+          name: 'AirTravelOrderRequest',
+          component: AirTravelOrderRequest,
+        },
+        {
+          path: 'entry',
+          name: 'EntryRequest',
+          component: EntryRequest,
+        },
+        {
+          path: 'parking',
+          name: 'ParkingRequest',
+          component: ParkingRequest,
+        },
+        {
+          path: 'janitorial',
+          name: 'JanitorialRequest',
+          component: JanitorialRequest,
         },
       ],
     },
@@ -113,6 +198,38 @@ const router = createRouter({
           name: 'RequestJanitorialServices',
           component: RequestJanitorialServices,
         },
+        {
+          path: '/view-requests',
+          name: 'ViewRequest',
+          component: ViewRequest,
+        },
+      ],
+    },
+    {
+      path: '/client',
+      component: AuthenticatedLayout,
+      meta: { requiresAuth: true, role: ['client', 'superadmin', 'supervisor', 'manager'] },
+      children: [
+        {
+          path: '/calendar-views/vehicle-schedule',
+          name: 'vehicleschedule',
+          component: VehicleSchedule,
+        },
+        {
+          path: '/calendar-views/maagap-schedule',
+          name: 'maagapschedule',
+          component: MaagapSchedule,
+        },
+        {
+          path: '/calendar-views/magiting-schedule',
+          name: 'magitingschedule',
+          component: MagitingSchedule,
+        },
+        {
+          path: '/calendar-views/seminar-hall-schedule',
+          name: 'seminarhallschedule',
+          component: SeminarHallSchedule,
+        },
       ],
     },
     {
@@ -136,7 +253,6 @@ router.beforeEach(async (to, from, next) => {
     try {
       await auth.fetchUser()
     } catch (error) {
-      console.error('Failed to fetch user:', error)
       auth.token = null
       localStorage.removeItem('token')
     }

@@ -26,6 +26,10 @@ import FileUpload from 'primevue/fileupload'
 import Checkbox from 'primevue/checkbox'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
+import Password from 'primevue/password'
+import Tag from 'primevue/tag'
+import IconField from 'primevue/iconfield'
+import InputIcon from 'primevue/inputicon'
 
 import axios from 'axios'
 
@@ -62,5 +66,9 @@ app.component('FileUpload', FileUpload)
 app.component('Checkbox', Checkbox)
 app.component('DataTable', DataTable)
 app.component('Column', Column)
+app.component('Password', Password)
+app.component('Tag', Tag)
+app.component('IconField', IconField)
+app.component('InputIcon', InputIcon)
 
 app.mount('#app')

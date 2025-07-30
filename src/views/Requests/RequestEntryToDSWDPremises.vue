@@ -1,18 +1,293 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-9">
-    <h1 class="text-3xl font-bold mb-4">REQUEST FOR ENTRY TO DSWD PREMISES</h1>
+  <FullScreenLoader :visible="loading" message="Loading Entry to DSWD Premises Request Form..." />
 
-    <RouterLink
-      class="mb-6 w-1/6 bg-gray-600 text-white p-2 rounded-lg shadow-md text-center"
-      to="/client"
+  <div v-if="!loading">
+    <div
+      class="flex flex-col p-4 sm:p-6 md:p-9 lg:p-12 bg-gray-100 rounded-3xl max-w-full sm:max-w-3xl md:max-w-5xl lg:max-w-7xl mx-auto mt-12"
     >
-      <i class="pi pi-arrow-left" /> Back to Requests
-    </RouterLink>
-    <hr class="mb-6 border-gray-300" />
+      <!-- Header -->
+      <div class="mb-6 text-center w-full">
+        <h1 class="text-2xl sm:text-3xl font-bold">REQUEST FOR ENTRY TO DSWD PREMISES</h1>
+      </div>
+      <RouterLink
+        class="mb-6 w-1/6 bg-gray-600 text-white p-2 rounded-lg shadow-md text-center"
+        to="/client"
+      >
+        <i class="pi pi-arrow-left" /> Back to Requests
+      </RouterLink>
+      <hr class="mb-6 border-gray-300" />
+      <!-- Input Fields -->
+      <div class="flex flex-col gap-8">
+        <!-- Row 1 -->
+        <div class="flex flex-col sm:flex-row gap-6">
+          <FloatLabel class="flex-1">
+            <InputText
+              id="requestingOffice"
+              class="w-full"
+              v-model="formStoreEntryToPremises.requestingOffice"
+              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.requestingOffice }"
+            />
+            <label for="requestingOffice"
+              >Requesting Office/Unit <span class="text-red-500">*</span></label
+            >
+          </FloatLabel>
 
-    <p class="text-lg text-gray-700 mb-8">This feature is currently under development.</p>
-    <p class="text-md text-gray-500">Please check back later for updates.</p>
+          <FloatLabel class="flex-1">
+            <DatePicker
+              id="dateRequested"
+              class="w-full"
+              v-model="formStoreEntryToPremises.dateRequested"
+              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.dateRequested }"
+              showIcon
+              fluid
+              iconDisplay="input"
+            />
+            <label for="dateRequested">Date Requested <span class="text-red-500">*</span></label>
+          </FloatLabel>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="flex flex-col sm:flex-row gap-6">
+          <FloatLabel class="flex-1">
+            <DatePicker
+              id="dateNeeded"
+              class="w-full"
+              v-model="formStoreEntryToPremises.dateNeeded"
+              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.dateNeeded }"
+              showIcon
+              fluid
+              iconDisplay="input"
+            />
+            <label for="dateNeeded">Expected Date<span class="text-red-500">*</span></label>
+          </FloatLabel>
+        </div>
+        <!-- Row 3 -->
+        <div class="flex flex-col sm:flex-row gap-6">
+          <FloatLabel class="flex-1">
+            <InputText
+              id="requestedBy"
+              class="w-full"
+              v-model="formStoreEntryToPremises.requestedBy"
+              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.requestedBy }"
+            />
+            <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
+          </FloatLabel>
+          <FloatLabel class="flex-1">
+            <InputText
+              id="position"
+              class="w-full"
+              v-model="formStoreEntryToPremises.position"
+              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.position }"
+            />
+            <label for="position">Position <span class="text-red-500">*</span></label>
+          </FloatLabel>
+          <FloatLabel class="flex-1">
+            <InputMask
+              id="contactNo"
+              class="w-full"
+              v-model="formStoreEntryToPremises.contactNo"
+              mask="0999 999 9999"
+              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.contactNo }"
+            />
+            <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
+          </FloatLabel>
+
+          <FloatLabel class="flex-1">
+            <InputText
+              id="emailOfRequester"
+              v-model="formStoreEntryToPremises.emailOfRequester"
+              class="w-full"
+              type="email"
+              :class="{
+                'p-invalid': showErrors && !isValidEmail(formStoreEntryToPremises.emailOfRequester),
+              }"
+              required
+            />
+            <label for="emailOfRequester"
+              >Email of Requester <span class="text-red-500">*</span></label
+            >
+          </FloatLabel>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+          <FileUpload
+            id="esign"
+            mode="basic"
+            accept="image/png,image/jpeg"
+            name="esignature"
+            customUpload
+            auto
+            @select="onFileSelect"
+            chooseLabel="Choose File"
+            class="w-full sm:w-auto"
+            :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.src }"
+          />
+
+          <div v-if="formStoreEntryToPremises.src" class="mt-4 sm:mt-0">
+            <img
+              :key="formStoreEntryToPremises.src"
+              :src="formStoreEntryToPremises.src"
+              alt="E-Signature Preview"
+              class="shadow-md rounded-xl w-full sm:w-32"
+              style="filter: grayscale(100%)"
+            />
+          </div>
+          <div class="text-sm text-gray-500 mt-2">
+            Upload your e-signature (PNG, JPG, JPEG) - Max size: 1MB
+            <span class="text-red-500">*</span
+            ><span v-if="showErrors && !formStoreEntryToPremises.src" class="text-red-500 block"
+              >E-signature is required.</span
+            >
+          </div>
+        </div>
+
+        <hr class="mb-6 border-gray-300" />
+
+        <div class="flex flex-col">
+          <div class="p-4">
+            <h2 class="text-xl font-semibold mb-4">List of Person/s Requesting for Entry</h2>
+
+            <div
+              v-for="(guest, index) in formStoreEntryToPremises.guests"
+              :key="index"
+              class="mb-2 flex items-center gap-2"
+            >
+              <FloatLabel class="flex-1" variant="on">
+                <InputText
+                  id="guest"
+                  v-model="formStoreEntryToPremises.guests[index].name"
+                  class="w-full"
+                />
+                <label for="guest">Name</label>
+              </FloatLabel>
+              <FloatLabel class="flex-1" variant="on">
+                <InputText
+                  id="project"
+                  v-model="formStoreEntryToPremises.guests[index].project"
+                  class="w-full"
+                />
+                <label for="project">Enter Projects/Work to be done</label>
+              </FloatLabel>
+              <Button
+                icon="pi pi-times"
+                severity="danger"
+                @click="formStoreEntryToPremises.removeGuest(index)"
+                v-if="formStoreEntryToPremises.guests.length > 1"
+              />
+            </div>
+
+            <div class="mt-4 flex gap-2">
+              <Button
+                label="Add Guest"
+                icon="pi pi-plus"
+                @click="formStoreEntryToPremises.addGuest"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-center mt-8">
+          <Button
+            label="Submit Request"
+            icon="pi pi-check"
+            severity="primary"
+            class="w-full sm:w-auto"
+            :disabled="submitting"
+            @click="submitRequest"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
-<script setup></script>
-<style scoped></style>
+
+<script setup>
+import { usePremisesFormStore } from '@/stores/entryToDSWDFormStore'
+import FullScreenLoader from '@/components/FullScreenLoader.vue'
+import { ref, onMounted } from 'vue'
+
+const maxGuests = 20
+const formStoreEntryToPremises = usePremisesFormStore()
+const showErrors = ref(false)
+const submitting = ref(false)
+const loading = ref(true)
+
+onMounted(async () => {
+  await new Promise((resolve) => setTimeout(resolve, 1500)) // Simulate API call
+  loading.value = false
+})
+
+function onFileSelect(event) {
+  const file = event.files[0]
+  if (!file) return
+
+  const validTypes = ['image/png', 'image/jpeg', 'image/jpg']
+  const maxSize = 1 * 1024 * 1024
+
+  if (!validTypes.includes(file.type)) {
+    alert('Only PNG, JPG, or JPEG files are allowed.')
+    formStoreEntryToPremises.src = null
+    return
+  }
+
+  if (file.size > maxSize) {
+    alert('Maximum file size is 1MB.')
+    formStoreEntryToPremises.src = null
+    return
+  }
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    formStoreEntryToPremises.src = e.target.result
+  }
+  reader.readAsDataURL(file)
+}
+
+function isValidEmail(email) {
+  const allowedDomains = ['@gmail.com', '@dswd.gov.ph']
+  const trimmed = email?.trim().toLowerCase()
+
+  return (
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed) &&
+    allowedDomains.some((domain) => trimmed.endsWith(domain))
+  )
+}
+
+function submitRequest() {
+  showErrors.value = true
+
+  const f = formStoreEntryToPremises
+  const errors = []
+
+  if (!f.requestingOffice) errors.push('Requesting Office/Unit is required.')
+  if (!f.dateRequested) errors.push('Date Requested is required.')
+  if (!f.dateNeeded) errors.push('Expected Date is required.')
+  if (!f.requestedBy) errors.push('Requested by is required.')
+  if (!f.position) errors.push('Position is required.')
+  if (!f.contactNo) errors.push('Contact number is required.')
+  if (!f.emailOfRequester || !isValidEmail(f.emailOfRequester)) {
+    errors.push('A valid email (gmail.com or dswd.gov.ph) is required.')
+  }
+  if (!f.src) errors.push('E-signature is required.')
+
+  if (
+    !formStoreEntryToPremises.guests.length ||
+    formStoreEntryToPremises.guests.some((g) => !g.name || !g.project)
+  ) {
+    errors.push('Each guest must have a name and a project.')
+  }
+
+  if (errors.length) {
+    alert(errors.join('\n'))
+    return
+  }
+
+  submitting.value = true
+  setTimeout(() => {
+    alert('Form submitted successfully!')
+    submitting.value = false
+  }, 1000)
+}
+</script>

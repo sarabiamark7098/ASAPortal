@@ -6,12 +6,13 @@ export const useUsersStore = defineStore('users', {
   state: () => ({
     userList: [],
     loading: false,
+    loading2: false,
     error: null,
   }),
 
   actions: {
     async fetchAllUsers() {
-      this.loading = true
+      this.loading2 = true
       try {
         const res = await axios.get('/api/users')
         this.userList = res.data
@@ -20,7 +21,7 @@ export const useUsersStore = defineStore('users', {
         this.error = error.response?.data?.message || 'Failed to fetch users'
         console.error('Fetch users error:', error)
       } finally {
-        this.loading = false
+        this.loading2 = false
       }
     },
 
