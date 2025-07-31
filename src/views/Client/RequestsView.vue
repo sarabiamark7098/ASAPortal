@@ -7,9 +7,7 @@
     >
       <div class="justify-center h-full pt-32 pb-12 w-full px-6 sm:px-24">
         <div class="flex flex-col items-center text-center">
-          <p class="bg-blue-800 px-5 py-1 rounded-full text-white text-sm mb-6" id="request">
-            <b>DSWD FO XI</b>
-          </p>
+          
           <p class="text-3xl sm:text-5xl lg:text-6xl font-bold">Request Dashboard</p>
         </div>
         <div

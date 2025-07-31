@@ -47,5 +47,35 @@ export const useTransactionsFormStore = defineStore('transactionForm', {
         this.loading = false
       }
     },
+    async getPaginatedTransactions({ token, page = 1, perPage = 5 }) {
+      const res = await axios.get(`/api/vehicle-requests`, {
+        params: { page, per_page: perPage },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      return {
+        data: res.data.data, // paginated data
+        total: res.data.total, // total records
+      }
+    },
+    async getVehicleRequests(token, page, perPage, search = '', sortBy = '', sortDir = '') {
+      const response = await axios.get('/api/vehicle-requests', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          page,
+          per_page: perPage,
+          search,
+          sort_by: sortBy,
+          sort_dir: sortDir,
+        },
+      })
+
+      this.vehicleRequests = response.data.data
+      this.totalRecords = response.data.total
+    },
   },
 })
