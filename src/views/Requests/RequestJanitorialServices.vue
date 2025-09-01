@@ -25,8 +25,8 @@
             <InputText
               id="requestingOffice"
               class="w-full"
-              v-model="formStoreJanitorial.requestingOffice"
-              :class="{ 'p-invalid': showErrors && !formStoreJanitorial.requestingOffice }"
+              v-model="janitorialFormStore.requestingOffice"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.requestingOffice }"
             />
             <label for="requestingOffice"
               >Requesting Office/Unit <span class="text-red-500">*</span></label
@@ -37,8 +37,8 @@
             <InputText
               id="purpose"
               class="w-full"
-              v-model="formStoreJanitorial.purpose"
-              :class="{ 'p-invalid': showErrors && !formStoreJanitorial.purpose }"
+              v-model="janitorialFormStore.purpose"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.purpose }"
             />
             <label for="purpose">Purpose <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -50,8 +50,8 @@
             <InputText
               id="utilityWorker"
               class="w-full"
-              v-model="formStoreJanitorial.utilityWorker"
-              :class="{ 'p-invalid': showErrors && !formStoreJanitorial.utilityWorker }"
+              v-model="janitorialFormStore.utilityWorker"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.utilityWorker }"
               type="number"
             />
             <label for="utilityWorker"
@@ -63,8 +63,8 @@
             <DatePicker
               id="dateNeeded"
               class="w-full"
-              v-model="formStoreJanitorial.dateNeeded"
-              :class="{ 'p-invalid': showErrors && !formStoreJanitorial.dateNeeded }"
+              v-model="janitorialFormStore.dateNeeded"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.dateNeeded }"
               showIcon
               fluid
               iconDisplay="input"
@@ -76,8 +76,8 @@
             <DatePicker
               id="startTime"
               class="w-full"
-              v-model="formStoreJanitorial.startTime"
-              :class="{ 'p-invalid': showErrors && !formStoreJanitorial.startTime }"
+              v-model="janitorialFormStore.startTime"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.startTime }"
               showIcon
               fluid
               hourFormat="12"
@@ -98,8 +98,8 @@
             <InputText
               id="assignment"
               class="w-full"
-              v-model="formStoreJanitorial.assignment"
-              :class="{ 'p-invalid': showErrors && !formStoreJanitorial.assignment }"
+              v-model="janitorialFormStore.assignment"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.assignment }"
               autoResize
               rows="2"
             />
@@ -110,7 +110,7 @@
             <InputText
               id="fund"
               class="w-full"
-              v-model="formStoreJanitorial.fund"
+              v-model="janitorialFormStore.fund"
               autoResize
               rows="2"
             />
@@ -124,8 +124,8 @@
             <InputText
               id="officeHead"
               class="w-full"
-              v-model="formStoreJanitorial.officeHead"
-              :class="{ 'p-invalid': showErrors && !formStoreJanitorial.officeHead }"
+              v-model="janitorialFormStore.officeHead"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.officeHead }"
             />
             <label for="officeHead"
               >Head of Requesting Office <span class="text-red-500">*</span></label
@@ -139,8 +139,8 @@
             <InputText
               id="requestedBy"
               class="w-full"
-              v-model="formStoreJanitorial.requestedBy"
-              :class="{ 'p-invalid': showErrors && !formStoreJanitorial.requestedBy }"
+              v-model="janitorialFormStore.requestedBy"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.requestedBy }"
             />
             <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -148,8 +148,8 @@
             <InputText
               id="position"
               class="w-full"
-              v-model="formStoreJanitorial.position"
-              :class="{ 'p-invalid': showErrors && !formStoreJanitorial.position }"
+              v-model="janitorialFormStore.position"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.position }"
             />
             <label for="position">Position <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -157,9 +157,9 @@
             <InputMask
               id="contactNo"
               class="w-full"
-              v-model="formStoreJanitorial.contactNo"
+              v-model="janitorialFormStore.contactNo"
               mask="0999 999 9999"
-              :class="{ 'p-invalid': showErrors && !formStoreJanitorial.contactNo }"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.contactNo }"
             />
             <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -167,11 +167,11 @@
           <FloatLabel class="flex-1">
             <InputText
               id="emailOfRequester"
-              v-model="formStoreJanitorial.emailOfRequester"
+              v-model="janitorialFormStore.emailOfRequester"
               class="w-full"
               type="email"
               :class="{
-                'p-invalid': showErrors && !isValidEmail(formStoreJanitorial.emailOfRequester),
+                'p-invalid': showErrors && !isValidEmail(janitorialFormStore.emailOfRequester),
               }"
               required
             />
@@ -193,13 +193,13 @@
             @select="onFileSelect"
             chooseLabel="Choose File"
             class="w-full sm:w-auto"
-            :class="{ 'p-invalid': showErrors && !formStoreJanitorial.src }"
+            :class="{ 'p-invalid': showErrors && !janitorialFormStore.src }"
           />
 
-          <div v-if="formStoreJanitorial.src" class="mt-4 sm:mt-0">
+          <div v-if="janitorialFormStore.src" class="mt-4 sm:mt-0">
             <img
-              :key="formStoreJanitorial.src"
-              :src="formStoreJanitorial.src"
+              :key="janitorialFormStore.src"
+              :src="janitorialFormStore.src"
               alt="E-Signature Preview"
               class="shadow-md rounded-xl w-full sm:w-32"
               style="filter: grayscale(100%)"
@@ -208,7 +208,7 @@
           <div class="text-sm text-gray-500 mt-2">
             Upload your e-signature (PNG, JPG, JPEG) - Max size: 1MB
             <span class="text-red-500">*</span
-            ><span v-if="showErrors && !formStoreJanitorial.src" class="text-red-500 block"
+            ><span v-if="showErrors && !janitorialFormStore.src" class="text-red-500 block"
               >E-signature is required.</span
             >
           </div>
@@ -236,7 +236,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 // Pinia store holding form data
-const formStoreJanitorial = useJanitorialFormStore()
+const janitorialFormStore = useJanitorialFormStore()
 const router = useRouter()
 
 const showErrors = ref(false)
@@ -268,19 +268,19 @@ function onFileSelect(event) {
 
   if (!validTypes.includes(file.type)) {
     alert('Only PNG, JPG, or JPEG files are allowed.')
-    formStoreJanitorial.src = null
+    janitorialFormStore.src = null
     return
   }
 
   if (file.size > maxSize) {
     alert('Maximum file size is 1MB.')
-    formStoreJanitorial.src = null
+    janitorialFormStore.src = null
     return
   }
 
   const reader = new FileReader()
   reader.onload = (e) => {
-    formStoreJanitorial.src = e.target.result
+    janitorialFormStore.src = e.target.result
   }
   reader.readAsDataURL(file)
 }
@@ -288,7 +288,7 @@ function onFileSelect(event) {
 // Form submit handler with validation
 function submitRequest() {
   showErrors.value = true
-  const f = formStoreJanitorial
+  const f = janitorialFormStore
   const errors = []
 
   if (!f.requestingOffice) errors.push('Requesting Office/Unit is required.')
@@ -317,7 +317,7 @@ function submitRequest() {
     alert('Form submitted successfully!')
     showErrors.value = false
     submitting.value = false
-    formStoreJanitorial.$reset() // Reset Pinia form state if you want
+    janitorialFormStore.$reset() // Reset Pinia form state if you want
     router.push('/client') // Redirect after submission
   }, 1000)
 }

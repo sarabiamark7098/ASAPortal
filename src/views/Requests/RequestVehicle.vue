@@ -35,8 +35,8 @@
             <InputText
               id="requestingOffice"
               class="w-full"
-              v-model="formStoreVehicle.requestingOffice"
-              :class="{ 'p-invalid': showErrors && !formStoreVehicle.requestingOffice }"
+              v-model="vehicleFormStore.requestingOffice"
+              :class="{ 'p-invalid': showErrors && !vehicleFormStore.requestingOffice }"
             />
             <label for="requestingOffice"
               >Requesting Office/Unit <span class="text-red-500">*</span></label
@@ -47,8 +47,8 @@
             <InputText
               id="purpose"
               class="w-full"
-              v-model="formStoreVehicle.purpose"
-              :class="{ 'p-invalid': showErrors && !formStoreVehicle.purpose }"
+              v-model="vehicleFormStore.purpose"
+              :class="{ 'p-invalid': showErrors && !vehicleFormStore.purpose }"
             />
             <label for="purpose">Purpose of Trip <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -60,8 +60,8 @@
             <Textarea
               id="passengers"
               class="w-full"
-              v-model="formStoreVehicle.passengers"
-              :class="{ 'p-invalid': showErrors && !formStoreVehicle.passengers }"
+              v-model="vehicleFormStore.passengers"
+              :class="{ 'p-invalid': showErrors && !vehicleFormStore.passengers }"
               autoResize
               rows="2"
             />
@@ -75,8 +75,8 @@
             <DatePicker
               id="dateNeeded"
               class="w-full"
-              v-model="formStoreVehicle.dateNeeded"
-              :class="{ 'p-invalid': showErrors && !formStoreVehicle.dateNeeded }"
+              v-model="vehicleFormStore.dateNeeded"
+              :class="{ 'p-invalid': showErrors && !vehicleFormStore.dateNeeded }"
               showIcon
               fluid
               iconDisplay="input"
@@ -88,8 +88,8 @@
             <DatePicker
               id="startTime"
               class="w-full"
-              v-model="formStoreVehicle.startTime"
-              :class="{ 'p-invalid': showErrors && !formStoreVehicle.startTime }"
+              v-model="vehicleFormStore.startTime"
+              :class="{ 'p-invalid': showErrors && !vehicleFormStore.startTime }"
               showIcon
               fluid
               hourFormat="12"
@@ -107,10 +107,10 @@
             <DatePicker
               id="dateEnding"
               class="w-full"
-              v-model="formStoreVehicle.dateEnding"
+              v-model="vehicleFormStore.dateEnding"
               :class="[
                 'w-full',
-                (showErrors && !formStoreVehicle.dateEnding) || isDateInvalid
+                (showErrors && !vehicleFormStore.dateEnding) || isDateInvalid
                   ? 'p-invalid border border-red-200 ring-1 ring-red-500 focus:ring-red-500 rounded-lg'
                   : '',
               ]"
@@ -128,8 +128,8 @@
             <Textarea
               id="placeOfTravel"
               class="w-full"
-              v-model="formStoreVehicle.placeOfTravel"
-              :class="{ 'p-invalid': showErrors && !formStoreVehicle.placeOfTravel }"
+              v-model="vehicleFormStore.placeOfTravel"
+              :class="{ 'p-invalid': showErrors && !vehicleFormStore.placeOfTravel }"
               autoResize
               rows="2"
             />
@@ -143,8 +143,8 @@
             <InputText
               id="requestedBy"
               class="w-full"
-              v-model="formStoreVehicle.requestedBy"
-              :class="{ 'p-invalid': showErrors && !formStoreVehicle.requestedBy }"
+              v-model="vehicleFormStore.requestedBy"
+              :class="{ 'p-invalid': showErrors && !vehicleFormStore.requestedBy }"
             />
             <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -152,8 +152,8 @@
             <InputText
               id="position"
               class="w-full"
-              v-model="formStoreVehicle.position"
-              :class="{ 'p-invalid': showErrors && !formStoreVehicle.position }"
+              v-model="vehicleFormStore.position"
+              :class="{ 'p-invalid': showErrors && !vehicleFormStore.position }"
             />
             <label for="position">Position <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -161,9 +161,9 @@
             <InputMask
               id="contactNo"
               class="w-full"
-              v-model="formStoreVehicle.contactNo"
+              v-model="vehicleFormStore.contactNo"
               mask="0999 999 9999"
-              :class="{ 'p-invalid': showErrors && !formStoreVehicle.contactNo }"
+              :class="{ 'p-invalid': showErrors && !vehicleFormStore.contactNo }"
             />
             <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -171,11 +171,11 @@
           <FloatLabel class="flex-1">
             <InputText
               id="emailOfRequester"
-              v-model="formStoreVehicle.emailOfRequester"
+              v-model="vehicleFormStore.emailOfRequester"
               class="w-full"
               type="email"
               :class="{
-                'p-invalid': showErrors && !isValidEmail(formStoreVehicle.emailOfRequester),
+                'p-invalid': showErrors && !isValidEmail(vehicleFormStore.emailOfRequester),
               }"
               required
             />
@@ -197,13 +197,13 @@
             @select="onFileSelect"
             chooseLabel="Choose File"
             class="w-full sm:w-auto"
-            :class="{ 'p-invalid': showErrors && !formStoreVehicle.src }"
+            :class="{ 'p-invalid': showErrors && !vehicleFormStore.src }"
           />
 
-          <div v-if="formStoreVehicle.src" class="mt-4 sm:mt-0">
+          <div v-if="vehicleFormStore.src" class="mt-4 sm:mt-0">
             <img
-              :key="formStoreVehicle.src"
-              :src="formStoreVehicle.src"
+              :key="vehicleFormStore.src"
+              :src="vehicleFormStore.src"
               alt="E-Signature Preview"
               class="shadow-md rounded-xl w-full sm:w-32"
               style="filter: grayscale(100%)"
@@ -212,7 +212,7 @@
           <div class="text-sm text-gray-500 mt-2">
             Upload your e-signature (PNG, JPG, JPEG) - Max size: 1MB
             <span class="text-red-500">*</span
-            ><span v-if="showErrors && !formStoreVehicle.src" class="text-red-500 block"
+            ><span v-if="showErrors && !vehicleFormStore.src" class="text-red-500 block"
               >E-signature is required.</span
             >
           </div>
@@ -236,11 +236,11 @@
 
 <script setup>
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
-import { useVehicleFormStore } from '@/stores/vehicleFormStore'
+import { useVehicleFormStore } from '@/stores/vehicleRequestFormStore'
 import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 
-const formStoreVehicle = useVehicleFormStore()
+const vehicleFormStore = useVehicleFormStore()
 
 const showErrors = ref(false)
 const isDateInvalid = ref(false)
@@ -263,19 +263,19 @@ function onFileSelect(event) {
 
   if (!validTypes.includes(file.type)) {
     alert('Only PNG, JPG, or JPEG files are allowed.')
-    formStoreVehicle.src = null
+    vehicleFormStore.src = null
     return
   }
 
   if (file.size > maxSize) {
     alert('Maximum file size is 1MB.')
-    formStoreVehicle.src = null
+    vehicleFormStore.src = null
     return
   }
 
   const reader = new FileReader()
   reader.onload = (e) => {
-    formStoreVehicle.src = e.target.result
+    vehicleFormStore.src = e.target.result
   }
   reader.readAsDataURL(file)
 }
@@ -294,7 +294,7 @@ function submitRequest() {
   showErrors.value = true
   isDateInvalid.value = false
 
-  const f = formStoreVehicle
+  const f = vehicleFormStore
   const errors = []
 
   if (!f.requestingOffice) errors.push('Requesting Office/Unit is required.')

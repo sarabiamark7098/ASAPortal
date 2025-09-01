@@ -24,8 +24,8 @@
             <InputText
               id="requestedBy"
               class="w-full"
-              v-model="formStoreOvernightParking.requestedBy"
-              :class="{ 'p-invalid': showErrors && !formStoreOvernightParking.requestedBy }"
+              v-model="overnightFormStore.requestedBy"
+              :class="{ 'p-invalid': showErrors && !overnightFormStore.requestedBy }"
             />
             <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -33,12 +33,11 @@
           <FloatLabel class="flex-1">
             <InputText
               id="emailOfRequester"
-              v-model="formStoreOvernightParking.emailOfRequester"
+              v-model="overnightFormStore.emailOfRequester"
               class="w-full"
               type="email"
               :class="{
-                'p-invalid':
-                  showErrors && !isValidEmail(formStoreOvernightParking.emailOfRequester),
+                'p-invalid': showErrors && !isValidEmail(overnightFormStore.emailOfRequester),
               }"
               required
             />
@@ -51,8 +50,8 @@
             <DatePicker
               id="dateRequested"
               class="w-full"
-              v-model="formStoreOvernightParking.dateRequested"
-              :class="{ 'p-invalid': showErrors && !formStoreOvernightParking.dateRequested }"
+              v-model="overnightFormStore.dateRequested"
+              :class="{ 'p-invalid': showErrors && !overnightFormStore.dateRequested }"
               showIcon
               fluid
               iconDisplay="input"
@@ -67,8 +66,8 @@
             <InputText
               id="position"
               class="w-full"
-              v-model="formStoreOvernightParking.position"
-              :class="{ 'p-invalid': showErrors && !formStoreOvernightParking.position }"
+              v-model="overnightFormStore.position"
+              :class="{ 'p-invalid': showErrors && !overnightFormStore.position }"
             />
             <label for="position">Position <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -77,16 +76,16 @@
             <InputMask
               id="contactNo"
               class="w-full"
-              v-model="formStoreOvernightParking.contactNo"
+              v-model="overnightFormStore.contactNo"
               mask="0999 999 9999"
-              :class="{ 'p-invalid': showErrors && !formStoreOvernightParking.contactNo }"
+              :class="{ 'p-invalid': showErrors && !overnightFormStore.contactNo }"
             />
             <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
           </FloatLabel>
 
           <FloatLabel class="flex-1">
             <Select
-              v-model="formStoreOvernightParking.division"
+              v-model="overnightFormStore.division"
               :options="divisionList"
               option-label="name"
               option-value="id"
@@ -105,8 +104,8 @@
             <InputText
               id="plateNumber"
               class="w-full"
-              v-model="formStoreOvernightParking.plateNumber"
-              :class="{ 'p-invalid': showErrors && !formStoreOvernightParking.plateNumber }"
+              v-model="overnightFormStore.plateNumber"
+              :class="{ 'p-invalid': showErrors && !overnightFormStore.plateNumber }"
             />
             <label for="plateNumber"
               >Model and Plate Number of Vehicle <span class="text-red-500">*</span></label
@@ -117,8 +116,8 @@
             <DatePicker
               id="dateNeeded"
               class="w-full"
-              v-model="formStoreOvernightParking.dateNeeded"
-              :class="{ 'p-invalid': showErrors && !formStoreOvernightParking.dateNeeded }"
+              v-model="overnightFormStore.dateNeeded"
+              :class="{ 'p-invalid': showErrors && !overnightFormStore.dateNeeded }"
               showIcon
               fluid
               iconDisplay="input"
@@ -130,10 +129,10 @@
             <DatePicker
               id="dateEnding"
               class="w-full"
-              v-model="formStoreOvernightParking.dateEnding"
+              v-model="overnightFormStore.dateEnding"
               :class="[
                 'w-full',
-                (showErrors && !formStoreOvernightParking.dateEnding) || isDateInvalid
+                (showErrors && !overnightFormStore.dateEnding) || isDateInvalid
                   ? 'p-invalid border border-red-200 ring-1 ring-red-500 focus:ring-red-500 rounded-lg'
                   : '',
               ]"
@@ -151,8 +150,8 @@
             <Textarea
               id="justification"
               class="w-full"
-              v-model="formStoreOvernightParking.justification"
-              :class="{ 'p-invalid': showErrors && !formStoreOvernightParking.justification }"
+              v-model="overnightFormStore.justification"
+              :class="{ 'p-invalid': showErrors && !overnightFormStore.justification }"
               autoResize
               rows="2"
             />
@@ -166,8 +165,8 @@
             <DatePicker
               id="startTime"
               class="w-full"
-              v-model="formStoreOvernightParking.startTime"
-              :class="{ 'p-invalid': showErrors && !formStoreOvernightParking.startTime }"
+              v-model="overnightFormStore.startTime"
+              :class="{ 'p-invalid': showErrors && !overnightFormStore.startTime }"
               showIcon
               fluid
               hourFormat="12"
@@ -199,10 +198,10 @@
                 :class="{ 'p-invalid': showErrors && showSupportingDocumentError }"
               />
               <div
-                v-if="formStoreOvernightParking.supportingDocumentFileName"
+                v-if="overnightFormStore.supportingDocumentFileName"
                 class="mt-2 text-sm text-gray-700"
               >
-                Selected: {{ formStoreOvernightParking.supportingDocumentFileName }}
+                Selected: {{ overnightFormStore.supportingDocumentFileName }}
               </div>
               <div
                 v-if="showErrors && showSupportingDocumentError"
@@ -211,7 +210,7 @@
                 Only PDF files are allowed.
               </div>
               <div
-                v-if="!formStoreOvernightParking.supportingDocumentFileName"
+                v-if="!overnightFormStore.supportingDocumentFileName"
                 class="text-sm text-gray-500 mt-2"
               >
                 Upload your Supporting Document Here (optional)
@@ -230,24 +229,22 @@
                 @select="onFileSelect"
                 chooseLabel="Choose File"
                 class="w-full sm:w-auto"
-                :class="{ 'p-invalid': showErrors && !formStoreOvernightParking.src }"
+                :class="{ 'p-invalid': showErrors && !overnightFormStore.src }"
               />
 
-              <div v-if="formStoreOvernightParking.src" class="mt-4 sm:mt-0">
+              <div v-if="overnightFormStore.src" class="mt-4 sm:mt-0">
                 <img
-                  :key="formStoreOvernightParking.src"
-                  :src="formStoreOvernightParking.src"
+                  :key="overnightFormStore.src"
+                  :src="overnightFormStore.src"
                   alt="E-Signature Preview"
                   class="shadow-md rounded-xl w-full sm:w-32"
                   style="filter: grayscale(100%)"
                 />
               </div>
-              <div v-if="!formStoreOvernightParking.src" class="text-sm text-gray-500 mt-2">
+              <div v-if="!overnightFormStore.src" class="text-sm text-gray-500 mt-2">
                 Upload your e-signature (PNG, JPG, JPEG) - Max size: 1MB
                 <span class="text-red-500">*</span
-                ><span
-                  v-if="showErrors && !formStoreOvernightParking.src"
-                  class="text-red-500 block"
+                ><span v-if="showErrors && !overnightFormStore.src" class="text-red-500 block"
                   >E-signature is required.</span
                 >
               </div>
@@ -279,7 +276,7 @@ import { useOvernightFormStore } from '@/stores/overnightParkingFormStore'
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
 
 const dropdownStore = useDropdownStore()
-const formStoreOvernightParking = useOvernightFormStore()
+const overnightFormStore = useOvernightFormStore()
 
 const { divisionList } = storeToRefs(dropdownStore)
 const { fetchDivisions } = dropdownStore
@@ -301,7 +298,7 @@ function onSupportingDocumentSelect(event) {
   if (!file) return
 
   if (file.type !== 'application/pdf') {
-    formStoreOvernightParking.supportingDocumentFileName = null
+    overnightFormStore.supportingDocumentFileName = null
     showSupportingDocumentError.value = true
     alert('Only PDF files are allowed.')
     return
@@ -314,8 +311,8 @@ function onSupportingDocumentSelect(event) {
   }
 
   showSupportingDocumentError.value = false
-  formStoreOvernightParking.supportingDocumentFileName = file.name
-  formStoreOvernightParking.supportingDocument = file
+  overnightFormStore.supportingDocumentFileName = file.name
+  overnightFormStore.supportingDocument = file
 }
 
 // File upload handler
@@ -328,19 +325,19 @@ function onFileSelect(event) {
 
   if (!validTypes.includes(file.type)) {
     alert('Only PNG, JPG, or JPEG files are allowed.')
-    formStoreOvernightParking.src = null
+    overnightFormStore.src = null
     return
   }
 
   if (file.size > maxSize) {
     alert('Maximum file size is 1MB.')
-    formStoreOvernightParking.src = null
+    overnightFormStore.src = null
     return
   }
 
   const reader = new FileReader()
   reader.onload = (e) => {
-    formStoreOvernightParking.src = e.target.result
+    overnightFormStore.src = e.target.result
   }
   reader.readAsDataURL(file)
 }
@@ -359,7 +356,7 @@ function submitRequest() {
   showErrors.value = true
   isDateInvalid.value = false
 
-  const f = formStoreOvernightParking
+  const f = overnightFormStore
   const errors = []
 
   if (!f.requestedBy) errors.push('Requested by is required.')

@@ -251,15 +251,15 @@ const register = async () => {
 
   const auth = authStore
   const errors = []
-  if (!auth.username) errors.push('Username is required.')
-  if (!auth.email) errors.push('Email is required.')
+  if (!authStore.username) errors.push('Username is required.')
+  if (!authStore.email) errors.push('Email is required.')
   // Simple email regex check
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (auth.email && !emailRegex.test(auth.email)) errors.push('Invalid email format.')
-  if (!auth.password) errors.push('Password is required.')
-  if (auth.password !== auth.password_confirmation) errors.push('Passwords do not match.')
-  if (!auth.firstName) errors.push('First Name is required.')
-  if (!auth.lastName) errors.push('Last Name is required.')
+  if (authStore.email && !emailRegex.test(authStore.email)) errors.push('Invalid email format.')
+  if (!authStore.password) errors.push('Password is required.')
+  if (authStore.password !== authStore.password_confirmation) errors.push('Passwords do not match.')
+  if (!authStore.firstName) errors.push('First Name is required.')
+  if (!authStore.lastName) errors.push('Last Name is required.')
 
   if (errors.length > 0) {
     error.value = errors.join(' ')

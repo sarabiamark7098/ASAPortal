@@ -61,7 +61,7 @@ const router = createRouter({
       ],
     },
     {
-      path: '/useraccounts',
+      path: '/manage/useraccounts',
       component: AdminLayout,
       meta: { requiresAuth: true, role: ['superadmin'] },
       children: [
@@ -203,13 +203,6 @@ const router = createRouter({
           name: 'ViewRequest',
           component: ViewRequest,
         },
-      ],
-    },
-    {
-      path: '/client',
-      component: AuthenticatedLayout,
-      meta: { requiresAuth: true, role: ['client', 'superadmin', 'supervisor', 'manager'] },
-      children: [
         {
           path: '/calendar-views/vehicle-schedule',
           name: 'vehicleschedule',
@@ -246,27 +239,27 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const auth = useAuthStore()
+  const authStore = useAuthStore()
 
   // Fetch user only if token exists and user is not yet loaded
-  if (auth.token && !auth.user && !auth.loading) {
+  if (authStore.token && !authStore.user && !authStore.loading) {
     try {
-      await auth.fetchUser()
+      await authStore.fetchUser()
     } catch (error) {
-      auth.token = null
+      authStore.token = null
       localStorage.removeItem('token')
     }
   }
 
   // Requires authentication
-  if (to.meta.requiresAuth && !auth.user) {
+  if (to.meta.requiresAuth && !authStore.user) {
     return next({ name: 'login' })
   }
 
   // Guest-only page (login, register)
-  if (to.meta.requiresGuest && auth.user) {
+  if (to.meta.requiresGuest && authStore.user) {
     // Redirect based on role
-    const roles = auth.user.roles || []
+    const roles = authStore.user.roles || []
     if (roles.includes('superadmin') || roles.includes('supervisor') || roles.includes('manager')) {
       return next({ name: 'dashboard' })
     } else if (roles.includes('client')) {
@@ -277,9 +270,9 @@ router.beforeEach(async (to, from, next) => {
   }
 
   // Role-based access control
-  if (to.meta.role && auth.user) {
+  if (to.meta.role && authStore.user) {
     const allowedRoles = Array.isArray(to.meta.role) ? to.meta.role : [to.meta.role]
-    const userRoles = auth.user.roles || []
+    const userRoles = authStore.user.roles || []
 
     const hasAccess = userRoles.some((role) => allowedRoles.includes(role))
 

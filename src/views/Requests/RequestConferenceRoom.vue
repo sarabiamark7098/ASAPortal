@@ -25,8 +25,8 @@
             <InputText
               id="requestingOffice"
               class="w-full"
-              v-model="formStoreConference.requestingOffice"
-              :class="{ 'p-invalid': showErrors && !formStoreConference.requestingOffice }"
+              v-model="conferenceFormStore.requestingOffice"
+              :class="{ 'p-invalid': showErrors && !conferenceFormStore.requestingOffice }"
             />
             <label for="requestingOffice"
               >Requesting Office/Unit <span class="text-red-500">*</span></label
@@ -37,8 +37,8 @@
             <DatePicker
               id="dateRequested"
               class="w-full"
-              v-model="formStoreConference.dateRequested"
-              :class="{ 'p-invalid': showErrors && !formStoreConference.dateRequested }"
+              v-model="conferenceFormStore.dateRequested"
+              :class="{ 'p-invalid': showErrors && !conferenceFormStore.dateRequested }"
               showIcon
               fluid
               iconDisplay="input"
@@ -53,8 +53,8 @@
             <Textarea
               id="purpose"
               class="w-full"
-              v-model="formStoreConference.purpose"
-              :class="{ 'p-invalid': showErrors && !formStoreConference.purpose }"
+              v-model="conferenceFormStore.purpose"
+              :class="{ 'p-invalid': showErrors && !conferenceFormStore.purpose }"
               autoResize
               rows="2"
             />
@@ -68,8 +68,8 @@
             <DatePicker
               id="dateNeeded"
               class="w-full"
-              v-model="formStoreConference.dateNeeded"
-              :class="{ 'p-invalid': showErrors && !formStoreConference.dateNeeded }"
+              v-model="conferenceFormStore.dateNeeded"
+              :class="{ 'p-invalid': showErrors && !conferenceFormStore.dateNeeded }"
               showIcon
               fluid
               iconDisplay="input"
@@ -81,10 +81,10 @@
             <DatePicker
               id="dateEnding"
               class="w-full"
-              v-model="formStoreConference.dateEnding"
+              v-model="conferenceFormStore.dateEnding"
               :class="[
                 'w-full',
-                (showErrors && !formStoreConference.dateEnding) || isDateInvalid
+                (showErrors && !conferenceFormStore.dateEnding) || isDateInvalid
                   ? 'p-invalid border border-red-200 ring-1 ring-red-500 focus:ring-red-500 rounded-lg'
                   : '',
               ]"
@@ -102,8 +102,8 @@
             <DatePicker
               id="timeNeeded"
               class="w-full"
-              v-model="formStoreConference.timeNeeded"
-              :class="{ 'p-invalid': showErrors && !formStoreConference.timeNeeded }"
+              v-model="conferenceFormStore.timeNeeded"
+              :class="{ 'p-invalid': showErrors && !conferenceFormStore.timeNeeded }"
               showIcon
               fluid
               hourFormat="12"
@@ -121,8 +121,8 @@
             <DatePicker
               id="timeEnding"
               class="w-full"
-              v-model="formStoreConference.timeEnding"
-              :class="{ 'p-invalid': showErrors && !formStoreConference.timeEnding }"
+              v-model="conferenceFormStore.timeEnding"
+              :class="{ 'p-invalid': showErrors && !conferenceFormStore.timeEnding }"
               showIcon
               fluid
               hourFormat="12"
@@ -143,9 +143,9 @@
           <FloatLabel class="flex-1">
             <InputText
               id="numberOfPersons"
-              v-model="formStoreConference.numberOfPersons"
+              v-model="conferenceFormStore.numberOfPersons"
               class="w-full"
-              :class="{ 'p-invalid': showErrors && !formStoreConference.numberOfPersons }"
+              :class="{ 'p-invalid': showErrors && !conferenceFormStore.numberOfPersons }"
               required
               type="text"
             />
@@ -154,9 +154,9 @@
           <FloatLabel class="flex-1">
             <InputText
               id="focal"
-              v-model="formStoreConference.focal"
+              v-model="conferenceFormStore.focal"
               class="w-full"
-              :class="{ 'p-invalid': showErrors && !formStoreConference.focal }"
+              :class="{ 'p-invalid': showErrors && !conferenceFormStore.focal }"
               required
             />
             <label for="focal">Focal Person<span class="text-red-500">*</span></label>
@@ -169,13 +169,13 @@
           <div class="flex-1">
             <Select
               id="selectedConferenceRoom"
-              v-model="formStoreConference.selectedConferenceRoom"
+              v-model="conferenceFormStore.selectedConferenceRoom"
               :options="Rooms"
               showClear
               optionLabel="name"
               placeholder="Select Conference Room"
               class="w-full"
-              :class="{ 'p-invalid': showErrors && !formStoreConference.selectedConferenceRoom }"
+              :class="{ 'p-invalid': showErrors && !conferenceFormStore.selectedConferenceRoom }"
             />
           </div>
         </div>
@@ -189,8 +189,8 @@
                 <InputText
                   id="requestedBy"
                   class="w-full"
-                  v-model="formStoreConference.requestedBy"
-                  :class="{ 'p-invalid': showErrors && !formStoreConference.requestedBy }"
+                  v-model="conferenceFormStore.requestedBy"
+                  :class="{ 'p-invalid': showErrors && !conferenceFormStore.requestedBy }"
                 />
                 <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
               </FloatLabel>
@@ -198,8 +198,8 @@
                 <InputText
                   id="position"
                   class="w-full"
-                  v-model="formStoreConference.position"
-                  :class="{ 'p-invalid': showErrors && !formStoreConference.position }"
+                  v-model="conferenceFormStore.position"
+                  :class="{ 'p-invalid': showErrors && !conferenceFormStore.position }"
                 />
                 <label for="position">Position <span class="text-red-500">*</span></label>
               </FloatLabel>
@@ -207,9 +207,9 @@
                 <InputMask
                   id="contactNo"
                   class="w-full"
-                  v-model="formStoreConference.contactNo"
+                  v-model="conferenceFormStore.contactNo"
                   mask="0999 999 9999"
-                  :class="{ 'p-invalid': showErrors && !formStoreConference.contactNo }"
+                  :class="{ 'p-invalid': showErrors && !conferenceFormStore.contactNo }"
                 />
                 <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
               </FloatLabel>
@@ -217,11 +217,11 @@
               <FloatLabel class="flex-1">
                 <InputText
                   id="emailOfRequester"
-                  v-model="formStoreConference.emailOfRequester"
+                  v-model="conferenceFormStore.emailOfRequester"
                   class="w-full"
                   type="email"
                   :class="{
-                    'p-invalid': showErrors && !isValidEmail(formStoreConference.emailOfRequester),
+                    'p-invalid': showErrors && !isValidEmail(conferenceFormStore.emailOfRequester),
                   }"
                   required
                 />
@@ -243,22 +243,22 @@
                 @select="onFileSelect"
                 chooseLabel="Choose File"
                 class="w-full sm:w-auto"
-                :class="{ 'p-invalid': showErrors && !formStoreConference.src }"
+                :class="{ 'p-invalid': showErrors && !conferenceFormStore.src }"
               />
 
-              <div v-if="formStoreConference.src" class="mt-4 sm:mt-0">
+              <div v-if="conferenceFormStore.src" class="mt-4 sm:mt-0">
                 <img
-                  :key="formStoreConference.src"
-                  :src="formStoreConference.src"
+                  :key="conferenceFormStore.src"
+                  :src="conferenceFormStore.src"
                   alt="E-Signature Preview"
                   class="shadow-md rounded-xl w-full sm:w-32"
                   style="filter: grayscale(100%)"
                 />
               </div>
-              <div v-if="!formStoreConference.src" class="text-sm text-gray-500 mt-2">
+              <div v-if="!conferenceFormStore.src" class="text-sm text-gray-500 mt-2">
                 Upload your e-signature (PNG, JPG, JPEG) - Max size: 1MB
                 <span class="text-red-500">*</span
-                ><span v-if="showErrors && !formStoreConference.src" class="text-red-500 block"
+                ><span v-if="showErrors && !conferenceFormStore.src" class="text-red-500 block"
                   >E-signature is required.</span
                 >
               </div>
@@ -287,7 +287,7 @@ import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { useConferenceFormStore } from '@/stores/conferenceFormStore'
 import { ref, onMounted } from 'vue'
 
-const formStoreConference = useConferenceFormStore()
+const conferenceFormStore = useConferenceFormStore()
 
 const showErrors = ref(false)
 const isDateInvalid = ref(false)
@@ -324,19 +324,19 @@ function onFileSelect(event) {
 
   if (!validTypes.includes(file.type)) {
     alert('Only PNG, JPG, or JPEG files are allowed.')
-    formStoreConference.src = null
+    conferenceFormStore.src = null
     return
   }
 
   if (file.size > maxSize) {
     alert('Maximum file size is 1MB.')
-    formStoreConference.src = null
+    conferenceFormStore.src = null
     return
   }
 
   const reader = new FileReader()
   reader.onload = (e) => {
-    formStoreConference.src = e.target.result
+    conferenceFormStore.src = e.target.result
   }
   reader.readAsDataURL(file)
 }
@@ -346,7 +346,7 @@ function submitRequest() {
   isDateInvalid.value = false
 
   const errors = []
-  const form = formStoreConference
+  const form = conferenceFormStore
 
   if (!form.requestingOffice) errors.push('Requesting Office/Unit is required.')
   if (!form.dateRequested) errors.push('Date Requested is required.')

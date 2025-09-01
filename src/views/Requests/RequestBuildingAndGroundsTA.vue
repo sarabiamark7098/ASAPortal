@@ -27,8 +27,8 @@
             <InputText
               id="requestingOffice"
               class="w-full"
-              v-model="formStoreTA.requestingOffice"
-              :class="{ 'p-invalid': showErrors && !formStoreTA.requestingOffice }"
+              v-model="TAFormStore.requestingOffice"
+              :class="{ 'p-invalid': showErrors && !TAFormStore.requestingOffice }"
             />
             <label for="requestingOffice"
               >Requesting Office/Unit <span class="text-red-500">*</span></label
@@ -36,7 +36,7 @@
           </FloatLabel>
 
           <FloatLabel class="flex-1">
-            <InputText id="drn" class="w-full" v-model="formStoreTA.drn" />
+            <InputText id="drn" class="w-full" v-model="TAFormStore.drn" />
             <label for="drn">DRN</label>
           </FloatLabel>
 
@@ -44,8 +44,8 @@
             <DatePicker
               id="dateRequested"
               class="w-full"
-              v-model="formStoreTA.dateRequested"
-              :class="{ 'p-invalid': showErrors && !formStoreTA.dateRequested }"
+              v-model="TAFormStore.dateRequested"
+              :class="{ 'p-invalid': showErrors && !TAFormStore.dateRequested }"
               showIcon
               fluid
               iconDisplay="input"
@@ -67,7 +67,7 @@
               >
                 <div class="flex items-center gap-2">
                   <Checkbox
-                    v-model="formStoreTA.selectedRequestTypeCategories"
+                    v-model="TAFormStore.selectedRequestTypeCategories"
                     :inputId="category.key"
                     name="RequestTypeCategories"
                     :value="category.name"
@@ -79,9 +79,9 @@
                 <InputText
                   v-if="
                     category.name === 'Other' &&
-                    formStoreTA.selectedRequestTypeCategories.includes('Other')
+                    TAFormStore.selectedRequestTypeCategories.includes('Other')
                   "
-                  v-model="formStoreTA.otherRequestType"
+                  v-model="TAFormStore.otherRequestType"
                   placeholder="Please specify"
                   class="w-full sm:w-auto"
                 />
@@ -100,7 +100,7 @@
               >
                 <div class="flex items-center gap-2">
                   <Checkbox
-                    v-model="formStoreTA.selectedRequestNatureCategories"
+                    v-model="TAFormStore.selectedRequestNatureCategories"
                     :inputId="category.key"
                     name="RequestNatureCategories"
                     :value="category.name"
@@ -112,9 +112,9 @@
                 <InputText
                   v-if="
                     category.name === 'Other' &&
-                    formStoreTA.selectedRequestNatureCategories.includes('Other')
+                    TAFormStore.selectedRequestNatureCategories.includes('Other')
                   "
-                  v-model="formStoreTA.otherRequestNature"
+                  v-model="TAFormStore.otherRequestNature"
                   placeholder="Please specify"
                   class="w-full sm:w-auto"
                 />
@@ -129,8 +129,8 @@
             <Textarea
               id="requestDetail"
               class="w-full"
-              v-model="formStoreTA.requestDetail"
-              :class="{ 'p-invalid': showErrors && !formStoreTA.requestDetail }"
+              v-model="TAFormStore.requestDetail"
+              :class="{ 'p-invalid': showErrors && !TAFormStore.requestDetail }"
               autoResize
               rows="2"
             />
@@ -146,8 +146,8 @@
             <InputText
               id="requestedBy"
               class="w-full"
-              v-model="formStoreTA.requestedBy"
-              :class="{ 'p-invalid': showErrors && !formStoreTA.requestedBy }"
+              v-model="TAFormStore.requestedBy"
+              :class="{ 'p-invalid': showErrors && !TAFormStore.requestedBy }"
             />
             <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -156,8 +156,8 @@
             <InputText
               id="position"
               class="w-full"
-              v-model="formStoreTA.position"
-              :class="{ 'p-invalid': showErrors && !formStoreTA.position }"
+              v-model="TAFormStore.position"
+              :class="{ 'p-invalid': showErrors && !TAFormStore.position }"
             />
             <label for="position">Position <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -165,9 +165,9 @@
             <InputMask
               id="contactNo"
               class="w-full"
-              v-model="formStoreTA.contactNo"
+              v-model="TAFormStore.contactNo"
               mask="0999 999 9999"
-              :class="{ 'p-invalid': showErrors && !formStoreTA.contactNo }"
+              :class="{ 'p-invalid': showErrors && !TAFormStore.contactNo }"
             />
             <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -175,10 +175,10 @@
           <FloatLabel class="flex-1">
             <InputText
               id="emailOfRequester"
-              v-model="formStoreTA.emailOfRequester"
+              v-model="TAFormStore.emailOfRequester"
               class="w-full"
               type="email"
-              :class="{ 'p-invalid': showErrors && !isValidEmail(formStoreTA.emailOfRequester) }"
+              :class="{ 'p-invalid': showErrors && !isValidEmail(TAFormStore.emailOfRequester) }"
               required
             />
             <label for="emailOfRequester"
@@ -199,13 +199,13 @@
             @select="onFileSelect"
             chooseLabel="Choose File"
             class="w-full sm:w-auto"
-            :class="{ 'p-invalid': showErrors && !formStoreTA.src }"
+            :class="{ 'p-invalid': showErrors && !TAFormStore.src }"
           />
 
-          <div v-if="formStoreTA.src" class="mt-4 sm:mt-0">
+          <div v-if="TAFormStore.src" class="mt-4 sm:mt-0">
             <img
-              :key="formStoreTA.src"
-              :src="formStoreTA.src"
+              :key="TAFormStore.src"
+              :src="TAFormStore.src"
               alt="E-Signature Preview"
               class="shadow-md rounded-xl w-full sm:w-32"
               style="filter: grayscale(100%)"
@@ -214,7 +214,7 @@
           <div class="text-sm text-gray-500 mt-2">
             Upload your e-signature (PNG, JPG, JPEG) - Max size: 1MB
             <span class="text-red-500">*</span
-            ><span v-if="showErrors && !formStoreTA.src" class="text-red-500 block"
+            ><span v-if="showErrors && !TAFormStore.src" class="text-red-500 block"
               >E-signature is required.</span
             >
           </div>
@@ -241,7 +241,7 @@ import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { ref, watch, onMounted } from 'vue'
 import { useTAFormStore } from '@/stores/TAFormStore.js'
 
-const formStoreTA = useTAFormStore()
+const TAFormStore = useTAFormStore()
 
 const RequestTypeCategories = ref([
   { name: 'Repair and Maintenance', key: 'Repair and Maintenance' },
@@ -300,19 +300,19 @@ function onFileSelect(event) {
 
   if (!validTypes.includes(file.type)) {
     alert('Only PNG, JPG, or JPEG files are allowed.')
-    formStoreTA.src = null
+    TAFormStore.src = null
     return
   }
 
   if (file.size > maxSize) {
     alert('Maximum file size is 1MB.')
-    formStoreTA.src = null
+    TAFormStore.src = null
     return
   }
 
   const reader = new FileReader()
   reader.onload = (e) => {
-    formStoreTA.src = e.target.result
+    TAFormStore.src = e.target.result
   }
   reader.readAsDataURL(file)
 }
@@ -322,19 +322,19 @@ function submitRequest() {
 
   const errors = []
 
-  if (!formStoreTA.requestingOffice) errors.push('Requesting Office/Unit is required.')
-  if (!formStoreTA.dateRequested) errors.push('Date Requested is required.')
-  if (!formStoreTA.selectedRequestTypeCategories.length)
+  if (!TAFormStore.requestingOffice) errors.push('Requesting Office/Unit is required.')
+  if (!TAFormStore.dateRequested) errors.push('Date Requested is required.')
+  if (!TAFormStore.selectedRequestTypeCategories.length)
     errors.push('Please select at least one Type of Request.')
-  if (!formStoreTA.selectedRequestNatureCategories.length)
+  if (!TAFormStore.selectedRequestNatureCategories.length)
     errors.push('Please select at least one Nature of Request.')
-  if (!formStoreTA.requestDetail) errors.push('Complete request details are required.')
-  if (!formStoreTA.requestedBy) errors.push('Requested by is required.')
-  if (!formStoreTA.position) errors.push('Position is required.')
-  if (!formStoreTA.contactNo) errors.push('Contact number is required.')
-  if (!formStoreTA.emailOfRequester || !isValidEmail(formStoreTA.emailOfRequester))
+  if (!TAFormStore.requestDetail) errors.push('Complete request details are required.')
+  if (!TAFormStore.requestedBy) errors.push('Requested by is required.')
+  if (!TAFormStore.position) errors.push('Position is required.')
+  if (!TAFormStore.contactNo) errors.push('Contact number is required.')
+  if (!TAFormStore.emailOfRequester || !isValidEmail(TAFormStore.emailOfRequester))
     errors.push('A valid email (gmail.com or dswd.gov.ph) is required.')
-  if (!formStoreTA.src) errors.push('E-signature is required.')
+  if (!TAFormStore.src) errors.push('E-signature is required.')
 
   if (errors.length) {
     alert(errors.join('\n'))
@@ -343,8 +343,7 @@ function submitRequest() {
 
   submitting.value = true
 
-  formStoreTA
-    .submitForm()
+  TAFormStore.submitForm()
     .then(() => {
       alert('Form submitted successfully!')
       // Optionally reset fields here

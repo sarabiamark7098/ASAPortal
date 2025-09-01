@@ -24,8 +24,8 @@
             <InputText
               id="requestingOffice"
               class="w-full"
-              v-model="formStoreEntryToPremises.requestingOffice"
-              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.requestingOffice }"
+              v-model="entryFormStore.requestingOffice"
+              :class="{ 'p-invalid': showErrors && !entryFormStore.requestingOffice }"
             />
             <label for="requestingOffice"
               >Requesting Office/Unit <span class="text-red-500">*</span></label
@@ -36,8 +36,8 @@
             <DatePicker
               id="dateRequested"
               class="w-full"
-              v-model="formStoreEntryToPremises.dateRequested"
-              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.dateRequested }"
+              v-model="entryFormStore.dateRequested"
+              :class="{ 'p-invalid': showErrors && !entryFormStore.dateRequested }"
               showIcon
               fluid
               iconDisplay="input"
@@ -52,8 +52,8 @@
             <DatePicker
               id="dateNeeded"
               class="w-full"
-              v-model="formStoreEntryToPremises.dateNeeded"
-              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.dateNeeded }"
+              v-model="entryFormStore.dateNeeded"
+              :class="{ 'p-invalid': showErrors && !entryFormStore.dateNeeded }"
               showIcon
               fluid
               iconDisplay="input"
@@ -67,8 +67,8 @@
             <InputText
               id="requestedBy"
               class="w-full"
-              v-model="formStoreEntryToPremises.requestedBy"
-              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.requestedBy }"
+              v-model="entryFormStore.requestedBy"
+              :class="{ 'p-invalid': showErrors && !entryFormStore.requestedBy }"
             />
             <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -76,8 +76,8 @@
             <InputText
               id="position"
               class="w-full"
-              v-model="formStoreEntryToPremises.position"
-              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.position }"
+              v-model="entryFormStore.position"
+              :class="{ 'p-invalid': showErrors && !entryFormStore.position }"
             />
             <label for="position">Position <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -85,9 +85,9 @@
             <InputMask
               id="contactNo"
               class="w-full"
-              v-model="formStoreEntryToPremises.contactNo"
+              v-model="entryFormStore.contactNo"
               mask="0999 999 9999"
-              :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.contactNo }"
+              :class="{ 'p-invalid': showErrors && !entryFormStore.contactNo }"
             />
             <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -95,11 +95,11 @@
           <FloatLabel class="flex-1">
             <InputText
               id="emailOfRequester"
-              v-model="formStoreEntryToPremises.emailOfRequester"
+              v-model="entryFormStore.emailOfRequester"
               class="w-full"
               type="email"
               :class="{
-                'p-invalid': showErrors && !isValidEmail(formStoreEntryToPremises.emailOfRequester),
+                'p-invalid': showErrors && !isValidEmail(entryFormStore.emailOfRequester),
               }"
               required
             />
@@ -121,13 +121,13 @@
             @select="onFileSelect"
             chooseLabel="Choose File"
             class="w-full sm:w-auto"
-            :class="{ 'p-invalid': showErrors && !formStoreEntryToPremises.src }"
+            :class="{ 'p-invalid': showErrors && !entryFormStore.src }"
           />
 
-          <div v-if="formStoreEntryToPremises.src" class="mt-4 sm:mt-0">
+          <div v-if="entryFormStore.src" class="mt-4 sm:mt-0">
             <img
-              :key="formStoreEntryToPremises.src"
-              :src="formStoreEntryToPremises.src"
+              :key="entryFormStore.src"
+              :src="entryFormStore.src"
               alt="E-Signature Preview"
               class="shadow-md rounded-xl w-full sm:w-32"
               style="filter: grayscale(100%)"
@@ -136,7 +136,7 @@
           <div class="text-sm text-gray-500 mt-2">
             Upload your e-signature (PNG, JPG, JPEG) - Max size: 1MB
             <span class="text-red-500">*</span
-            ><span v-if="showErrors && !formStoreEntryToPremises.src" class="text-red-500 block"
+            ><span v-if="showErrors && !entryFormStore.src" class="text-red-500 block"
               >E-signature is required.</span
             >
           </div>
@@ -149,22 +149,18 @@
             <h2 class="text-xl font-semibold mb-4">List of Person/s Requesting for Entry</h2>
 
             <div
-              v-for="(guest, index) in formStoreEntryToPremises.guests"
+              v-for="(guest, index) in entryFormStore.guests"
               :key="index"
               class="mb-2 flex items-center gap-2"
             >
               <FloatLabel class="flex-1" variant="on">
-                <InputText
-                  id="guest"
-                  v-model="formStoreEntryToPremises.guests[index].name"
-                  class="w-full"
-                />
+                <InputText id="guest" v-model="entryFormStore.guests[index].name" class="w-full" />
                 <label for="guest">Name</label>
               </FloatLabel>
               <FloatLabel class="flex-1" variant="on">
                 <InputText
                   id="project"
-                  v-model="formStoreEntryToPremises.guests[index].project"
+                  v-model="entryFormStore.guests[index].project"
                   class="w-full"
                 />
                 <label for="project">Enter Projects/Work to be done</label>
@@ -172,17 +168,13 @@
               <Button
                 icon="pi pi-times"
                 severity="danger"
-                @click="formStoreEntryToPremises.removeGuest(index)"
-                v-if="formStoreEntryToPremises.guests.length > 1"
+                @click="entryFormStore.removeGuest(index)"
+                v-if="entryFormStore.guests.length > 1"
               />
             </div>
 
             <div class="mt-4 flex gap-2">
-              <Button
-                label="Add Guest"
-                icon="pi pi-plus"
-                @click="formStoreEntryToPremises.addGuest"
-              />
+              <Button label="Add Guest" icon="pi pi-plus" @click="entryFormStore.addGuest" />
             </div>
           </div>
         </div>
@@ -209,7 +201,7 @@ import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { ref, onMounted } from 'vue'
 
 const maxGuests = 20
-const formStoreEntryToPremises = usePremisesFormStore()
+const entryFormStore = usePremisesFormStore()
 const showErrors = ref(false)
 const submitting = ref(false)
 const loading = ref(true)
@@ -228,19 +220,19 @@ function onFileSelect(event) {
 
   if (!validTypes.includes(file.type)) {
     alert('Only PNG, JPG, or JPEG files are allowed.')
-    formStoreEntryToPremises.src = null
+    entryFormStore.src = null
     return
   }
 
   if (file.size > maxSize) {
     alert('Maximum file size is 1MB.')
-    formStoreEntryToPremises.src = null
+    entryFormStore.src = null
     return
   }
 
   const reader = new FileReader()
   reader.onload = (e) => {
-    formStoreEntryToPremises.src = e.target.result
+    entryFormStore.src = e.target.result
   }
   reader.readAsDataURL(file)
 }
@@ -258,7 +250,7 @@ function isValidEmail(email) {
 function submitRequest() {
   showErrors.value = true
 
-  const f = formStoreEntryToPremises
+  const f = entryFormStore
   const errors = []
 
   if (!f.requestingOffice) errors.push('Requesting Office/Unit is required.')
@@ -272,10 +264,7 @@ function submitRequest() {
   }
   if (!f.src) errors.push('E-signature is required.')
 
-  if (
-    !formStoreEntryToPremises.guests.length ||
-    formStoreEntryToPremises.guests.some((g) => !g.name || !g.project)
-  ) {
+  if (!entryFormStore.guests.length || entryFormStore.guests.some((g) => !g.name || !g.project)) {
     errors.push('Each guest must have a name and a project.')
   }
 

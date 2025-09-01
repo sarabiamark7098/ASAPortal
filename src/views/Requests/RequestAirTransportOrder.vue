@@ -25,8 +25,8 @@
             <InputText
               id="requestingOffice"
               class="w-full"
-              v-model="formStoreATO.requestingOffice"
-              :class="{ 'p-invalid': showErrors && !formStoreATO.requestingOffice }"
+              v-model="ATOFormStore.requestingOffice"
+              :class="{ 'p-invalid': showErrors && !ATOFormStore.requestingOffice }"
             />
             <label for="requestingOffice"
               >Requesting Office/Unit <span class="text-red-500">*</span></label
@@ -36,8 +36,8 @@
             <InputText
               id="fundSource"
               class="w-full"
-              v-model="formStoreATO.fundSource"
-              :class="{ 'p-invalid': showErrors && !formStoreATO.fundSource }"
+              v-model="ATOFormStore.fundSource"
+              :class="{ 'p-invalid': showErrors && !ATOFormStore.fundSource }"
             />
             <label for="fundSource">Source of Fund <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -45,8 +45,8 @@
             <DatePicker
               id="dateRequested"
               class="w-full"
-              v-model="formStoreATO.dateRequested"
-              :class="{ 'p-invalid': showErrors && !formStoreATO.dateRequested }"
+              v-model="ATOFormStore.dateRequested"
+              :class="{ 'p-invalid': showErrors && !ATOFormStore.dateRequested }"
               showIcon
               fluid
               iconDisplay="input"
@@ -87,7 +87,7 @@
           <div class="flex-1 flex justify-center">
             <div class="flex items-center gap-6">
               <Checkbox
-                v-model="formStoreATO.roundTrip"
+                v-model="ATOFormStore.roundTrip"
                 inputId="roundTrip"
                 name="roundTrip"
                 value="roundTrip"
@@ -101,7 +101,7 @@
             <div class="flex items-center gap-6">
               <div class="flex items-center gap-6">
                 <Checkbox
-                  v-model="formStoreATO.connectingFlight"
+                  v-model="ATOFormStore.connectingFlight"
                   inputId="connectingFlight"
                   name="connectingFlight"
                   value="connectingFlight"
@@ -264,8 +264,8 @@
             <InputText
               id="requestedBy"
               class="w-full"
-              v-model="formStoreATO.requestedBy"
-              :class="{ 'p-invalid': showErrors && !formStoreATO.requestedBy }"
+              v-model="ATOFormStore.requestedBy"
+              :class="{ 'p-invalid': showErrors && !ATOFormStore.requestedBy }"
             />
             <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -273,8 +273,8 @@
             <InputText
               id="position"
               class="w-full"
-              v-model="formStoreATO.position"
-              :class="{ 'p-invalid': showErrors && !formStoreATO.position }"
+              v-model="ATOFormStore.position"
+              :class="{ 'p-invalid': showErrors && !ATOFormStore.position }"
             />
             <label for="position">Position <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -282,9 +282,9 @@
             <InputMask
               id="contactNo"
               class="w-full"
-              v-model="formStoreATO.contactNo"
+              v-model="ATOFormStore.contactNo"
               mask="0999 999 9999"
-              :class="{ 'p-invalid': showErrors && !formStoreATO.contactNo }"
+              :class="{ 'p-invalid': showErrors && !ATOFormStore.contactNo }"
             />
             <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -292,10 +292,10 @@
           <FloatLabel class="flex-1">
             <InputText
               id="emailOfRequester"
-              v-model="formStoreATO.emailOfRequester"
+              v-model="ATOFormStore.emailOfRequester"
               class="w-full"
               type="email"
-              :class="{ 'p-invalid': showErrors && !isValidEmail(formStoreATO.emailOfRequester) }"
+              :class="{ 'p-invalid': showErrors && !isValidEmail(ATOFormStore.emailOfRequester) }"
               required
             />
             <label for="emailOfRequester"
@@ -379,12 +379,12 @@ import { useAirTravelOrderFormStore } from '@/stores/airTravelOrderFormStore'
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { ref, computed, onMounted } from 'vue'
 
-const formStoreATO = useAirTravelOrderFormStore()
+const ATOFormStore = useAirTravelOrderFormStore()
 
-const flights = computed(() => formStoreATO.flights)
-const guests = computed(() => formStoreATO.guests)
-const specialOrderFileName = computed(() => formStoreATO.specialOrderFileName)
-const travelOrderFileName = computed(() => formStoreATO.travelOrderFileName)
+const flights = computed(() => ATOFormStore.flights)
+const guests = computed(() => ATOFormStore.guests)
+const specialOrderFileName = computed(() => ATOFormStore.specialOrderFileName)
+const travelOrderFileName = computed(() => ATOFormStore.travelOrderFileName)
 
 const maxGuests = 10
 const maxFlights = 10
@@ -401,20 +401,20 @@ onMounted(async () => {
 })
 
 function addGuest() {
-  if (formStoreATO.guests.length < maxGuests) {
-    formStoreATO.guests.push({ name: '' })
+  if (ATOFormStore.guests.length < maxGuests) {
+    ATOFormStore.guests.push({ name: '' })
   }
 }
 
 function removeGuest(index) {
-  if (formStoreATO.guests.length > 1) {
-    formStoreATO.guests.splice(index, 1)
+  if (ATOFormStore.guests.length > 1) {
+    ATOFormStore.guests.splice(index, 1)
   }
 }
 
 function addFlight() {
-  if (formStoreATO.flights.length < maxFlights) {
-    formStoreATO.flights.push({
+  if (ATOFormStore.flights.length < maxFlights) {
+    ATOFormStore.flights.push({
       destination: '',
       dateDeparture: null,
       departureETD: '',
@@ -427,8 +427,8 @@ function addFlight() {
 }
 
 function removeFlight(index) {
-  if (formStoreATO.flights.length > 1) {
-    formStoreATO.flights.splice(index, 1)
+  if (ATOFormStore.flights.length > 1) {
+    ATOFormStore.flights.splice(index, 1)
   }
 }
 
@@ -444,12 +444,12 @@ function isValidEmail(email) {
 const onSpecialOrderSelect = (event) => {
   const file = event.files[0]
   if (!file || file.type === 'application/pdf') {
-    formStoreATO.specialOrderFile = file || null
-    formStoreATO.specialOrderFileName = file?.name || ''
+    ATOFormStore.specialOrderFile = file || null
+    ATOFormStore.specialOrderFileName = file?.name || ''
     showSpecialOrderError.value = false
   } else {
-    formStoreATO.specialOrderFile = null
-    formStoreATO.specialOrderFileName = ''
+    ATOFormStore.specialOrderFile = null
+    ATOFormStore.specialOrderFileName = ''
     showSpecialOrderError.value = true
   }
 }
@@ -457,12 +457,12 @@ const onSpecialOrderSelect = (event) => {
 const onTravelOrderSelect = (event) => {
   const file = event.files[0]
   if (!file || file.type === 'application/pdf') {
-    formStoreATO.travelOrderFile = file || null
-    formStoreATO.travelOrderFileName = file?.name || ''
+    ATOFormStore.travelOrderFile = file || null
+    ATOFormStore.travelOrderFileName = file?.name || ''
     showTravelOrderError.value = false
   } else {
-    formStoreATO.travelOrderFile = null
-    formStoreATO.travelOrderFileName = ''
+    ATOFormStore.travelOrderFile = null
+    ATOFormStore.travelOrderFileName = ''
     showTravelOrderError.value = true
   }
 }
@@ -470,7 +470,7 @@ const onTravelOrderSelect = (event) => {
 const submitRequest = async () => {
   showErrors.value = true
   submitting.value = false
-  const f = formStoreATO
+  const f = ATOFormStore
   const errors = []
 
   // Validate fields

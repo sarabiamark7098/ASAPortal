@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
 import { useTAFormStore } from './TAFormStore'
-import { useVehicleFormStore } from './vehicleFormStore'
+import { useVehicleFormStore } from './vehicleRequestFormStore'
 import { useConferenceFormStore } from './conferenceFormStore'
 import { useAirTravelOrderFormStore } from './airTravelOrderFormStore'
 import { usePremisesFormStore } from './entryToDSWDFormStore'
@@ -47,20 +47,8 @@ export const useTransactionsFormStore = defineStore('transactionForm', {
         this.loading = false
       }
     },
-    async getPaginatedTransactions({ token, page = 1, perPage = 5 }) {
-      const res = await axios.get(`/api/vehicle-requests`, {
-        params: { page, per_page: perPage },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
 
-      return {
-        data: res.data.data, // paginated data
-        total: res.data.total, // total records
-      }
-    },
-    async getVehicleRequests(token, page, perPage, search = '', sortBy = '', sortDir = '') {
+    async getVehicleRequests(token, page, perPage, query = '', sortBy = '', sortDir = '') {
       const response = await axios.get('/api/vehicle-requests', {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -68,9 +56,9 @@ export const useTransactionsFormStore = defineStore('transactionForm', {
         params: {
           page,
           per_page: perPage,
-          search,
+          query,
           sort_by: sortBy,
-          sort_dir: sortDir,
+          sort_order: sortDir,
         },
       })
 

@@ -4,94 +4,170 @@
 
     <div v-if="!loading">
       <h1 class="text-2xl font-bold mb-4">Vehicles Management</h1>
-      <p class="mb-4">Manage vehicles directory.</p>
+      <p class="mb-4">Manage vehicles directory</p>
+      <div class="flex gap-4">
+        <!-- Left Section Placeholder -->
+        <div
+          class="w-1/3 inset-shadow-sm shadow-sm h-[600px] rounded-lg p-5 overflow-y-auto flex flex-col bg-white"
+        >
+          <h3 class="text-lg font-semibold mb-4 sticky top-0 bg-white z-10 pb-2">
+            Vehicle Information
+          </h3>
 
-      <div class="flex flex-col md:flex-row gap-4 md:gap-8">
-        <!-- Sidebar: User Data -->
-        <div class="w-full md:w-1/3">
-          <div class="bg-white shadow-md rounded-lg p-4 md:p-6">
-            <h2 class="text-xl font-bold mb-4">Vehicle Data</h2>
-            <template v-if="selectedUserInfo">
-              <p class="mb-2">
-                First Name: {{ selectedUserInfo?.account_detail?.first_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Middle Name: {{ selectedUserInfo?.account_detail?.middle_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Last Name: {{ selectedUserInfo?.account_detail?.last_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Extension Name: {{ selectedUserInfo?.account_detail?.extension_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Position: {{ selectedUserInfo?.account_detail?.position || 'N/A' }}
-              </p>
-              <p class="mb-2">Email: {{ selectedUserInfo?.email || 'N/A' }}</p>
-              <p class="mb-2">Username: {{ selectedUserInfo?.username || 'N/A' }}</p>
-              <p class="mb-2">
-                Section: {{ selectedUserInfo?.account_detail?.section?.name || 'N/A' }}
-              </p>
-              <p class="mb-2">Role: {{ selectedUserInfo?.role?.name || 'N/A' }}</p>
-            </template>
-            <p v-else class="text-gray-400 italic">Click a user row to view details.</p>
-          </div>
+          <dl class="space-y-2 text-base flex-grow">
+            <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Plate Number:</dt>
+              <dd class="text-green-600">{{ selectedVehicle?.plate_number || 'N/A' }}</dd>
+            </div>
+            <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Model:</dt>
+              <dd class="text-green-600">{{ selectedVehicle?.model || 'N/A' }}</dd>
+            </div>
+            <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Unit Type:</dt>
+              <dd class="text-green-600">{{ selectedVehicle?.unit_type || 'N/A' }}</dd>
+            </div>
+            <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Brand:</dt>
+              <dd class="text-green-600">{{ selectedVehicle?.brand || 'N/A' }}</dd>
+            </div>
+            <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Year Purchased:</dt>
+              <dd class="text-green-600">{{ selectedVehicle?.purchase_year || 'N/A' }}</dd>
+            </div>
+            <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Year Model:</dt>
+              <dd class="text-green-600">{{ selectedVehicle?.model_year || 'N/A' }}</dd>
+            </div>
+            <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Driver:</dt>
+              <dd class="text-green-600">
+                {{ selectedDriver?.full_name || 'N/A' }}
+              </dd>
+            </div>
+            <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Contact Number:</dt>
+              <dd class="text-green-600">{{ selectedDriver?.contact_number || 'N/A' }}</dd>
+            </div>
+            <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Email:</dt>
+              <dd class="text-green-600">{{ selectedDriver?.email || 'N/A' }}</dd>
+            </div>
+          </dl>
+
+          <Button
+            class="mt-4 self-end w-1/2"
+            :disabled="!selectedVehicle"
+            @click="$emit('edit-vehicle', selectedVehicle)"
+          >
+            Update
+          </Button>
         </div>
 
-        <!-- Main: DataTable -->
-        <div class="w-full md:flex-1 overflow-x-auto">
-          <div class="bg-white shadow-md inset-shadow-sm rounded-lg p-4 md:p-6">
-            <DataTable
-              :value="userData"
-              dataKey="id"
-              paginator
-              :rows="5"
-              :rowsPerPageOptions="[5, 10, 20, 50]"
-              :loading="loading2"
-              :filters="filters"
-              filterDisplay="menu"
-              :globalFilterFields="[
-                'account_detail.first_name',
-                'account_detail.middle_name',
-                'account_detail.last_name',
-                'account_detail.extension_name',
-              ]"
-              tableStyle="min-width: 30rem"
-              class="w-full"
-              :emptyMessage="'No users found.'"
-              :responsiveLayout="'scroll'"
-              @rowClick="selectUser"
+        <!-- Right Section - DataTable -->
+        <div class="w-2/3 h-[600px] shadow-sm inset-shadow-sm rounded-lg bg-white">
+          <div class="bg-white rounded-xl h-full relative flex flex-col">
+            <!-- Loading Overlay -->
+            <div
+              v-if="loading2"
+              class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10"
             >
-              <template #header>
-                <div class="flex flex-wrap gap-2 items-center justify-between">
-                  <h4 class="m-0">Manage Vehicles</h4>
-                  <IconField>
-                    <InputIcon>
-                      <i class="pi pi-search" />
-                    </InputIcon>
-                    <InputText v-model="filters['global'].value" placeholder="Search..." />
-                  </IconField>
-                </div>
-              </template>
+              <i class="pi pi-spinner pi-spin text-blue-500 text-3xl" />
+            </div>
 
-              <Column field="account_detail.first_name" header="First Name" />
-              <Column field="account_detail.middle_name" header="Middle Name" />
-              <Column field="account_detail.last_name" header="Last Name" />
-              <Column field="account_detail.extension_name" header="Extension Name" />
+            <!-- Header -->
+            <div
+              class="sticky top-0 z-20 bg-white px-6 pt-6 pb-4 flex items-center justify-between border-b border-gray-200"
+            >
+              <h4 class="text-lg font-semibold">Vehicles</h4>
+              <div class="flex items-center border border-gray-300 rounded-lg px-3 py-1">
+                <i class="pi pi-search mr-2 text-gray-500" />
+                <input
+                  v-model="searchInput"
+                  type="text"
+                  placeholder="Search..."
+                  class="outline-none border-none focus:ring-0 text-sm bg-transparent"
+                  @keydown.enter="triggerSearch"
+                />
+              </div>
+            </div>
 
-              <Column header="Actions" bodyStyle="text-align: center; min-width: 80px;">
-                <template #body="slotProps">
-                  <button
-                    class="border border-blue-500 text-blue-500 p-2 rounded hover:bg-blue-500 hover:text-white transition"
-                    @click.stop="editUser(slotProps.data)"
-                    title="Edit"
-                    aria-label="Edit user"
+            <!-- Table -->
+            <div class="overflow-y-auto flex-1 px-6 pb-4">
+              <table class="w-full min-w-max table-auto border border-gray-200 text-sm">
+                <thead class="bg-white sticky top-0 z-10 shadow-sm">
+                  <tr>
+                    <th
+                      v-for="col in columns"
+                      :key="col.field"
+                      @click="sortBy(col.field)"
+                      class="px-4 py-3 font-semibold text-left cursor-pointer select-none hover:bg-gray-100 transition"
+                    >
+                      <div class="flex items-center">
+                        {{ col.header }}
+                        <i
+                          v-if="sortField === col.field && sortOrder === 1"
+                          class="pi pi-sort-amount-up-alt ml-2 text-xs"
+                        />
+                        <i
+                          v-else-if="sortField === col.field && sortOrder === -1"
+                          class="pi pi-sort-amount-down ml-2 text-xs"
+                        />
+                        <i v-else class="pi pi-sort-alt ml-2 text-xs text-gray-400" />
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="item in vehicles"
+                    :key="item.id"
+                    @click="selectedVehicle = item"
+                    :class="[
+                      'border-b even:bg-gray-50 hover:bg-gray-100 transition cursor-pointer',
+                      selectedVehicle?.id === item.id ? 'bg-blue-50' : '',
+                    ]"
                   >
-                    <i class="pi pi-pencil" style="font-size: 1rem" />
-                  </button>
-                </template>
-              </Column>
-            </DataTable>
+                    <td class="px-4 py-2 w-1">{{ item.model }}</td>
+                    <td class="px-4 py-2 w-1">{{ item.plate_number }}</td>
+                    <td class="px-4 py-2 w-1">{{ item.unit_type }}</td>
+                    <td class="px-4 py-2 w-1">{{ item.brand }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <div
+              class="px-6 pb-6 mt-auto border-t border-gray-200 pt-4 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-700 gap-2"
+            >
+              <p>Showing page {{ currentPage }} of {{ totalPages }}</p>
+              <div class="flex flex-wrap items-center gap-1">
+                <Button
+                  icon="pi pi-angle-left"
+                  outlined
+                  @click="goToPage(currentPage - 1)"
+                  :disabled="currentPage === 1"
+                  class="w-9 h-9 p-0"
+                />
+                <Button
+                  v-for="page in visiblePages"
+                  :key="page"
+                  @click="goToPage(page)"
+                  :label="String(page)"
+                  :outlined="page !== currentPage"
+                  :severity="page === currentPage ? 'primary' : null"
+                  class="w-9 h-9 p-0 text-sm font-medium"
+                />
+                <Button
+                  icon="pi pi-angle-right"
+                  outlined
+                  @click="goToPage(currentPage + 1)"
+                  :disabled="currentPage === totalPages"
+                  class="w-9 h-9 p-0"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -99,71 +175,96 @@
       <!-- Edit Dialog -->
       <Dialog
         v-model:visible="showEditDialog"
-        header="Edit User"
+        header="Edit Vehicle"
         modal
         :closable="true"
         :closeOnEscape="true"
         class="w-[90vw] md:w-[30rem]"
       >
-        <form @submit.prevent="saveUser" class="p-4 space-y-4">
+        <form @submit.prevent="saveVehicle" class="p-4 space-y-4" novalidate>
           <FloatLabel variant="on">
             <InputText
-              id="first"
-              v-model="editedUser.account_detail.first_name"
+              id="vehicle_model"
+              v-model="editedVehicle.model"
               class="w-full"
               required
               autocomplete="given-name"
+              aria-required="true"
             />
-            <label for="first">First Name</label>
+            <label for="vehicle_model">Model</label>
           </FloatLabel>
 
           <FloatLabel variant="on">
             <InputText
-              id="middle"
-              v-model="editedUser.account_detail.middle_name"
-              class="w-full"
-              autocomplete="additional-name"
-            />
-            <label for="middle">Middle Name</label>
-          </FloatLabel>
-
-          <FloatLabel variant="on">
-            <InputText
-              id="last"
-              v-model="editedUser.account_detail.last_name"
+              id="vehicle_plate_number"
+              v-model="editedVehicle.plate_number"
               class="w-full"
               required
-              autocomplete="family-name"
+              autocomplete="off"
+              aria-required="true"
             />
-            <label for="last">Last Name</label>
+            <label for="vehicle_plate_number">Plate Number</label>
           </FloatLabel>
 
           <FloatLabel variant="on">
             <InputText
-              id="email"
-              v-model="editedUser.email"
-              type="email"
+              id="vehicle_unit_type"
+              v-model="editedVehicle.unit_type"
               class="w-full"
               required
-              autocomplete="email"
+              autocomplete="off"
+              aria-required="true"
             />
-            <label for="email">Email</label>
+            <label for="vehicle_unit_type">Unit Type</label>
           </FloatLabel>
 
-          <!-- Add more editable fields as needed -->
-
+          <FloatLabel variant="on">
+            <InputText
+              id="vehicle_brand"
+              v-model="editedVehicle.brand"
+              class="w-full"
+              required
+              autocomplete="off"
+              aria-required="true"
+            />
+            <label for="vehicle_brand">Brand</label>
+          </FloatLabel>
+          <FloatLabel variant="on">
+            <InputText
+              id="vehicle_purchase_year"
+              v-model="editedVehicle.purchase_year"
+              class="w-full"
+              required
+              type="number"
+              autocomplete="off"
+              aria-required="true"
+            />
+            <label for="vehicle_purchase_year">Year Purchased</label>
+          </FloatLabel>
+          <FloatLabel variant="on">
+            <InputText
+              id="vehicle_model_year"
+              v-model="editedVehicle.model_year"
+              class="w-full"
+              required
+              type="number"
+              autocomplete="off"
+              aria-required="true"
+            />
+            <label for="vehicle_model_year">Year Model</label>
+          </FloatLabel>
           <div class="flex justify-end gap-2 mt-4">
             <button
               type="button"
               @click="showEditDialog = false"
-              class="bg-gray-300 px-4 py-2 rounded"
+              class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               :disabled="saving"
-              class="bg-blue-500 text-white px-4 py-2 rounded"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition disabled:opacity-50"
             >
               {{ saving ? 'Saving...' : 'Save' }}
             </button>
@@ -175,84 +276,105 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
-import Dialog from 'primevue/dialog'
-import InputText from 'primevue/inputtext'
-import FloatLabel from 'primevue/floatlabel'
+import { ref, onMounted, computed } from 'vue'
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
-import { useUsersStore } from '@/stores/users'
 import { useAuthStore } from '@/stores/auth'
+import { useVehicleFormStore } from '@/stores/vehicleRequestFormStore'
 
-const auth = useAuthStore()
-const users = useUsersStore()
+const vehicleFormStore = useVehicleFormStore()
+const authStore = useAuthStore()
 const loading = ref(true)
-const loading2 = ref(true)
-const userData = ref([])
+const loading2 = ref(false)
+const selectedVehicle = ref(null)
+// Table interaction refs
+const rows = ref(20)
+const first = ref(0)
+const searchInput = ref('')
+const sortField = ref(null)
+const sortOrder = ref(null)
 
-const selectedUser = ref(null)
 const showEditDialog = ref(false)
 const editedUser = ref({})
-
-const selectedUserInfo = ref(null)
-
-const filters = ref({
-  global: { value: '', matchMode: 'contains' }, 
-})
-
-const selectUser = (event) => {
-  selectedUserInfo.value = event.data
-}
-
-const fetchUsersData = async () => {
-  loading2.value = true
-  try {
-    await users.fetchAllUsers()
-    userData.value = users.userList
-  } catch (error) {
-    console.error('Error fetching user data:', error)
-  } finally {
-    loading2.value = false
-  }
-}
-
-const editUser = (user) => {
-  selectedUser.value = user
-  // Deep copy to avoid mutating the table data directly
-  editedUser.value = JSON.parse(JSON.stringify(user))
-  showEditDialog.value = true
-}
-
 const saving = ref(false)
 
-const saveUser = async () => {
-  saving.value = true
+const viewVehicleInfo = (vehicle) => {
+  selectedVehicle.value = vehicle
+}
+
+const fetchVehiclesData = async () => {
   try {
-    await users.updateUser(selectedUser.value.id, editedUser.value)
-    showEditDialog.value = false
-    await fetchUsersData()
-    // Update sidebar details if the edited user is currently selected
-    if (selectedUserInfo.value?.id === selectedUser.value.id) {
-      selectedUserInfo.value = JSON.parse(JSON.stringify(editedUser.value))
-    }
-  } catch (err) {
-    console.error('Failed to update user:', err)
-  } finally {
-    saving.value = false
+    await vehicleFormStore.fetchAllVehicles()
+  } catch (error) {
+    console.error('Error fetching vehicles data:', error)
   }
 }
+
 onMounted(async () => {
   try {
-    // Simulate API delay and fetch user data
-    await Promise.all([auth.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1500))])
-    fetchUsersData()
+    await Promise.all([authStore.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1500))])
+    await fetchVehiclesData()
   } catch (error) {
-    console.error('Error fetching dashboard data:', error)
+    console.error('Error on mount:', error)
   } finally {
     loading.value = false
   }
 })
+
+const vehicles = computed(() => vehicleFormStore.vehicles)
+const totalRecords = computed(() => vehicleFormStore.totalRecords)
+const totalPages = computed(() => Math.ceil(totalRecords.value / rows.value))
+const currentPage = computed(() => Math.floor(first.value / rows.value) + 1)
+
+const visiblePages = computed(() => {
+  const maxButtons = 5
+  let start = Math.max(1, currentPage.value - 2)
+  let end = Math.min(start + maxButtons - 1, totalPages.value)
+  if (end - start < maxButtons - 1) {
+    start = Math.max(1, end - maxButtons + 1)
+  }
+  return Array.from({ length: end - start + 1 }, (_, i) => start + i)
+})
+
+const columns = [
+  { field: 'model', header: 'Model' },
+  { field: 'plate_number', header: 'Plate Number' },
+  { field: 'unit_type', header: 'Unit Type' },
+  { field: 'brand', header: 'Brand' },
+]
+
+function triggerSearch() {
+  first.value = 0
+  loadRequests(1)
+}
+
+function sortBy(field) {
+  if (sortField.value === field) {
+    sortOrder.value = sortOrder.value === 1 ? -1 : 1
+  } else {
+    sortField.value = field
+    sortOrder.value = 1
+  }
+  loadRequests(currentPage.value)
+}
+
+function goToPage(page) {
+  if (page < 1 || page > totalPages.value) return
+  first.value = (page - 1) * rows.value
+  loadRequests(page)
+}
+
+function loadRequests(page = currentPage.value) {
+  loading2.value = true
+  const search = searchInput.value || ''
+  const sortBy = sortField.value || ''
+  const sortDir = sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : ''
+
+  vehicleFormStore
+    .getVehicles(authStore.token, page, rows.value, search, sortBy, sortDir)
+    .finally(() => {
+      loading2.value = false
+    })
+}
 </script>
 
 <style scoped></style>

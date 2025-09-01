@@ -57,15 +57,14 @@
               :key="item.id"
               class="border-b text-sm even:bg-gray-50 hover:bg-gray-100 transition"
             >
-              <td class="px-4 py-2 whitespace-nowrap">{{ item.date_requested }}</td>
-              <td class="px-4 py-2 whitespace-nowrap">{{ item.control_number }}</td>
-              <td class="px-4 py-2 whitespace-nowrap">{{ item.requesting_office }}</td>
-              <td class="px-4 py-2 whitespace-nowrap">{{ item.transactable_type }}</td>
-              <td class="px-4 py-2 whitespace-nowrap">{{ item.destination }}</td>
-              <td class="px-4 py-2 whitespace-nowrap">
+              <td class="px-4 py-2 w-1">{{ item.date_requested }}</td>
+              <td class="px-4 py-2 w-1">{{ item.control_number }}</td>
+              <td class="px-4 py-2 w-2">{{ item.requesting_office }}</td>
+              <td class="px-4 py-2 w-2">{{ item.transactable_type }}</td>
+              <td class="px-4 py-2 w-1">
                 <Tag :value="toUcWords(item.status)" :severity="getStatusLabel(item.status)" />
               </td>
-              <td class="px-4 py-2 whitespace-nowrap">
+              <td class="px-4 py-2 w-1">
                 <Button icon="pi pi-eye" outlined rounded @click="editTransaction(item)" />
               </td>
             </tr>
@@ -176,12 +175,15 @@ const visiblePages = computed(() => {
   return pages
 })
 
+defineOptions({
+  name: 'Vehicle',
+})
+
 const columns = [
   { field: 'date_requested', header: 'Date Requested' },
   { field: 'control_number', header: 'Control Number' },
   { field: 'requesting_office', header: 'Requesting Office' },
   { field: 'transactable_type', header: 'Type of Request' },
-  { field: 'destination', header: 'Destination' },
   { field: 'status', header: 'Status' },
 ]
 

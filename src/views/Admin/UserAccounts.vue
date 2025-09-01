@@ -9,54 +9,67 @@
       <div class="flex flex-col md:flex-row gap-4 md:gap-8">
         <!-- Sidebar: User Data -->
         <div class="w-full md:w-1/3">
-          <div class="bg-white shadow-md rounded-lg p-4 md:p-6 inset-shadow-sm">
-            <h2 class="text-xl font-bold mb-4">User Data</h2>
-            <template v-if="selectedUserInfo">
-              <p class="mb-2">
-                First Name: {{ selectedUserInfo?.account_detail?.first_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Middle Name: {{ selectedUserInfo?.account_detail?.middle_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Last Name: {{ selectedUserInfo?.account_detail?.last_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Extension Name: {{ selectedUserInfo?.account_detail?.extension_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Position: {{ selectedUserInfo?.account_detail?.position || 'N/A' }}
-              </p>
-              <p class="mb-2">Email: {{ selectedUserInfo?.email || 'N/A' }}</p>
-              <p class="mb-2">Username: {{ selectedUserInfo?.username || 'N/A' }}</p>
-              <p class="mb-2">
-                Section: {{ selectedUserInfo?.account_detail?.section?.name || 'N/A' }}
-              </p>
-              <p class="mb-2">Role: {{ selectedUserInfo?.role?.name || 'N/A' }}</p>
-            </template>
-            <template v-else>
-              <p class="mb-2">
-                First Name: {{ selectedUserInfo?.account_detail?.first_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Middle Name: {{ selectedUserInfo?.account_detail?.middle_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Last Name: {{ selectedUserInfo?.account_detail?.last_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Extension Name: {{ selectedUserInfo?.account_detail?.extension_name || 'N/A' }}
-              </p>
-              <p class="mb-2">
-                Position: {{ selectedUserInfo?.account_detail?.position || 'N/A' }}
-              </p>
-              <p class="mb-2">Email: {{ selectedUserInfo?.email || 'N/A' }}</p>
-              <p class="mb-2">Username: {{ selectedUserInfo?.username || 'N/A' }}</p>
-              <p class="mb-2">
-                Section: {{ selectedUserInfo?.account_detail?.section?.name || 'N/A' }}
-              </p>
-              <p class="mb-2">Role: {{ selectedUserInfo?.role?.name || 'N/A' }}</p>
-            </template>
+          <div class="bg-white shadow-md rounded-lg py-4 md:py-6 inset-shadow-sm">
+            <h2 class="font-bold mb-4 px-5">User Account Details</h2>
+
+            <dl class="space-y-2 px-5 py-2">
+              <div class="flex justify-between border-b border-gray-400 py-1">
+                <dt class="font-semibold">First Name:</dt>
+                <dd class="text-green-600">
+                  {{ selectedUserInfo?.account_detail?.first_name || 'N/A' }}
+                </dd>
+              </div>
+
+              <div class="flex justify-between border-b border-gray-400 py-1">
+                <dt class="font-semibold">Middle Name:</dt>
+                <dd class="text-green-600">
+                  {{ selectedUserInfo?.account_detail?.middle_name || 'N/A' }}
+                </dd>
+              </div>
+
+              <div class="flex justify-between border-b border-gray-400 py-1">
+                <dt class="font-semibold">Last Name:</dt>
+                <dd class="text-green-600">
+                  {{ selectedUserInfo?.account_detail?.last_name || 'N/A' }}
+                </dd>
+              </div>
+
+              <div class="flex justify-between border-b border-gray-400 py-1">
+                <dt class="font-semibold">Extension Name:</dt>
+                <dd class="text-green-600">
+                  {{ selectedUserInfo?.account_detail?.extension_name || 'N/A' }}
+                </dd>
+              </div>
+
+              <div class="flex justify-between border-b border-gray-400 py-1">
+                <dt class="font-semibold">Position:</dt>
+                <dd class="text-green-600">
+                  {{ selectedUserInfo?.account_detail?.position || 'N/A' }}
+                </dd>
+              </div>
+
+              <div class="flex justify-between border-b border-gray-400 py-1">
+                <dt class="font-semibold">Email:</dt>
+                <dd class="text-green-600">{{ selectedUserInfo?.email || 'N/A' }}</dd>
+              </div>
+
+              <div class="flex justify-between border-b border-gray-400 py-1">
+                <dt class="font-semibold">Username:</dt>
+                <dd class="text-green-600">{{ selectedUserInfo?.username || 'N/A' }}</dd>
+              </div>
+
+              <div class="flex justify-between border-b border-gray-400 py-1">
+                <dt class="font-semibold">Section:</dt>
+                <dd class="text-green-600">
+                  {{ selectedUserInfo?.account_detail?.section?.name || 'N/A' }}
+                </dd>
+              </div>
+
+              <div class="flex justify-between border-b border-gray-400 py-1">
+                <dt class="font-semibold">Role:</dt>
+                <dd class="text-green-600">{{ selectedUserInfo?.role?.name || 'N/A' }}</dd>
+              </div>
+            </dl>
           </div>
         </div>
 
@@ -209,7 +222,7 @@ import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { useUsersStore } from '@/stores/users'
 import { useAuthStore } from '@/stores/auth'
 
-const auth = useAuthStore()
+const authStore = useAuthStore()
 const users = useUsersStore()
 const loading = ref(true)
 const loading2 = ref(true)
@@ -269,7 +282,7 @@ const saveUser = async () => {
 onMounted(async () => {
   try {
     // Simulate API delay and fetch user data
-    await Promise.all([auth.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1500))])
+    await Promise.all([authStore.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1500))])
     fetchUsersData()
   } catch (error) {
     console.error('Error fetching dashboard data:', error)

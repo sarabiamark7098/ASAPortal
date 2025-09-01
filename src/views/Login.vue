@@ -133,7 +133,7 @@ const showErrors = ref(false)
 const errorMessage = ref('')
 
 const router = useRouter()
-const auth = useAuthStore()
+const authStore = useAuthStore()
 
 const handleLogin = async () => {
   showErrors.value = false
@@ -147,7 +147,7 @@ const handleLogin = async () => {
   loading.value = true
 
   try {
-    await auth.login({ login: username.value, password: password.value })
+    await authStore.login({ login: username.value, password: password.value })
   } catch (error) {
     errorMessage.value = 'Login failed. Please check your credentials.'
   } finally {

@@ -50,7 +50,7 @@
       <template #end>
         <div class="flex items-center gap-4">
           <span class="text-gray-700 text-sm hidden md:inline"
-            >Welcome{{ auth.userEmail ? ', ' + auth.userEmail : '' }}</span
+            >Welcome{{ authStore.userEmail ? ', ' + authStore.userEmail : '' }}</span
           >
           <Button
             icon="pi pi-sign-out"
@@ -72,7 +72,7 @@ import { ref, computed } from 'vue'
 import { useRouter, RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
-const auth = useAuthStore()
+const authStore = useAuthStore()
 const router = useRouter()
 const logoutLoading = ref(false)
 
@@ -80,7 +80,7 @@ const handleLogout = async () => {
   if (logoutLoading.value) return
   logoutLoading.value = true
   try {
-    await auth.logout()
+    await authStore.logout()
     router.push({ name: 'login' })
   } catch (error) {
     console.error('Logout failed', error)
@@ -132,7 +132,7 @@ const baseMenuItems = [
 
 // Conditionally add Admin View if user is admin
 const menuItems = computed(() => {
-  if (auth.userRole === 'superadmin') {
+  if (authStore.userRole === 'superadmin') {
     return [...baseMenuItems, { label: 'Admin View', to: '/dashboard' }]
   }
   return baseMenuItems

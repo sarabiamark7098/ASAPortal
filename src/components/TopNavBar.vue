@@ -18,10 +18,15 @@
     </div>
 
     <!-- Header / Top Navbar -->
-    <header class="bg-white shadow-md flex items-center justify-between px-4 py-2 z-10">
+    <header
+      :class="[
+        'bg-white shadow-md flex items-center justify-between px-4 py-2 z-30 transition-all duration-300',
+        collapsed ? 'pl-18' : 'pl-74',
+      ]"
+    >
       <div class="flex items-center gap-4">
         <Button
-          icon="pi pi-bars"
+          :icon="collapsed ? 'pi pi-bars' : 'pi pi-caret-left'"
           class="p-button-rounded p-button-text"
           @click="collapsed = !collapsed"
           :aria-label="collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'"
@@ -43,7 +48,7 @@
 
       <div class="flex items-center gap-4">
         <span class="text-gray-700 text-sm hidden md:inline">
-          Welcome{{ auth.userEmail ? ', ' + auth.userEmail : '' }}
+          Welcome{{ authStore.userEmail ? ', ' + authStore.userEmail : '' }}
         </span>
         <button
           class="text-gray-600 hover:text-blue-600 focus:outline-none"
@@ -72,10 +77,13 @@
     <div class="flex flex-1 min-h-0 overflow-hidden">
       <!-- Sidebar -->
       <aside
-        :class="['sidebar', { collapsed }]"
+        :class="[
+          'bg-white border-r border-gray-200 transition-all duration-300 z-40',
+          collapsed ? 'w-16' : 'w-72',
+        ]"
+        class="h-screen fixed top-0 left-0 flex flex-col"
         role="navigation"
         aria-label="Main Navigation"
-        class="z-50"
       >
         <div class="sidebar-header flex items-center justify-between px-4 py-3">
           <span class="inline-flex items-center justify-center gap-2 w-full">
@@ -87,20 +95,6 @@
               />
             </Transition>
           </span>
-          <Button
-            icon="pi pi-angle-left"
-            class="p-button-rounded p-button-text"
-            @click="collapsed = true"
-            v-if="!collapsed"
-            aria-label="Collapse Sidebar"
-          />
-          <Button
-            icon="pi pi-angle-right"
-            class="p-button-rounded p-button-text"
-            @click="collapsed = false"
-            v-if="collapsed"
-            aria-label="Expand Sidebar"
-          />
         </div>
 
         <nav class="flex-grow overflow-y-auto px-3 py-2">
@@ -110,8 +104,10 @@
                 <RouterLink
                   :to="item.to"
                   class="flex items-center gap-2 p-3 rounded hover:bg-[#e0e4ff] transition"
-                  active-class="router-link-active"
-                  exact-active-class="router-link-exact-active"
+                  :class="{
+                    'bg-[#e0e4ff] text-[#283192] font-semibold border-l-4 border-[#283192]':
+                      route.path === item.to,
+                  }"
                 >
                   <i :class="item.icon"></i>
                   <span v-if="!collapsed">{{ item.label }}</span>
@@ -147,10 +143,13 @@
                   <li v-for="(subItem, subIndex) in item.children" :key="subIndex">
                     <RouterLink
                       :to="subItem.to"
-                      class="block p-2 rounded hover:bg-[#e0e4ff] transition"
-                      active-class="router-link-active"
-                      exact-active-class="router-link-exact-active"
+                      class="block p-2 text-sm rounded hover:bg-[#e0e4ff] transition"
+                      :class="{
+                        'bg-[#e0e4ff] text-[#283192] font-semibold border-l-4 border-[#283192]':
+                          route.path === subItem.to,
+                      }"
                     >
+                      <i :class="subItem.icon"></i>
                       {{ subItem.label }}
                     </RouterLink>
                   </li>
@@ -162,7 +161,10 @@
       </aside>
 
       <!-- Main content area -->
-      <main class="flex-1 p-6 overflow-auto">
+      <main
+        :class="['transition-all duration-300 p-6 overflow-auto ml-16', !collapsed && 'ml-64']"
+        class="flex-1"
+      >
         <!-- Replace with your actual routed content or slot -->
         <slot />
       </main>
@@ -179,7 +181,7 @@ import logoIcon from '@/assets/DSWD_Only.png'
 import { RouterLink } from 'vue-router'
 import Button from 'primevue/button'
 
-const auth = useAuthStore()
+const authStore = useAuthStore()
 const logoutLoading = ref(false)
 const collapsed = ref(false)
 const delayedCollapsed = ref(false)
@@ -188,7 +190,7 @@ watch(collapsed, (newVal) => {
   if (newVal) {
     setTimeout(() => {
       delayedCollapsed.value = true
-    }, 300)
+    }, 100)
   } else {
     delayedCollapsed.value = false
   }
@@ -207,21 +209,21 @@ function toggleSubmenu(key) {
 const menuItems = [
   {
     label: 'Dashboard',
-    icon: 'pi pi-home',
+    icon: 'pi pi-chart-bar',
     to: '/dashboard',
-  },
-  {
-    label: 'User Accounts',
-    icon: 'pi pi-users',
-    to: '/useraccounts',
   },
   {
     label: 'Management',
     icon: 'pi pi-cog',
     submenuKey: 'manageMenuOpen',
     children: [
-      { label: "Driver's", to: '/manage/drivers' },
-      { label: 'Vehicles', to: '/manage/vehicles' },
+      {
+        label: 'User Accounts',
+        icon: 'pi pi-users',
+        to: '/manage/useraccounts',
+      },
+      { label: 'Drivers', icon: 'pi pi-users', to: '/manage/drivers' },
+      { label: 'Vehicles', icon: 'pi pi-car', to: '/manage/vehicles' },
     ],
   },
   {
@@ -229,15 +231,15 @@ const menuItems = [
     icon: 'pi pi-ticket',
     submenuKey: 'requestsMenuOpen',
     children: [
-      { label: 'TA Management', to: '/request/ta' },
-      { label: 'Vehicle', to: '/request/vehicle' },
-      { label: 'Maagap Conference Room', to: '/request/maagap' },
-      { label: 'Magiting Conference Room', to: '/request/magiting' },
-      { label: 'Seminar Hall', to: '/request/seminar' },
-      { label: 'Air Travel Orders', to: '/request/ato' },
-      { label: 'Entry To DSWD Premises', to: '/request/entry' },
-      { label: 'Overnight Parking', to: '/request/parking' },
-      { label: 'Janitorial', to: '/request/janitorial' },
+      { label: 'TA Management', icon: 'pi pi-wrench', to: '/request/ta' },
+      { label: 'Vehicle', icon: 'pi pi-car', to: '/request/vehicle' },
+      { label: 'Maagap Conference', icon: 'pi pi-home', to: '/request/maagap' },
+      { label: 'Magiting Conference', icon: 'pi pi-home', to: '/request/magiting' },
+      { label: 'Seminar Hall', icon: 'pi pi-home', to: '/request/seminar' },
+      { label: 'Air Travel Orders', icon: 'pi pi-map-marker', to: '/request/ato' },
+      { label: 'Entry To DSWD Premises', icon: 'pi pi-building', to: '/request/entry' },
+      { label: 'Overnight Parking', icon: 'pi pi-moon', to: '/request/parking' },
+      { label: 'Janitorial', icon: 'pi pi-th-large', to: '/request/janitorial' },
     ],
   },
   {
@@ -281,7 +283,7 @@ watch(
 const handleLogout = async () => {
   logoutLoading.value = true
   try {
-    await auth.logout()
+    await authStore.logout()
   } catch (error) {
     console.error('Logout error:', error)
     alert('Logout failed. Please try again.')
@@ -303,7 +305,9 @@ const handleLogout = async () => {
 header {
   height: 56px;
 }
-
+aside {
+  height: calc(100vh - 56px);
+}
 /* Sidebar */
 .sidebar {
   width: 280px;
@@ -348,8 +352,9 @@ main {
 .fade-leave-to {
   opacity: 0;
 }
-.sidebar nav ul li a.router-link-exact-active {
-  background-color: #e0e4ff; /* light background for contrast */
+.sidebar nav ul li a.router-link-exact-active,
+.sidebar nav ul li a.router-link-active {
+  background-color: #e0e4ff;
   color: #283192;
   font-weight: 600;
   border-left: 4px solid #283192;

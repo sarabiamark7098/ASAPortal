@@ -30,6 +30,12 @@ import Password from 'primevue/password'
 import Tag from 'primevue/tag'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
+import Stepper from 'primevue/stepper';
+import StepList from 'primevue/steplist';
+import StepPanels from 'primevue/steppanels';
+import StepItem from 'primevue/stepitem';
+import Step from 'primevue/step';
+import StepPanel from 'primevue/steppanel';
 
 import axios from 'axios'
 
@@ -70,5 +76,11 @@ app.component('Password', Password)
 app.component('Tag', Tag)
 app.component('IconField', IconField)
 app.component('InputIcon', InputIcon)
+app.component('Stepper', Stepper)
+app.component('StepList', StepList)
+app.component('StepPanels', StepPanels)
+app.component('StepItem', StepItem)
+app.component('Step', Step)
+app.component('StepPanel', StepPanel)
 
 app.mount('#app')
