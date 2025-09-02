@@ -25,12 +25,12 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import { useVehicleFormStore } from '@/stores/vehicleRequestFormStore'
+import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 import ShowPrint from './ShowPrint.vue'
 
-const vehicleFormStore = useVehicleFormStore()
+const vehicleRequestFormStore = useVehicleRequestFormStore()
 
 function VehicleMenu() {
-  vehicleFormStore.printMode = false
+  vehicleRequestFormStore.printMode = false
 }
 </script>

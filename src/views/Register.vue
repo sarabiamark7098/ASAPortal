@@ -306,7 +306,6 @@ const register = async () => {
     authStore.division = null
     authStore.office = null
     authStore.contactNumber = ''
-    // console.log('Registration successful:', payload)
   } catch (err) {
     console.error('Registration error:', err)
     const apiError = err.response?.data

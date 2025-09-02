@@ -62,7 +62,7 @@
               <td class="px-4 py-2 w-2">{{ item.requesting_office }}</td>
               <td class="px-4 py-2 w-2">{{ item.transactable_type }}</td>
               <td class="px-4 py-2 w-1">
-                <Tag :value="toUcWords(item.status)" :severity="getStatusLabel(item.status)" />
+                <Tag :value="toUcWords(item.status === 'no_available' ? 'Not Available' : item.status)" :severity="getStatusLabel(item.status)" />
               </td>
               <td class="px-4 py-2 w-1">
                 <Button icon="pi pi-eye" outlined rounded @click="editTransaction(item)" />
@@ -244,6 +244,8 @@ function getStatusLabel(status) {
     case 'pending':
       return 'warn'
     case 'disapproved':
+      return 'danger'
+    case 'no_available':
       return 'danger'
     default:
       return 'info'

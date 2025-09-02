@@ -56,7 +56,6 @@ export const useAuthStore = defineStore('auth', {
 
     async login(credentials) {
       this.loading = true
-      // console.log('Logging in with credentials:', credentials)
       try {
         await axios.get('/sanctum/csrf-cookie')
         const response = await axios.post('/api/auth/login', credentials)

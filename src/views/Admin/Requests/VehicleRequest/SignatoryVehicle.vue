@@ -1,10 +1,10 @@
 <template>
-  <div v-if="vehicleFormStore.editMode" class="flex flex-col gap-8">
+  <div v-if="vehicleRequestFormStore.editMode" class="flex flex-col gap-8">
     <!-- Row 1 -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1">
         <Select
-          v-model="vehicleFormStore.checkedSignatory"
+          v-model="vehicleRequestFormStore.checkedSignatory"
           :options="signatoryList"
           option-label="full_name"
           option-value="id"
@@ -16,7 +16,7 @@
       </FloatLabel>
       <FloatLabel class="flex-1">
         <Select
-          v-model="vehicleFormStore.requestingSignatory"
+          v-model="vehicleRequestFormStore.requestingSignatory"
           :options="signatoryList"
           option-label="full_name"
           option-value="id"
@@ -33,7 +33,7 @@
       <FloatLabel class="flex-1 position-label">
         <InputText
           class="w-full"
-          :value="vehicleFormStore.checkedSignatoryPosition"
+          :value="vehicleRequestFormStore.checkedSignatoryPosition"
           readonly
           disabled
         />
@@ -43,7 +43,7 @@
       <FloatLabel class="flex-1 position-label">
         <InputText
           class="w-full"
-          :value="vehicleFormStore.requestingSignatoryPosition"
+          :value="vehicleRequestFormStore.requestingSignatoryPosition"
           readonly
           disabled
         />
@@ -55,7 +55,7 @@
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1">
         <Select
-          v-model="vehicleFormStore.approvalSignatory"
+          v-model="vehicleRequestFormStore.approvalSignatory"
           :options="signatoryList"
           option-label="full_name"
           option-value="id"
@@ -67,7 +67,7 @@
       </FloatLabel>
       <FloatLabel class="flex-1">
         <Select
-          v-model="vehicleFormStore.SOSignatory"
+          v-model="vehicleRequestFormStore.SOSignatory"
           :options="signatoryList"
           option-label="full_name"
           option-value="id"
@@ -84,7 +84,7 @@
       <FloatLabel class="flex-1 position-label">
         <InputText
           class="w-full"
-          :value="vehicleFormStore.approvalSignatoryPosition"
+          :value="vehicleRequestFormStore.approvalSignatoryPosition"
           readonly
           disabled
         />
@@ -92,17 +92,17 @@
       </FloatLabel>
 
       <FloatLabel class="flex-1 position-label">
-        <InputText class="w-full" :value="vehicleFormStore.SOSignatoryPosition" readonly disabled />
+        <InputText class="w-full" :value="vehicleRequestFormStore.SOSignatoryPosition" readonly disabled />
         <label>Position</label>
       </FloatLabel>
     </div>
   </div>
-  <div v-if="vehicleFormStore.editModeCNAS" class="flex flex-col gap-8">
+  <div v-if="vehicleRequestFormStore.editModeCNAS" class="flex flex-col gap-8">
     <!-- Row 1 -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1">
         <Select
-          v-model="vehicleFormStore.checkedSignatory"
+          v-model="vehicleRequestFormStore.checkedSignatory"
           :options="signatoryList"
           option-label="full_name"
           option-value="id"
@@ -114,7 +114,7 @@
       </FloatLabel>
       <FloatLabel class="flex-1">
         <Select
-          v-model="vehicleFormStore.approvalSignatory"
+          v-model="vehicleRequestFormStore.approvalSignatory"
           :options="signatoryList"
           option-label="full_name"
           option-value="id"
@@ -131,7 +131,7 @@
       <FloatLabel class="flex-1 position-label">
         <InputText
           class="w-full"
-          :value="vehicleFormStore.checkedSignatoryPosition"
+          :value="vehicleRequestFormStore.checkedSignatoryPosition"
           readonly
           disabled
         />
@@ -140,7 +140,7 @@
       <FloatLabel class="flex-1 position-label">
         <InputText
           class="w-full"
-          :value="vehicleFormStore.approvalSignatoryPosition"
+          :value="vehicleRequestFormStore.approvalSignatoryPosition"
           readonly
           disabled
         />
@@ -152,7 +152,7 @@
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1">
         <Select
-          v-model="vehicleFormStore.CNASSignatory"
+          v-model="vehicleRequestFormStore.CNASSignatory"
           :options="signatoryList"
           option-label="full_name"
           option-value="id"
@@ -169,7 +169,7 @@
       <FloatLabel class="flex-1 position-label">
         <InputText
           class="w-full"
-          :value="vehicleFormStore.CNASSignatoryPosition"
+          :value="vehicleRequestFormStore.CNASSignatoryPosition"
           readonly
           disabled
         />
@@ -182,11 +182,11 @@
 <script setup>
 import { ref, onMounted, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useVehicleFormStore } from '@/stores/vehicleRequestFormStore'
+import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 import { useAuthStore } from '@/stores/auth'
 import { useDropdownStore } from '@/stores/dropdown'
 
-const vehicleFormStore = useVehicleFormStore()
+const vehicleRequestFormStore = useVehicleRequestFormStore()
 const dropdownStore = useDropdownStore()
 const { signatoryList } = storeToRefs(dropdownStore)
 const { fetchSignatories } = dropdownStore
@@ -200,20 +200,20 @@ onMounted(async () => {
 watchEffect(() => {
   const list = signatoryList.value || []
 
-  const checked = list.find((s) => s.id == vehicleFormStore.checkedSignatory)
-  vehicleFormStore.checkedSignatoryPosition = checked ? checked.position : ''
+  const checked = list.find((s) => s.id == vehicleRequestFormStore.checkedSignatory)
+  vehicleRequestFormStore.checkedSignatoryPosition = checked ? checked.position : ''
 
-  const to = list.find((s) => s.id == vehicleFormStore.requestingSignatory)
-  vehicleFormStore.requestingSignatoryPosition = to ? to.position : ''
+  const to = list.find((s) => s.id == vehicleRequestFormStore.requestingSignatory)
+  vehicleRequestFormStore.requestingSignatoryPosition = to ? to.position : ''
 
-  const approval = list.find((s) => s.id == vehicleFormStore.approvalSignatory)
-  vehicleFormStore.approvalSignatoryPosition = approval ? approval.position : ''
+  const approval = list.find((s) => s.id == vehicleRequestFormStore.approvalSignatory)
+  vehicleRequestFormStore.approvalSignatoryPosition = approval ? approval.position : ''
 
-  const so = list.find((s) => s.id == vehicleFormStore.SOSignatory)
-  vehicleFormStore.SOSignatoryPosition = so ? so.position : ''
+  const so = list.find((s) => s.id == vehicleRequestFormStore.SOSignatory)
+  vehicleRequestFormStore.SOSignatoryPosition = so ? so.position : ''
 
-  const cnas = list.find((s) => s.id == vehicleFormStore.CNASSignatory)
-  vehicleFormStore.CNASSignatoryPosition = cnas ? cnas.position : ''
+  const cnas = list.find((s) => s.id == vehicleRequestFormStore.CNASSignatory)
+  vehicleRequestFormStore.CNASSignatoryPosition = cnas ? cnas.position : ''
 })
 </script>
 <style scoped>
