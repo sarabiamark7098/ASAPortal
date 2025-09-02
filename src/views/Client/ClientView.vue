@@ -74,15 +74,23 @@
           <p class="text-xl font-semibold">Menu</p>
 
           <div class="flex flex-col gap-2 mt-2 text-lg">
-            <RouterLink to="/request-forms" class="text-gray-600 hover:underline">Request Forms</RouterLink>
-            <RouterLink to="/view-requests" class="text-gray-600 hover:underline">View Requests</RouterLink>
-            <RouterLink to="/calendar-views" class="text-gray-600 hover:underline">Calendar Views</RouterLink>
+            <RouterLink to="/request-forms" class="text-gray-600 hover:underline"
+              >Request Forms</RouterLink
+            >
+            <RouterLink to="/view-requests" class="text-gray-600 hover:underline"
+              >View Requests</RouterLink
+            >
+            <RouterLink to="/calendar-views" class="text-gray-600 hover:underline"
+              >Calendar Views</RouterLink
+            >
           </div>
         </div>
         <div class="flex-12">
           <p class="text-xl font-semibold">Resources</p>
           <div class="flex flex-col gap-2 mt-2 text-lg">
-            <RouterLink to="/generalforms" class="text-gray-600 hover:underline">General Forms</RouterLink>
+            <RouterLink to="/generalforms" class="text-gray-600 hover:underline"
+              >General Forms</RouterLink
+            >
           </div>
         </div>
         <div class="flex-24">

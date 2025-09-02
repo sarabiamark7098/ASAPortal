@@ -57,11 +57,10 @@
 
           <Button
             class="mt-4 self-end w-1/2"
+            label="Update"
             :disabled="!selectedVehicle"
             @click="$emit('edit-vehicle', selectedVehicle)"
-          >
-            Update
-          </Button>
+          />
         </div>
 
         <!-- Right Section - DataTable -->
@@ -254,20 +253,18 @@
             <label for="vehicle_model_year">Year Model</label>
           </FloatLabel>
           <div class="flex justify-end gap-2 mt-4">
-            <button
+            <Button
               type="button"
+              label="Cancel"
               @click="showEditDialog = false"
               class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded transition"
-            >
-              Cancel
-            </button>
-            <button
+            />
+            <Button
               type="submit"
+              :label="saving ? 'Saving...' : 'Save'"
               :disabled="saving"
               class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition disabled:opacity-50"
-            >
-              {{ saving ? 'Saving...' : 'Save' }}
-            </button>
+            />
           </div>
         </form>
       </Dialog>
@@ -279,9 +276,9 @@
 import { ref, onMounted, computed } from 'vue'
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { useAuthStore } from '@/stores/auth'
-import { useVehicleFormStore } from '@/stores/vehicleRequestFormStore'
+import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 
-const vehicleFormStore = useVehicleFormStore()
+const vehicleRequestFormStore = useVehicleRequestFormStore()
 const authStore = useAuthStore()
 const loading = ref(true)
 const loading2 = ref(false)
@@ -303,7 +300,7 @@ const viewVehicleInfo = (vehicle) => {
 
 const fetchVehiclesData = async () => {
   try {
-    await vehicleFormStore.fetchAllVehicles()
+    await vehicleRequestFormStore.fetchAllVehicles()
   } catch (error) {
     console.error('Error fetching vehicles data:', error)
   }
@@ -320,8 +317,8 @@ onMounted(async () => {
   }
 })
 
-const vehicles = computed(() => vehicleFormStore.vehicles)
-const totalRecords = computed(() => vehicleFormStore.totalRecords)
+const vehicles = computed(() => vehicleRequestFormStore.vehicles)
+const totalRecords = computed(() => vehicleRequestFormStore.totalRecords)
 const totalPages = computed(() => Math.ceil(totalRecords.value / rows.value))
 const currentPage = computed(() => Math.floor(first.value / rows.value) + 1)
 
@@ -369,7 +366,7 @@ function loadRequests(page = currentPage.value) {
   const sortBy = sortField.value || ''
   const sortDir = sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : ''
 
-  vehicleFormStore
+  vehicleRequestFormStore
     .getVehicles(authStore.token, page, rows.value, search, sortBy, sortDir)
     .finally(() => {
       loading2.value = false

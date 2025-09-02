@@ -222,6 +222,7 @@ const menuItems = [
         icon: 'pi pi-users',
         to: '/manage/useraccounts',
       },
+      { label: 'Signatories', icon: 'pi pi-users', to: '/manage/signatories' },
       { label: 'Drivers', icon: 'pi pi-users', to: '/manage/drivers' },
       { label: 'Vehicles', icon: 'pi pi-car', to: '/manage/vehicles' },
     ],

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
 
-export const useDriversFormStore = defineStore('driversForm', {
+export const useDriverFormStore = defineStore('driversForm', {
   state: () => ({
     first_name: '',
     middle_name: '',
@@ -46,23 +46,25 @@ export const useDriversFormStore = defineStore('driversForm', {
       this.email = ''
       this.contact_number = ''
       this.selectedDriver = null
-
-      this.loading = true
-      this.loading2 = false
-      this.rows = 20
-      this.first = 0
-      this.searchInput = ''
-      this.sortField = null
-      this.sortOrder = null
-
-      this.submitting = false
-
-      this.addDriver = false
-      this.updateDriver = false
     },
+
+    setDriver(driver) {
+      this.updateDriver = true
+      this.first_name = driver.first_name
+      this.middle_name = driver.middle_name
+      this.last_name = driver.last_name
+      this.extension_name = driver.extension_name
+      this.position = driver.position
+      this.official_station = driver.official_station
+      this.designation = driver.designation
+      this.email = driver.email
+      this.contact_number = driver.contact_number
+    },
+
     async getDriversList() {
       try {
         const authStore = useAuthStore()
+        this.loading = true
         const response = await axios.get('/api/drivers', {
           headers: { Authorization: `Bearer ${authStore.token}` },
         })
@@ -74,7 +76,7 @@ export const useDriversFormStore = defineStore('driversForm', {
         this.loading = false
       }
     },
-    async getDrivers() {
+    async getDrivers(token, page, perPage, query = '', sortBy = '', sortDir = '') {
       const authStore = useAuthStore()
       const response = await axios.get('/api/drivers', {
         headers: { Authorization: `Bearer ${authStore.token}` },
@@ -86,9 +88,43 @@ export const useDriversFormStore = defineStore('driversForm', {
           sort_order: sortDir,
         },
       })
-      
       this.driverList = response.data.data
       this.totalRecords = response.data.total
+    },
+
+    async submitForm() {
+      try {
+        this.submitting = true
+        const authStore = useAuthStore()
+        const payload = {
+          first_name: this.first_name,
+          middle_name: this.middle_name,
+          last_name: this.last_name,
+          extension_name: this.extension_name,
+          position: this.position,
+          designation: this.designation,
+          official_station: this.official_station,
+          email: this.email,
+          contact_number: this.contact_number,
+        }
+        if (this.addDriver) {
+          await axios.post('/api/drivers', payload, {
+            headers: { Authorization: `Bearer ${authStore.token}` },
+          })
+        } else {
+          await axios.put(`/api/drivers/${this.selectedDriver.id}`, payload, {
+            headers: { Authorization: `Bearer ${authStore.token}` },
+          })
+        }
+        setTimeout(() => {
+          this.resetForm() // clear local state if needed
+        }, 2000)
+      } catch (error) {
+        console.error('Failed to submit form:', error)
+        throw error
+      } finally {
+        this.submitting = false
+      }
     },
   },
 })

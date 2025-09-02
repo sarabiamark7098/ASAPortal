@@ -82,20 +82,20 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useVehicleFormStore } from '@/stores/vehicleRequestFormStore'
+import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 import { useAuthStore } from '@/stores/auth'
 import PreviewVehicle from './PreviewVehicle.vue'
 import SignatoryVehicle from './SignatoryVehicle.vue'
 import VehicleSelection from './VehicleSelection.vue'
 import ShowPrint from './ShowPrint.vue'
 
-const vehicleFormStore = useVehicleFormStore()
+const vehicleRequestFormStore = useVehicleRequestFormStore()
 const authStore = useAuthStore()
 
 const submitting = ref(false)
 
 function VehicleMenu() {
-  vehicleFormStore.editMode = false
+  vehicleRequestFormStore.editMode = false
 }
 
 function Done() {
@@ -105,23 +105,23 @@ function Done() {
 }
 
 const handleSubmit = (activateCallback) => {
-  vehicleFormStore.showErrors = true
+  vehicleRequestFormStore.showErrors = true
 
   const errors = []
 
-  if (!vehicleFormStore.checkedSignatory) {
+  if (!vehicleRequestFormStore.checkedSignatory) {
     errors.push('Checked By is required')
   }
-  if (!vehicleFormStore.requestingSignatory) {
+  if (!vehicleRequestFormStore.requestingSignatory) {
     errors.push('Requesting Officer is required')
   }
-  if (!vehicleFormStore.approvalSignatory) {
+  if (!vehicleRequestFormStore.approvalSignatory) {
     errors.push('Request Approval is required')
   }
-  if (!vehicleFormStore.SOSignatory) {
+  if (!vehicleRequestFormStore.SOSignatory) {
     errors.push('Special Order Approval is required')
   }
-  if (!vehicleFormStore.vehicleAssigned) {
+  if (!vehicleRequestFormStore.vehicleAssigned) {
     errors.push('Assignment of vehicle is required')
   }
 
@@ -130,19 +130,19 @@ const handleSubmit = (activateCallback) => {
     return
   }
 
-  vehicleFormStore.submitting = true
+  vehicleRequestFormStore.submitting = true
 
   setTimeout(async () => {
     try {
-      await vehicleFormStore.submitApprovalForm(vehicleFormStore.selectedRequest.id, 'Available')
+      await vehicleRequestFormStore.submitApprovalForm(vehicleRequestFormStore.selectedRequest.id, 'Available')
       alert('Form successfully submitted!')
       activateCallback('4')
-      vehicleFormStore.resetForm()
+      vehicleRequestFormStore.resetForm()
     } catch (error) {
       console.error('Form submission failed:', error)
       alert('There was an error submitting the form. Please try again.')
     } finally {
-      vehicleFormStore.submitting = false
+      vehicleRequestFormStore.submitting = false
     }
   }, 1000)
 }

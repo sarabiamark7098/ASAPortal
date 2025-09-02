@@ -5,8 +5,8 @@
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1">
         <Select
-          v-model="vehicleFormStore.vehicleAssigned"
-          :options="vehicleOptions"
+          v-model="vehicleRequestFormStore.vehicleAssigned"
+          :options="vehicleRequestFormStore.vehicleOptions"
           option-label="label"
           option-value="value"
           id="platenumber"
@@ -19,7 +19,7 @@
         <InputText
           class="w-full"
           id="vehiclemodel"
-          :value="vehicleFormStorevehiclemodel"
+          :value="vehicleRequestFormStore.vehiclemodel"
           readonly
           disabled
         />
@@ -29,14 +29,14 @@
     <!-- Row 2 -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1 label">
-        <InputText class="w-full" id="brand" :value="vehicleFormStore.brand" readonly disabled />
+        <InputText class="w-full" id="brand" :value="vehicleRequestFormStore.brand" readonly disabled />
         <label for="brand">Brand</label>
       </FloatLabel>
       <FloatLabel class="flex-1 label">
         <InputText
           class="w-full"
           id="unitType"
-          :value="vehicleFormStore.unitType"
+          :value="vehicleRequestFormStore.unitType"
           readonly
           disabled
         />
@@ -51,7 +51,7 @@
         <InputText
           class="w-full"
           id="last_name"
-          :value="vehicleFormStore.last_name"
+          :value="vehicleRequestFormStore.last_name"
           readonly
           disabled
         />
@@ -61,7 +61,7 @@
         <InputText
           class="w-full"
           id="first_name"
-          :value="vehicleFormStore.first_name"
+          :value="vehicleRequestFormStore.first_name"
           readonly
           disabled
         />
@@ -75,7 +75,7 @@
         <InputText
           class="w-full"
           id="driverposition"
-          :value="vehicleFormStore.driver_position"
+          :value="vehicleRequestFormStore.driver_position"
           readonly
           disabled
         />
@@ -85,7 +85,7 @@
         <InputText
           class="w-full"
           id="official_station"
-          :value="official_station"
+          :value="vehicleRequestFormStore.official_station"
           readonly
           disabled
         />
@@ -96,14 +96,14 @@
     <!-- Row 5 -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1 label">
-        <InputText class="w-full" id="email" :value="vehicleFormStore.email" readonly disabled />
+        <InputText class="w-full" id="email" :value="vehicleRequestFormStore.email" readonly disabled />
         <label for="email">Email</label>
       </FloatLabel>
       <FloatLabel class="flex-1 label">
         <InputText
           class="w-full"
           id="contact_number"
-          :value="vehicleFormStore.contact_number"
+          :value="vehicleRequestFormStore.contact_number"
           readonly
           disabled
         />
@@ -115,42 +115,40 @@
 
 <script setup>
 import { onMounted, watchEffect } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useVehicleFormStore } from '@/stores/vehicleRequestFormStore'
+import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 import { useAuthStore } from '@/stores/auth'
 import { useDropdownStore } from '@/stores/dropdown'
 
-const vehicleFormStore = useVehicleFormStore()
+const vehicleRequestFormStore = useVehicleRequestFormStore()
 const authStore = useAuthStore()
 const dropdownStore = useDropdownStore()
-const { vehicleList } = storeToRefs(dropdownStore)
-const { fetchVehicleAssignments } = dropdownStore
 
 onMounted(async () => {
-  await fetchVehicleAssignments(authStore.token)
+  await dropdownStore.fetchVehicleAssignments(authStore.token)
 })
 
 // Update options and selected vehicle reactively
 watchEffect(() => {
-  vehicleOptions.value = (vehicleList.value?.data || []).map((a) => ({
+  vehicleRequestFormStore.vehicleOptions = (dropdownStore.vehicle?.data || []).map((a) => ({
     label: a.vehicle.plate_number,
     value: a.id,
     original: a,
   }))
 
-  vehicleFormStore.selectedVehicle =
-    vehicleOptions.value.find((v) => v.value === vehicleFormStore.vehicleAssigned)?.original || null
+  vehicleRequestFormStore.selectedVehicle =
+    vehicleRequestFormStore.vehicleOptions.find((v) => v.value === vehicleRequestFormStore.vehicleAssigned)
+      ?.original || null
 
-  vehicleFormStore.vehiclemodel = vehicleFormStore.selectedVehicle?.vehicle.model || ''
-  vehicleFormStore.brand = vehicleFormStore.selectedVehicle?.vehicle.brand || ''
-  vehicleFormStore.unitType = vehicleFormStore.selectedVehicle?.vehicle.unit_type || ''
-  vehicleFormStore.last_name = vehicleFormStore.selectedVehicle?.driver.last_name || ''
-  vehicleFormStore.first_name = vehicleFormStore.selectedVehicle?.driver.first_name || ''
-  vehicleFormStore.driver_position = vehicleFormStore.selectedVehicle?.driver.position || ''
-  vehicleFormStore.official_station =
-    vehicleFormStore.selectedVehicle?.driver.official_station || ''
-  vehicleFormStore.email = vehicleFormStore.selectedVehicle?.driver.email || ''
-  vehicleFormStore.contact_number = vehicleFormStore.selectedVehicle?.driver.contact_number || ''
+  vehicleRequestFormStore.vehiclemodel = vehicleRequestFormStore.selectedVehicle?.vehicle.model || ''
+  vehicleRequestFormStore.brand = vehicleRequestFormStore.selectedVehicle?.vehicle.brand || ''
+  vehicleRequestFormStore.unitType = vehicleRequestFormStore.selectedVehicle?.vehicle.unit_type || ''
+  vehicleRequestFormStore.last_name = vehicleRequestFormStore.selectedVehicle?.driver.last_name || ''
+  vehicleRequestFormStore.first_name = vehicleRequestFormStore.selectedVehicle?.driver.first_name || ''
+  vehicleRequestFormStore.driver_position = vehicleRequestFormStore.selectedVehicle?.driver.position || ''
+  vehicleRequestFormStore.official_station =
+    vehicleRequestFormStore.selectedVehicle?.driver.official_station || ''
+  vehicleRequestFormStore.email = vehicleRequestFormStore.selectedVehicle?.driver.email || ''
+  vehicleRequestFormStore.contact_number = vehicleRequestFormStore.selectedVehicle?.driver.contact_number || ''
 })
 </script>
 

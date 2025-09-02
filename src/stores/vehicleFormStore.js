@@ -1,42 +1,24 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
-import dayjs from 'dayjs'
 
-export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
+export const useVehicleFormStore = defineStore('vehicleForm', {
   state: () => ({
-    requestingOffice: '',
-    purpose: '',
-    passengers: '',
-    dateNeeded: null,
-    dateEnding: null,
-    startTime: null,
-    placeOfTravel: '',
-    requestedBy: '',
-    position: '',
-    contactNo: '',
-    emailOfRequester: '',
-    src: '',
+    plateNumber: '',
+    vehicleModel: '',
+    brand: '',
+    unitType: '',
+    lastName: '',
+    firstName: '',
+    driverPosition: '',
+    officialStation: '',
+    email: '',
+    contactNumber: '',
     vehicleList: [],
-    selectedRequest: '',
+    selectedVehicle: '',
     loading: false,
     loading2: false,
-    editMode: false,
-    editModeCNAS: false,
-    printMode: false,
     error: null,
-
-    checkedSignatory: '',
-    requestingSignatory: '',
-    approvalSignatory: '',
-    SOSignatory: '',
-    CNASSignatory: '',
-
-    vehicleAssigned: '',
-
-    approveDisapprove: '',
-
-    editingRequest: null,
 
     // Table interaction refs
     rows: 20,
@@ -49,24 +31,6 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
     visible: false,
     submitting: false,
     showErrors: false,
-
-    checkedSignatoryPosition: '',
-    requestingSignatoryPosition: '',
-    approvalSignatoryPosition: '',
-    SOSignatoryPosition: '',
-    CNASSignatoryPosition: '',
-
-    vehicleOptions: [],
-    selectedVehicle: null,
-    vehiclemodel: '',
-    brand: '',
-    unitType: '',
-    last_name: '',
-    first_name: '',
-    driver_position: '',
-    official_station: '',
-    email: '',
-    contact_number: '',
   }),
   getters: {
     isComplete: (state) =>
@@ -249,6 +213,19 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
           query,
           sort_by: sortBy,
           sort_order: sortDir,
+        },
+      })
+      this.vehicleRequests = response.data.data
+      this.totalRecords = response.data.total
+    },
+
+    async getApprovedVehicleRequestsEachMonth(token, query = '') {
+      const response = await axios.get('/api/vehicle-requests', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          query,
         },
       })
       this.vehicleRequests = response.data.data

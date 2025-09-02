@@ -118,14 +118,13 @@
 
               <Column header="Actions" bodyStyle="text-align: center; min-width: 80px;">
                 <template #body="slotProps">
-                  <button
+                  <Button
                     class="border border-blue-500 text-blue-500 p-2 rounded hover:bg-blue-500 hover:text-white transition"
+                    icon="pi pi-pencil"
                     @click.stop="editUser(slotProps.data)"
                     title="Edit"
                     aria-label="Edit user"
-                  >
-                    <i class="pi pi-pencil" style="font-size: 1rem" />
-                  </button>
+                  />
                 </template>
               </Column>
             </DataTable>
@@ -190,20 +189,18 @@
           <!-- Add more editable fields as needed -->
 
           <div class="flex justify-end gap-2 mt-4">
-            <button
+            <Button
               type="button"
+              label="Cancel"
               @click="showEditDialog = false"
               class="bg-gray-300 px-4 py-2 rounded"
-            >
-              Cancel
-            </button>
-            <button
+            />
+            <Button
               type="submit"
+              :label="saving ? 'Saving...' : 'Save'"
               :disabled="saving"
               class="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              {{ saving ? 'Saving...' : 'Save' }}
-            </button>
+            />
           </div>
         </form>
       </Dialog>

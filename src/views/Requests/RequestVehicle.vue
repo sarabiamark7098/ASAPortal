@@ -35,8 +35,8 @@
             <InputText
               id="requestingOffice"
               class="w-full"
-              v-model="vehicleFormStore.requestingOffice"
-              :class="{ 'p-invalid': showErrors && !vehicleFormStore.requestingOffice }"
+              v-model="vehicleRequestFormStore.requestingOffice"
+              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.requestingOffice }"
             />
             <label for="requestingOffice"
               >Requesting Office/Unit <span class="text-red-500">*</span></label
@@ -47,8 +47,8 @@
             <InputText
               id="purpose"
               class="w-full"
-              v-model="vehicleFormStore.purpose"
-              :class="{ 'p-invalid': showErrors && !vehicleFormStore.purpose }"
+              v-model="vehicleRequestFormStore.purpose"
+              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.purpose }"
             />
             <label for="purpose">Purpose of Trip <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -60,8 +60,8 @@
             <Textarea
               id="passengers"
               class="w-full"
-              v-model="vehicleFormStore.passengers"
-              :class="{ 'p-invalid': showErrors && !vehicleFormStore.passengers }"
+              v-model="vehicleRequestFormStore.passengers"
+              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.passengers }"
               autoResize
               rows="2"
             />
@@ -75,8 +75,8 @@
             <DatePicker
               id="dateNeeded"
               class="w-full"
-              v-model="vehicleFormStore.dateNeeded"
-              :class="{ 'p-invalid': showErrors && !vehicleFormStore.dateNeeded }"
+              v-model="vehicleRequestFormStore.dateNeeded"
+              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.dateNeeded }"
               showIcon
               fluid
               iconDisplay="input"
@@ -88,8 +88,8 @@
             <DatePicker
               id="startTime"
               class="w-full"
-              v-model="vehicleFormStore.startTime"
-              :class="{ 'p-invalid': showErrors && !vehicleFormStore.startTime }"
+              v-model="vehicleRequestFormStore.startTime"
+              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.startTime }"
               showIcon
               fluid
               hourFormat="12"
@@ -107,10 +107,10 @@
             <DatePicker
               id="dateEnding"
               class="w-full"
-              v-model="vehicleFormStore.dateEnding"
+              v-model="vehicleRequestFormStore.dateEnding"
               :class="[
                 'w-full',
-                (showErrors && !vehicleFormStore.dateEnding) || isDateInvalid
+                (showErrors && !vehicleRequestFormStore.dateEnding) || isDateInvalid
                   ? 'p-invalid border border-red-200 ring-1 ring-red-500 focus:ring-red-500 rounded-lg'
                   : '',
               ]"
@@ -128,8 +128,8 @@
             <Textarea
               id="placeOfTravel"
               class="w-full"
-              v-model="vehicleFormStore.placeOfTravel"
-              :class="{ 'p-invalid': showErrors && !vehicleFormStore.placeOfTravel }"
+              v-model="vehicleRequestFormStore.placeOfTravel"
+              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.placeOfTravel }"
               autoResize
               rows="2"
             />
@@ -143,8 +143,8 @@
             <InputText
               id="requestedBy"
               class="w-full"
-              v-model="vehicleFormStore.requestedBy"
-              :class="{ 'p-invalid': showErrors && !vehicleFormStore.requestedBy }"
+              v-model="vehicleRequestFormStore.requestedBy"
+              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.requestedBy }"
             />
             <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -152,8 +152,8 @@
             <InputText
               id="position"
               class="w-full"
-              v-model="vehicleFormStore.position"
-              :class="{ 'p-invalid': showErrors && !vehicleFormStore.position }"
+              v-model="vehicleRequestFormStore.position"
+              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.position }"
             />
             <label for="position">Position <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -161,9 +161,9 @@
             <InputMask
               id="contactNo"
               class="w-full"
-              v-model="vehicleFormStore.contactNo"
+              v-model="vehicleRequestFormStore.contactNo"
               mask="0999 999 9999"
-              :class="{ 'p-invalid': showErrors && !vehicleFormStore.contactNo }"
+              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.contactNo }"
             />
             <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
           </FloatLabel>
@@ -171,11 +171,11 @@
           <FloatLabel class="flex-1">
             <InputText
               id="emailOfRequester"
-              v-model="vehicleFormStore.emailOfRequester"
+              v-model="vehicleRequestFormStore.emailOfRequester"
               class="w-full"
               type="email"
               :class="{
-                'p-invalid': showErrors && !isValidEmail(vehicleFormStore.emailOfRequester),
+                'p-invalid': showErrors && !isValidEmail(vehicleRequestFormStore.emailOfRequester),
               }"
               required
             />
@@ -197,13 +197,13 @@
             @select="onFileSelect"
             chooseLabel="Choose File"
             class="w-full sm:w-auto"
-            :class="{ 'p-invalid': showErrors && !vehicleFormStore.src }"
+            :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.src }"
           />
 
-          <div v-if="vehicleFormStore.src" class="mt-4 sm:mt-0">
+          <div v-if="vehicleRequestFormStore.src" class="mt-4 sm:mt-0">
             <img
-              :key="vehicleFormStore.src"
-              :src="vehicleFormStore.src"
+              :key="vehicleRequestFormStore.src"
+              :src="vehicleRequestFormStore.src"
               alt="E-Signature Preview"
               class="shadow-md rounded-xl w-full sm:w-32"
               style="filter: grayscale(100%)"
@@ -212,7 +212,7 @@
           <div class="text-sm text-gray-500 mt-2">
             Upload your e-signature (PNG, JPG, JPEG) - Max size: 1MB
             <span class="text-red-500">*</span
-            ><span v-if="showErrors && !vehicleFormStore.src" class="text-red-500 block"
+            ><span v-if="showErrors && !vehicleRequestFormStore.src" class="text-red-500 block"
               >E-signature is required.</span
             >
           </div>
@@ -236,11 +236,11 @@
 
 <script setup>
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
-import { useVehicleFormStore } from '@/stores/vehicleRequestFormStore'
+import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 import { useRouter } from 'vue-router'
 import { ref, onMounted } from 'vue'
 
-const vehicleFormStore = useVehicleFormStore()
+const vehicleRequestFormStore = useVehicleRequestFormStore()
 
 const showErrors = ref(false)
 const isDateInvalid = ref(false)
@@ -263,19 +263,19 @@ function onFileSelect(event) {
 
   if (!validTypes.includes(file.type)) {
     alert('Only PNG, JPG, or JPEG files are allowed.')
-    vehicleFormStore.src = null
+    vehicleRequestFormStore.src = null
     return
   }
 
   if (file.size > maxSize) {
     alert('Maximum file size is 1MB.')
-    vehicleFormStore.src = null
+    vehicleRequestFormStore.src = null
     return
   }
 
   const reader = new FileReader()
   reader.onload = (e) => {
-    vehicleFormStore.src = e.target.result
+    vehicleRequestFormStore.src = e.target.result
   }
   reader.readAsDataURL(file)
 }
@@ -294,7 +294,7 @@ function submitRequest() {
   showErrors.value = true
   isDateInvalid.value = false
 
-  const f = vehicleFormStore
+  const f = vehicleRequestFormStore
   const errors = []
 
   if (!f.requestingOffice) errors.push('Requesting Office/Unit is required.')
