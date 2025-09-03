@@ -1,0 +1,27 @@
+stages:
+  - build_staging
+  - deploy_staging
+  - build_production
+
+build_development:
+  stage: build_development
+  image: node:20
+  script:
+    - echo 'build_development'
+    - npm install --legacy-peer-deps
+    - npm run build:development
+  artifacts:
+    paths:
+      - dist/
+  tags:
+    - docker
+
+deploy_development:
+  stage: deploy_development
+  needs:
+  - job: build_development
+    artifacts: true
+  script:
+    - rsync -az --delete dist/ $NONPROD_USR@$NONPROD_SRV:$APP_DIR
+  tags:
+    - local
