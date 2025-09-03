@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-[url(@/assets/DSWDFOXI.jpg)] bg-center bg-cover bg-no-repeat h-screen w-screen relative flex items-center justify-center"
+    class="bg-[url(@/assets/bg_dswd.jpg)] bg-center bg-cover bg-no-repeat h-screen w-screen relative flex items-center justify-center"
   >
     <!-- Overlay -->
     <div class="absolute inset-0 bg-gray-300 opacity-50"></div>
@@ -14,7 +14,7 @@
         <div class="col-span-1 flex justify-center">
           <img
             class="h-25 object-contain"
-            src="@/assets/DSWD Field Office XI.png"
+            src="@/assets/dswd_fo_xi_logo.png"
             alt="DSWD Logo"
           />
         </div>

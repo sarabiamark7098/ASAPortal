@@ -52,7 +52,7 @@
     <div
       class="flex-24 bg-gradient-to-r from-zinc-50 to-gray-100 items-center justify-center rounded-3xl shadow-4xl p-12 border-2 border-gray-100 shadow-lg"
     >
-      <img src="@/assets/DSWD Field Office XI.png" alt="" class="w-32 h-14 mb-6" />
+      <img src="@/assets/dswd_fo_xi_logo.png" alt="" class="w-32 h-14 mb-6" />
       <p class="indent-8 text-gray-500 text-lg text-justify">
         Get the latest updates, important advisories, and full access to DSWD’s social welfare
         programs and initiatives.
