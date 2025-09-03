@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:development": "vite build --mode development",
+    "build:development": "vite build --mode development --base=/asap/",
     "preview": "vite preview",
     "test:unit": "vitest",
     "format": "prettier --write src/"
