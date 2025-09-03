@@ -29,7 +29,7 @@
   </div>
 
   <div
-    class="lg:flex max-w-full mt-24 bg-[url(@/assets/footer.png)] bg-cover bg-center bg-no-repeat relative items-center justify-center rounded-3xl shadow-2xl"
+    class="lg:flex max-w-full mt-24 bg-[url(@/assets/footer-new.png)] bg-cover bg-center bg-no-repeat relative items-center justify-center rounded-3xl shadow-2xl"
   >
     <div class="justify-center h-full pt-12 pb-12 w-full px-6 sm:px-24">
       <div class="flex flex-col items-center text-center">
