@@ -13,7 +13,7 @@
   </div>
   <div
     v-else
-    class="bg-[url(@/assets/dswd_fo_xi_logo.jpg)] bg-center bg-cover bg-no-repeat h-screen w-screen relative flex items-center justify-center"
+    class="bg-[url(@/assets/dswd_fo_xi_logo.png)] bg-center bg-cover bg-no-repeat h-screen w-screen relative flex items-center justify-center"
   >
     <div class="absolute inset-0 bg-gray-300 opacity-50"></div>
     <div
