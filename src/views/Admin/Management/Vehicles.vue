@@ -3,9 +3,31 @@
     <FullScreenLoader :visible="vehicleFormStore.loading" message="Loading Vehicles..." />
 
     <div v-if="!vehicleFormStore.loading">
-      <h1 class="text-2xl font-bold mb-4">Vehicles Management</h1>
-      <p class="mb-4">Manage vehicles directory</p>
-      <div class="flex gap-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 class="text-xl sm:text-2xl font-bold">Vehicle Management</h1>
+          <p class="text-gray-600 text-sm sm:text-base">Manage vehicles directory</p>
+        </div>
+        <div class="flex justify-end">
+          <Button
+            v-if="!vehicleFormStore.updateVehicle && !vehicleFormStore.addVehicle"
+            class="px-4 py-2 rounded-xl shadow-sm w-full sm:w-auto"
+            severity="success"
+            icon="pi pi-plus"
+            label="Add New Vehicle"
+            @click="addVehicle"
+          />
+        </div>
+      </div>
+
+      <div
+        v-if="vehicleFormStore.updateVehicle || vehicleFormStore.addVehicle"
+        class="flex flex-col gap-4"
+      >
+        <VehicleInfo />
+      </div>
+
+      <div v-else class="flex gap-4">
         <!-- Left Section Placeholder -->
         <div
           class="w-1/3 inset-shadow-sm shadow-sm h-[600px] rounded-lg p-5 overflow-y-auto flex flex-col bg-white"
@@ -66,10 +88,13 @@
           </dl>
 
           <Button
-            class="mt-4 self-end w-1/2"
+            class="mt-4 self-end w-full sm:w-1/2"
             label="Update"
+            size="small"
+            icon="pi pi-pen-to-square"
             :disabled="!vehicleFormStore.selectedVehicle"
-            @click="$emit('edit-vehicle', vehicleFormStore.selectedVehicle)"
+            :severity="vehicleFormStore.selectedVehicle ? 'success' : 'secondary'"
+            @click="updateVehicleInfo"
           />
         </div>
 
@@ -193,6 +218,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
+import VehicleInfo from '@/views/Admin/Management/Manage/VehicleInfo.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useVehicleFormStore } from '@/stores/vehicleFormStore'
 import { useDriverFormStore } from '@/stores/driverFormStore'
@@ -200,37 +226,29 @@ import { useDriverFormStore } from '@/stores/driverFormStore'
 const vehicleFormStore = useVehicleFormStore()
 const driverFormStore = useDriverFormStore()
 const authStore = useAuthStore()
-const selectedDriver = computed(() => {
-  return (
-    driverFormStore.drivers.find((d) => d.id === vehicleFormStore.selectedVehicle?.driver_id) ||
-    null
-  )
-})
-
-const viewVehicleInfo = (vehicle) => {
-  vehicleFormStore.selectedVehicle = vehicle
-}
-
-const fetchVehiclesData = async () => {
-  try {
-    await vehicleFormStore.fetchAllVehicles()
-  } catch (error) {
-    console.error('Error fetching vehicles data:', error)
-  }
-}
 
 onMounted(async () => {
   try {
-    await Promise.all([authStore.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1500))])
-    await vehicleFormStore.fetchAllVehicles()
+    await Promise.all([authStore.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1000))])
+    loadRequests(1)
   } catch (error) {
     console.error('Error on mount:', error)
   } finally {
     vehicleFormStore.loading = false
   }
 })
+function updateVehicleInfo() {
+  if (vehicleFormStore.selectedVehicle) {
+    driverFormStore.selectedDriver = vehicleFormStore.selectedDriver
+    vehicleFormStore.updateVehicle = true
+  }
+}
+function addVehicle() {
+  vehicleFormStore.addVehicle = true
+  vehicleFormStore.resetForm()
+}
 
-const vehicles = computed(() => vehicleFormStore.vehicles)
+const vehicles = computed(() => vehicleFormStore.vehicleList)
 const totalRecords = computed(() => vehicleFormStore.totalRecords)
 const totalPages = computed(() => Math.ceil(totalRecords.value / vehicleFormStore.rows))
 const currentPage = computed(() => Math.floor(vehicleFormStore.first / vehicleFormStore.rows) + 1)
@@ -277,9 +295,10 @@ function loadRequests(page = currentPage.value) {
   vehicleFormStore.loading2 = true
   const search = vehicleFormStore.searchInput || ''
   const sortBy = vehicleFormStore.sortField || ''
-  const sortDir = vehicleFormStore.sortOrder === 1 ? 'asc' : vehicleFormStore.sortOrder === -1 ? 'desc' : ''
+  const sortDir =
+    vehicleFormStore.sortOrder === 1 ? 'asc' : vehicleFormStore.sortOrder === -1 ? 'desc' : ''
 
-  vehicleRequestFormStore
+  vehicleFormStore
     .getVehicles(authStore.token, page, vehicleFormStore.rows, search, sortBy, sortDir)
     .finally(() => {
       vehicleFormStore.loading2 = false

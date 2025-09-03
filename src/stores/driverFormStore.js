@@ -61,21 +61,6 @@ export const useDriverFormStore = defineStore('driversForm', {
       this.contact_number = driver.contact_number
     },
 
-    async getDriversList() {
-      try {
-        const authStore = useAuthStore()
-        this.loading = true
-        const response = await axios.get('/api/drivers', {
-          headers: { Authorization: `Bearer ${authStore.token}` },
-        })
-        this.driverList = response.data.data
-      } catch (error) {
-        console.error('Failed to fetch drivers:', error)
-        // Keep sample data if API call fails
-      } finally {
-        this.loading = false
-      }
-    },
     async getDrivers(token, page, perPage, query = '', sortBy = '', sortDir = '') {
       const authStore = useAuthStore()
       const response = await axios.get('/api/drivers', {
