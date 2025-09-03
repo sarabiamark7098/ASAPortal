@@ -241,7 +241,6 @@ onMounted(async () => {
   try {
     await Promise.all([
       authStore.fetchUser(),
-      driverFormStore.getDriversList(),
       new Promise((resolve) => setTimeout(resolve, 1000)), // Delay for UX smoothness
     ])
     loadRequests(1)
