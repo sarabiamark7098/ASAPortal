@@ -16,7 +16,15 @@ import RequestAirTransportOrder from '@/views/Requests/RequestAirTransportOrder.
 import RequestEntryToDSWDPremises from '@/views/Requests/RequestEntryToDSWDPremises.vue'
 import RequestOvernightParking from '@/views/Requests/RequestOvernightParking.vue'
 import RequestJanitorialServices from '@/views/Requests/RequestJanitorialServices.vue'
-import ViewRequest from '@/views/Client/RequestsView.vue'
+
+import ViewRequestBuildingandGround from '@/views/Client/ViewRequestBuildingandGround.vue'
+import ViewRequestVehicle from '@/views/Client/ViewRequestVehicle.vue'
+import ViewRequestAirTransport from '@/views/Client/ViewRequestAirTransport.vue'
+import ViewRequestConference from '@/views/Client/ViewRequestConference.vue'
+import ViewRequestEntry from '@/views/Client/ViewRequestEntry.vue'
+import ViewRequestParking from '@/views/Client/ViewRequestParking.vue'
+import ViewRequestJanitorial from '@/views/Client/ViewRequestJanitorial.vue'
+
 import VehicleSchedule from '@/views/Calendar/VehicleSchedule.vue'
 import MaagapSchedule from '@/views/Calendar/MaagapSchedule.vue'
 import MagitingSchedule from '@/views/Calendar/MagitingSchedule.vue'
@@ -199,9 +207,39 @@ const router = createRouter({
           component: RequestJanitorialServices,
         },
         {
-          path: '/view-requests',
-          name: 'ViewRequest',
-          component: ViewRequest,
+          path: '/view-requests/officialVehicleRequest',
+          name: 'ViewVehicleRequest',
+          component: ViewRequestVehicle,
+        },
+        {
+          path: '/view-requests/buildingAndGroundsTARequest',
+          name: 'ViewBuildingAndGroundsTARequest',
+          component: ViewRequestBuildingandGround,
+        },
+        {
+          path: '/view-requests/conferenceRoomRequest',
+          name: 'ViewConferenceRoomRequest',
+          component: ViewRequestConference,
+        },
+        {
+          path: '/view-requests/airTransportOrderRequest',
+          name: 'ViewAirTransportOrderRequest',
+          component: ViewRequestAirTransport,
+        },
+        {
+          path: '/view-requests/entryToDSWDPremisesRequest',
+          name: 'ViewEntryToDSWDPremisesRequest',
+          component: ViewRequestEntry,
+        },
+        {
+          path: '/view-requests/overnightParkingRequest',
+          name: 'ViewOvernightParkingRequest',
+          component: ViewRequestParking,
+        },
+        {
+          path: '/view-requests/janitorialServicesRequest',
+          name: 'ViewJanitorialServicesRequest',
+          component: ViewRequestJanitorial,
         },
         {
           path: '/calendar-views/vehicle-schedule',

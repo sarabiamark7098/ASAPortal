@@ -5,15 +5,11 @@ import { useAuthStore } from '@/stores/auth'
 export const useVehicleFormStore = defineStore('vehicleForm', {
   state: () => ({
     plateNumber: '',
+    unitType: '',
     vehicleModel: '',
     brand: '',
-    unitType: '',
-    lastName: '',
-    firstName: '',
-    driverPosition: '',
-    officialStation: '',
-    email: '',
-    contactNumber: '',
+    
+    driverName: '',
     vehicleList: [],
     selectedVehicle: '',
     loading: false,
@@ -49,18 +45,7 @@ export const useVehicleFormStore = defineStore('vehicleForm', {
   },
   actions: {
     resetForm() {
-      this.requestingOffice = ''
-      this.purpose = ''
-      this.passengers = ''
-      this.dateNeeded = null
-      this.dateEnding = null
-      this.startTime = null
-      this.placeOfTravel = ''
-      this.requestedBy = ''
-      this.position = ''
-      this.contactNo = ''
-      this.emailOfRequester = ''
-      this.src = null
+
     },
 
     async submitForm() {
@@ -100,97 +85,11 @@ export const useVehicleFormStore = defineStore('vehicleForm', {
       }
     },
 
-    async submitApprovalForm(id, availability) {
-      try {
-        const authStore = useAuthStore()
-
-        const isAvailable = availability === 'Available'
-
-        const formData = {
-          vehicle_assignment_id: isAvailable ? this.vehicleAssigned : 'N/A',
-          is_vehicle_available: isAvailable,
-          signatories: [],
-        }
-
-        if (isAvailable) {
-          formData.signatories = [
-            {
-              id: this.checkedSignatory,
-              label: 'Dispatcher',
-            },
-            {
-              id: this.requestingSignatory,
-              label: 'GSS Head',
-            },
-            {
-              id: this.approvalSignatory,
-              label: 'Division Chief',
-            },
-            {
-              id: this.SOSignatory,
-              label: 'Approval Officer',
-            },
-          ]
-        } else {
-          formData.signatories = [
-            {
-              id: this.checkedSignatory,
-              label: 'Dispatcher',
-            },
-            {
-              id: this.approvalSignatory,
-              label: 'Division Chief',
-            },
-            {
-              id: this.CNASSignatory,
-              label: 'CNAS Approving',
-            },
-          ]
-        }
-
-        const isEmpty = Object.values(formData).some(
-          (value) => value === null || value === '' || value === undefined,
-        )
-
-        if (isEmpty) {
-          throw new Error('Form contains empty fields.')
-        }
-
-        const response = await axios.post(`/api/vehicle-requests/${id}/process`, formData, {
-          headers: {
-            Authorization: `Bearer ${authStore.token}`,
-          },
-        })
-        this.selectedRequest = response.data
-        return response.data
-      } catch (error) {
-        throw error
-      }
-    },
-    async putApprovalStatus(id, status) {
-      try {
-        const authStore = useAuthStore()
-        const response = await axios.put(
-          `/api/vehicle-requests/${id}`,
-          { status },
-          {
-            headers: {
-              Authorization: `Bearer ${authStore.token}`,
-            },
-          },
-        )
-        this.selectedRequest = response.data
-        return response.data
-      } catch (error) {
-        throw error
-      }
-    },
-
-    async getVehicleTransactions(token) {
+    async getAllVehicles(token) {
       this.loading = true
       this.error = null
       try {
-        const response = await axios.get('/api/vehicle-requests', {
+        const response = await axios.get('/api/vehicle', {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.vehicleRequests = response.data.data || response.data
@@ -202,7 +101,7 @@ export const useVehicleFormStore = defineStore('vehicleForm', {
       }
     },
 
-    async getVehicleRequests(token, page, perPage, query = '', sortBy = '', sortDir = '') {
+    async getVehicle(token, page, perPage, query = '', sortBy = '', sortDir = '') {
       const response = await axios.get('/api/vehicle-requests', {
         headers: {
           Authorization: `Bearer ${token}`,

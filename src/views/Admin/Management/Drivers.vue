@@ -66,7 +66,7 @@
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Position:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.driver_position || 'N/A' }}
+                {{ driverFormStore.selectedDriver?.position || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
