@@ -5,6 +5,8 @@ stages:
 build_development:
   stage: build_development
   image: node:20
+  only:
+    - develop
   script:
     - echo 'build_development'
     - npm install --legacy-peer-deps
@@ -17,6 +19,8 @@ build_development:
 
 deploy_development:
   stage: deploy_development
+  only:
+    - develop
   needs:
   - job: build_development
     artifacts: true
