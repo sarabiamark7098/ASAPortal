@@ -38,7 +38,7 @@
           class="flex items-center gap-2"
         >
           <img
-            src="/src/assets/BP.png"
+            src="/src/assets/bagong_pilipinas.png"
             alt="DSWD Logo"
             class="max-h-8 transition-opacity duration-300"
           />
@@ -176,8 +176,8 @@
 import { ref, reactive, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import logoFull from '@/assets/DSWD Field Office XI.png'
-import logoIcon from '@/assets/DSWD_Only.png'
+import logoFull from '@/assets/dswd_fo_xi_logo.png'
+import logoIcon from '@/assets/dswd_only_logo.png'
 import { RouterLink } from 'vue-router'
 import Button from 'primevue/button'
 
