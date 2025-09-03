@@ -11,7 +11,7 @@
 
       <!-- Header -->
       <div class="flex items-center justify-between mb-4 relative z-20">
-        <h4 class="text-2xl font-semibold">Vehicle Requests</h4>
+        <h4 class="text-2xl font-semibold"></h4>
         <div class="flex items-center border border-gray-300 rounded-lg px-3 py-1">
           <i class="pi pi-search mr-2 text-gray-500" />
           <input
