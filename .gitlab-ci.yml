@@ -1,7 +1,6 @@
 stages:
-  - build_staging
-  - deploy_staging
-  - build_production
+  - build_development
+  - deploy_development
 
 build_development:
   stage: build_development
