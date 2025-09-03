@@ -27,7 +27,7 @@
           rel="noopener noreferrer"
           class="flex items-center gap-2 pr-8"
         >
-          <img src="@/assets/DSWD_Only.png" alt="DSWD FO XI Logo" class="h-12 w-12" />
+          <img src="@/assets/dswd_only_logo.png" alt="DSWD FO XI Logo" class="h-12 w-12" />
         </a>
       </template>
 

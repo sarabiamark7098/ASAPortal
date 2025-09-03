@@ -177,7 +177,7 @@ import { ref, reactive, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import logoFull from '@/assets/dswd_fo_xi_logo.png'
-import logoIcon from '@/assets/dswd_only.png'
+import logoIcon from '@/assets/dswd_only_logo.png'
 import { RouterLink } from 'vue-router'
 import Button from 'primevue/button'
 
