@@ -19,10 +19,14 @@ deploy_development:
   stage: deploy_development
   only:
     - develop
+  environment:
+    name: nonprod
   needs:
   - job: build_development
     artifacts: true
   script:
+    - echo "$HTACCESS" > .htaccess
     - rsync -az --delete dist/ $NONPROD_USR@$NONPROD_SRV:$APP_DIR
+    - ssh $NONPROD_USR@$NONPROD_SRV "cd $APP_DIR && echo "$HTACCESS" > .htaccess"
   tags:
     - local
