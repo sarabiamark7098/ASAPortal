@@ -26,7 +26,7 @@
         class="w-full lg:w-1/2 shadow-sm rounded-lg p-5 overflow-y-auto flex flex-col bg-white max-h-[600px]"
       >
         <h3 class="text-lg font-semibold mb-7 sticky top-0 bg-white z-10 pb-2">
-          Update Driver Information
+          Update Vehicle Information
         </h3>
 
         <div class="flex flex-col w-full gap-8 bg-white">
