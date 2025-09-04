@@ -149,7 +149,7 @@
             label="Back"
             icon="pi pi-arrow-left"
             class="p-button-outlined p-button-secondary w-full sm:w-auto"
-            @click="driverFormStore.updateDriver = false"
+            @click="back"
           />
 
           <Button
@@ -177,6 +177,11 @@ const authStore = useAuthStore()
 
 // Alias for readability
 const driver = driverFormStore.selectedDriver
+
+function back() {
+  driverFormStore.updateDriver = false
+  driverFormStore.addDriver = false
+}
 
 // Custom email validator with domain restriction
 function emailWithDomain(value) {

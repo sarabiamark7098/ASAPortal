@@ -69,7 +69,6 @@ export const useVehicleFormStore = defineStore('vehicleForm', {
       }
     },
 
-
     async getVehicles(token, page, perPage, query = '', sortBy = '', sortDir = '') {
       const response = await axios.get('/api/vehicles', {
         headers: {

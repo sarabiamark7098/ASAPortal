@@ -239,7 +239,6 @@ onMounted(async () => {
 })
 function updateVehicleInfo() {
   if (vehicleFormStore.selectedVehicle) {
-    driverFormStore.selectedDriver = vehicleFormStore.selectedDriver
     vehicleFormStore.updateVehicle = true
   }
 }
@@ -297,7 +296,6 @@ function loadRequests(page = currentPage.value) {
   const sortBy = vehicleFormStore.sortField || ''
   const sortDir =
     vehicleFormStore.sortOrder === 1 ? 'asc' : vehicleFormStore.sortOrder === -1 ? 'desc' : ''
-
   vehicleFormStore
     .getVehicles(authStore.token, page, vehicleFormStore.rows, search, sortBy, sortDir)
     .finally(() => {
