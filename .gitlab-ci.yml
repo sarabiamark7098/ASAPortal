@@ -25,7 +25,7 @@ deploy_development:
   - job: build_development
     artifacts: true
   script:
-    - echo "$HTACCESS" > .htaccess
+    - echo "$HTACCESS" > dist/.htaccess
     - rsync -az --delete dist/ $NONPROD_USR@$NONPROD_SRV:$APP_DIR
   tags:
     - local
