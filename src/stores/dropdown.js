@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
 
 export const useDropdownStore = defineStore('dropdown', {
   state: () => ({
@@ -8,6 +9,8 @@ export const useDropdownStore = defineStore('dropdown', {
     error: null,
     signatory: [],
     vehicle: [],
+    vehicleType: [],
+    drivers: [],
   }),
 
   getters: {
@@ -58,5 +61,26 @@ export const useDropdownStore = defineStore('dropdown', {
         console.error('Error fetching Vehicle Assignments:', this.error)
       }
     },
-  },
+    async fetchVehicleTypes() {
+      try {
+        const response = await axios.get('/api/vehicles/types')
+        this.vehicleType = response.data
+      } catch (error) {
+        this.error = error.response?.data?.message || 'Failed to fetch Vehicle Types'
+        console.error('Error fetching Vehicle Types:', this.error)
+      }
+    },
+    async fetchDrivers() {
+      try {
+        const authStore = useAuthStore()
+        const response = await axios.get('/api/drivers/fetch', {
+          headers: { Authorization: `Bearer ${authStore.token}` },
+        })
+        this.drivers = response.data
+      } catch (error) {
+        this.error = error.response?.data?.message || 'Failed to fetch Drivers'
+        console.error('Error fetching Drivers:', this.error)
+      }
+    },
+  }
 })

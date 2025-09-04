@@ -30,91 +30,95 @@
         </h3>
 
         <div class="flex flex-col w-full gap-8 bg-white">
-          <!-- Row 1: Names -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <div>
-              <FloatLabel>
-                <InputText
-                  id="plate_number"
-                  v-model="vehicleFormStore.plate_number"
-                  class="w-full"
-                />
-                <label for="plate_number">Plate Number</label>
-              </FloatLabel>
-              <small v-if="v$.plate_number.$error" class="text-red-500">
-                Plate Number is required.
-              </small>
-            </div>
-            <div>
-              <FloatLabel>
-                <InputText id="brand" v-model="vehicleFormStore.brand" class="w-full" />
-                <label for="brand">Brand</label>
-                <small v-if="v$.brand.$error" class="text-red-500"> Brand is required. </small>
-              </FloatLabel>
-            </div>
-            <div>
-              <FloatLabel>
-                <InputText id="unit_type" v-model="vehicleFormStore.unit_type" class="w-full" />
-                <label for="unit_type">Unit Type</label>
-              </FloatLabel>
-              <small v-if="v$.unit_type.$error" class="text-red-500">
-                Unit Type is required.
-              </small>
-            </div>
-            <div>
-              <FloatLabel>
-                <InputText id="model" v-model="vehicleFormStore.model" class="w-full" />
-                <label for="model">Model</label>
+          <!-- Row 1: Plate Number and Brand -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
+            <FloatLabel>
+              <InputText id="plate_number" v-model="vehicleFormStore.plate_number" class="w-full" />
+              <label for="plate_number">Plate Number</label>
+            </FloatLabel>
+            <small v-if="v$.plate_number.$error" class="text-red-500">
+              Plate Number is required.
+            </small>
+            <FloatLabel>
+              <InputText id="brand" v-model="vehicleFormStore.brand" class="w-full" />
+              <label for="brand">Brand</label>
+              <small v-if="v$.brand.$error" class="text-red-500"> Brand is required. </small>
+            </FloatLabel>
+          </div>
+          <!-- Row 2: Model and Unit Type -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
+            <FloatLabel>
+              <InputText id="unit_type" v-model="vehicleFormStore.unit_type" class="w-full" />
+              <label for="unit_type">Unit Type</label>
+            </FloatLabel>
+            <small v-if="v$.unit_type.$error" class="text-red-500"> Unit Type is required. </small>
+            <FloatLabel>
+              <InputText id="model" v-model="vehicleFormStore.model" class="w-full" />
+              <label for="model">Model</label>
 
-                <small v-if="v$.model.$error" class="text-red-500"> Model is required. </small>
-              </FloatLabel>
-            </div>
+              <small v-if="v$.model.$error" class="text-red-500"> Model is required. </small>
+            </FloatLabel>
           </div>
 
-          <!-- Row 2: Work Info -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            <div>
-              <FloatLabel>
-                <InputText
-                  id="purchase_year"
-                  v-model="vehicleFormStore.purchase_year"
-                  class="w-full"
-                />
-                <label for="purchase_year">Year of Purchase</label>
-              </FloatLabel>
-            </div>
-
-            <div>
-              <FloatLabel>
-                <InputText id="model_year" v-model="vehicleFormStore.model_year" class="w-full" />
-                <label for="model_year">Year Model</label>
-              </FloatLabel>
-            </div>
-
-            <div>
-              <FloatLabel>
-                <InputText
-                  id="chasis_number"
-                  v-model="vehicleFormStore.chasis_number"
-                  class="w-full"
-                />
-                <label for="chasis_number">Chassis Number</label>
-              </FloatLabel>
-            </div>
+          <!-- Row 3: Purchase and Model Year -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
+            <FloatLabel>
+              <DatePicker
+                class="w-full"
+                id="purchase_year"
+                v-model="vehicleFormStore.purchase_year"
+                view="year"
+                dateFormat="yy"
+                showIcon
+                iconDisplay="input"
+              />
+              <label for="purchase_year">Year of Purchase</label>
+            </FloatLabel>
+            <FloatLabel>
+              <DatePicker
+                class="w-full"
+                id="model_year"
+                v-model="vehicleFormStore.model_year"
+                view="year"
+                dateFormat="yy"
+                showIcon
+                iconDisplay="input"
+              />
+              <label for="model_year">Year Model</label>
+            </FloatLabel>
           </div>
 
-          <!-- Row 3: Contact -->
+          <!-- Row 4: Chassis and Engine Numbers -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            <div>
-              <FloatLabel>
-                <InputText
-                  id="engine_number"
-                  v-model="vehicleFormStore.engine_number"
-                  class="w-full"
-                />
-                <label for="engine_number">Engine Number</label>
-              </FloatLabel>
-            </div>
+            <FloatLabel>
+              <InputText
+                id="chasis_number"
+                v-model="vehicleFormStore.chasis_number"
+                class="w-full"
+              />
+              <label for="chasis_number">Chassis Number</label>
+            </FloatLabel>
+            <FloatLabel>
+              <InputText
+                id="engine_number"
+                v-model="vehicleFormStore.engine_number"
+                class="w-full"
+              />
+              <label for="engine_number">Engine Number</label>
+            </FloatLabel>
+          </div>
+          
+          <!-- Row 5: Select Driver -->
+          <div class="grid grid-cols-1 sm:grid-cols-1 gap-4 sm:gap-6">
+            <FloatLabel>
+              <Select class="w-full" v-model="vehicleFormStore.driver" id="driver">
+                <option value="" disabled>Select a driver</option>
+                <option v-for="driver in dropdownStore.drivers" :key="driver.id" :value="driver.id">
+                  {{ driver.name }}
+                </option>
+              </Select>
+              <label for="driver">Driver</label>
+            </FloatLabel>
           </div>
         </div>
 
@@ -147,9 +151,11 @@ import { useDriverFormStore } from '@/stores/driverFormStore'
 import { useAuthStore } from '@/stores/auth'
 import useVuelidate from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
+import { useDropdownStore } from '@/stores/dropdown'
 
 const vehicleFormStore = useVehicleFormStore()
 const driverFormStore = useDriverFormStore()
+const dropdownStore = useDropdownStore()
 const authStore = useAuthStore()
 
 // Alias for readability
