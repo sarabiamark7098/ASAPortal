@@ -18,29 +18,35 @@
       <FloatLabel class="flex-1 label">
         <InputText
           class="w-full"
-          id="vehiclemodel"
-          :value="vehicleRequestFormStore.vehiclemodel"
+          id="model"
+          :value="vehicleRequestFormStore.model"
           readonly
           disabled
         />
-        <label for="vehiclemodel">Model</label>
+        <label for="model">Model</label>
       </FloatLabel>
     </div>
     <!-- Row 2 -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1 label">
-        <InputText class="w-full" id="brand" :value="vehicleRequestFormStore.brand" readonly disabled />
+        <InputText
+          class="w-full"
+          id="brand"
+          :value="vehicleRequestFormStore.brand"
+          readonly
+          disabled
+        />
         <label for="brand">Brand</label>
       </FloatLabel>
       <FloatLabel class="flex-1 label">
         <InputText
           class="w-full"
-          id="unitType"
-          :value="vehicleRequestFormStore.unitType"
+          id="unit_type"
+          :value="vehicleRequestFormStore.unit_type"
           readonly
           disabled
         />
-        <label for="unitType">Unit Type</label>
+        <label for="unit_type">Unit Type</label>
       </FloatLabel>
     </div>
 
@@ -96,7 +102,13 @@
     <!-- Row 5 -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1 label">
-        <InputText class="w-full" id="email" :value="vehicleRequestFormStore.email" readonly disabled />
+        <InputText
+          class="w-full"
+          id="email"
+          :value="vehicleRequestFormStore.email"
+          readonly
+          disabled
+        />
         <label for="email">Email</label>
       </FloatLabel>
       <FloatLabel class="flex-1 label">
@@ -136,19 +148,25 @@ watchEffect(() => {
   }))
 
   vehicleRequestFormStore.selectedVehicle =
-    vehicleRequestFormStore.vehicleOptions.find((v) => v.value === vehicleRequestFormStore.vehicleAssigned)
-      ?.original || null
+    vehicleRequestFormStore.vehicleOptions.find(
+      (v) => v.value === vehicleRequestFormStore.vehicleAssigned,
+    )?.original || null
 
-  vehicleRequestFormStore.vehiclemodel = vehicleRequestFormStore.selectedVehicle?.vehicle.model || ''
+  vehicleRequestFormStore.model = vehicleRequestFormStore.selectedVehicle?.vehicle.model || ''
   vehicleRequestFormStore.brand = vehicleRequestFormStore.selectedVehicle?.vehicle.brand || ''
-  vehicleRequestFormStore.unitType = vehicleRequestFormStore.selectedVehicle?.vehicle.unit_type || ''
-  vehicleRequestFormStore.last_name = vehicleRequestFormStore.selectedVehicle?.driver.last_name || ''
-  vehicleRequestFormStore.first_name = vehicleRequestFormStore.selectedVehicle?.driver.first_name || ''
-  vehicleRequestFormStore.driver_position = vehicleRequestFormStore.selectedVehicle?.driver.position || ''
+  vehicleRequestFormStore.unit_type =
+    vehicleRequestFormStore.selectedVehicle?.vehicle.unit_type || ''
+  vehicleRequestFormStore.last_name =
+    vehicleRequestFormStore.selectedVehicle?.driver.last_name || ''
+  vehicleRequestFormStore.first_name =
+    vehicleRequestFormStore.selectedVehicle?.driver.first_name || ''
+  vehicleRequestFormStore.driver_position =
+    vehicleRequestFormStore.selectedVehicle?.driver.position || ''
   vehicleRequestFormStore.official_station =
     vehicleRequestFormStore.selectedVehicle?.driver.official_station || ''
   vehicleRequestFormStore.email = vehicleRequestFormStore.selectedVehicle?.driver.email || ''
-  vehicleRequestFormStore.contact_number = vehicleRequestFormStore.selectedVehicle?.driver.contact_number || ''
+  vehicleRequestFormStore.contact_number =
+    vehicleRequestFormStore.selectedVehicle?.driver.contact_number || ''
 })
 </script>
 

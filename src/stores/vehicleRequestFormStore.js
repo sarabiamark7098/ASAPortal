@@ -58,9 +58,9 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
 
     vehicleOptions: [],
     selectedVehicle: null,
-    vehiclemodel: '',
+    model: '',
     brand: '',
-    unitType: '',
+    unit_type: '',
     last_name: '',
     first_name: '',
     driver_position: '',

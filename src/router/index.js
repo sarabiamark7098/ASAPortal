@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useUsersStore } from '@/stores/users'
+
 import GuestLayout from '@/layouts/GuestLayout.vue'
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
@@ -9,6 +10,7 @@ import Dashboard from '@/views/Admin/Dashboard.vue'
 import Register from '@/views/Register.vue'
 import UserAccounts from '@/views/Admin/UserAccounts.vue'
 import ClientView from '@/views/Client/ClientView.vue'
+
 import RequestVehicle from '@/views/Requests/RequestVehicle.vue'
 import RequestBuildingAndGroundsTA from '@/views/Requests/RequestBuildingAndGroundsTA.vue'
 import RequestConferenceRoom from '@/views/Requests/RequestConferenceRoom.vue'
@@ -29,7 +31,11 @@ import VehicleSchedule from '@/views/Calendar/VehicleSchedule.vue'
 import MaagapSchedule from '@/views/Calendar/MaagapSchedule.vue'
 import MagitingSchedule from '@/views/Calendar/MagitingSchedule.vue'
 import SeminarHallSchedule from '@/views/Calendar/SeminarSchedule.vue'
+
 import Drivers from '@/views/Admin/Management/Drivers.vue'
+import Vehicles from '@/views/Admin/Management/Vehicles.vue'
+import Signatories from '@/views/Admin/Management/Signatories.vue'
+
 import TARequest from '@/views/Admin/Requests/TechnicalAssistance.vue'
 import VehicleRequest from '@/views/Admin/Requests/Vehicle.vue'
 import MaagapRequest from '@/views/Admin/Requests/Maagap.vue'
@@ -39,7 +45,6 @@ import AirTravelOrderRequest from '@/views/Admin/Requests/AirTravelOrder.vue'
 import EntryRequest from '@/views/Admin/Requests/Entry.vue'
 import ParkingRequest from '@/views/Admin/Requests/Parking.vue'
 import JanitorialRequest from '@/views/Admin/Requests/Janitorial.vue'
-import Vehicles from '@/views/Admin/Management/Vehicles.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -106,6 +111,11 @@ const router = createRouter({
           path: 'vehicles',
           name: 'vehicles',
           component: Vehicles,
+        },
+        {
+          path: 'signatories',
+          name: 'signatories',
+          component: Signatories,
         },
       ],
     },

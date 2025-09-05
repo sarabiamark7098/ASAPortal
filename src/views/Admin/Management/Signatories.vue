@@ -1,12 +1,12 @@
 <template>
   <div class="p-6">
-    <FullScreenLoader :visible="vehicleFormStore.loading" message="Loading Vehicles..." />
+    <FullScreenLoader :visible="vehicleFormStore.loading" message="Loading Signatories..." />
 
     <div v-if="!vehicleFormStore.loading">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 class="text-xl sm:text-2xl font-bold">Vehicle Management</h1>
-          <p class="text-gray-600 text-sm sm:text-base">Manage vehicles directory</p>
+          <h1 class="text-xl sm:text-2xl font-bold">Signatories Management</h1>
+          <p class="text-gray-600 text-sm sm:text-base">Manage signatories directory</p>
         </div>
         <div class="flex justify-end">
           <Button
@@ -44,8 +44,8 @@
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Brand:</dt>
-              <dd class="text-green-600">{{ vehicleFormStore.selectedVehicle?.brand || 'N/A' }}</dd>
+              <dt class="font-semibold">Model:</dt>
+              <dd class="text-green-600">{{ vehicleFormStore.selectedVehicle?.model || 'N/A' }}</dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Unit Type:</dt>
@@ -54,8 +54,8 @@
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Model:</dt>
-              <dd class="text-green-600">{{ vehicleFormStore.selectedVehicle?.model || 'N/A' }}</dd>
+              <dt class="font-semibold">Brand:</dt>
+              <dd class="text-green-600">{{ vehicleFormStore.selectedVehicle?.brand || 'N/A' }}</dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Year Purchased:</dt>
@@ -84,18 +84,18 @@
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Driver:</dt>
               <dd class="text-green-600">
-                {{ vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.full_name || 'N/A' }}
+                {{ vehicleFormStore.selectedDriver?.full_name || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Contact Number:</dt>
               <dd class="text-green-600">
-                {{ vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.contact_number || 'N/A' }}
+                {{ vehicleFormStore.selectedDriver?.contact_number || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Email:</dt>
-              <dd class="text-green-600">{{ vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.email || 'N/A' }}</dd>
+              <dd class="text-green-600">{{ vehicleFormStore.selectedDriver?.email || 'N/A' }}</dd>
             </div>
           </dl>
 
@@ -238,6 +238,7 @@ import { useDriverFormStore } from '@/stores/driverFormStore'
 const vehicleFormStore = useVehicleFormStore()
 const driverFormStore = useDriverFormStore()
 const authStore = useAuthStore()
+
 onMounted(async () => {
   try {
     await Promise.all([authStore.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1000))])

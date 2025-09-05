@@ -31,7 +31,16 @@
 
         <div class="flex flex-col w-full gap-8 bg-white">
           <!-- Row 1: Names -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
+            <div>
+              <FloatLabel>
+                <InputText id="driverLastName" v-model="driverFormStore.last_name" class="w-full" />
+                <label for="driverLastName">Last Name</label>
+              </FloatLabel>
+              <small v-if="v$.last_name.$error" class="text-red-500">
+                Last Name is required.
+              </small>
+            </div>
             <div>
               <FloatLabel>
                 <InputText
@@ -54,16 +63,6 @@
               />
               <label for="driverMiddleName">Middle Name</label>
             </FloatLabel>
-
-            <div>
-              <FloatLabel>
-                <InputText id="driverLastName" v-model="driverFormStore.last_name" class="w-full" />
-                <label for="driverLastName">Last Name</label>
-              </FloatLabel>
-              <small v-if="v$.last_name.$error" class="text-red-500">
-                Last Name is required.
-              </small>
-            </div>
 
             <FloatLabel>
               <InputText
@@ -229,21 +228,49 @@ async function submitForm() {
   const isValid = await v$.value.$validate()
   if (!isValid) return
 
+  const original = driverFormStore.selectedDriver || {}
+  const current = {
+    first_name: driverFormStore.first_name,
+    middle_name: driverFormStore.middle_name,
+    last_name: driverFormStore.last_name,
+    extension_name: driverFormStore.extension_name,
+    position: driverFormStore.position,
+    designation: driverFormStore.designation,
+    official_station: driverFormStore.official_station,
+    email: driverFormStore.email,
+    contact_number: driverFormStore.contact_number,
+  }
+
+  const hasChanged = Object.keys(current).some(
+    (key) => (current[key] || '') !== (original[key] || ''),
+  )
+
+  if (!driverFormStore.addDriver && !hasChanged) {
+    window.alert('No changes detected. Please update some fields before saving.')
+    return
+  }
+
   driverFormStore.submitting = true
+  let errorOccurred = false
   try {
     await driverFormStore.submitForm()
   } catch (error) {
     console.error('Form submission failed:', error)
+    errorOccurred = true
   } finally {
-    if (driverFormStore.addDriver) {
-      window.alert('Driver information successfully added.')
+    if (!errorOccurred) {
+      if (driverFormStore.addDriver) {
+        window.alert('Driver information successfully added.')
+      } else {
+        window.alert('Driver information successfully updated.')
+      }
+      window.location.reload()
+      driverFormStore.addDriver = false
+      driverFormStore.updateDriver = false
+      driverFormStore.submitting = false
     } else {
-      window.alert('Driver information successfully updated.')
+      window.alert('Form submission failed. Please try again.')
     }
-    window.location.reload()
-    driverFormStore.addDriver = false
-    driverFormStore.updateDriver = false
-    driverFormStore.submitting = false
   }
 }
 </script>
