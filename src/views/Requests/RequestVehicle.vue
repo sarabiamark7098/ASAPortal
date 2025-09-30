@@ -20,169 +20,231 @@
           the vehicle assigned.
         </div>
       </div>
+
       <RouterLink
         class="mb-6 w-1/6 bg-gray-600 text-white p-2 rounded-lg shadow-md text-center"
         to="/client"
       >
         <i class="pi pi-arrow-left" /> Back to Requests
       </RouterLink>
+
       <hr class="mb-6 border-gray-300" />
+
       <!-- Input Fields -->
       <div class="flex flex-col gap-8">
         <!-- Row 1 -->
         <div class="flex flex-col sm:flex-row gap-6">
-          <FloatLabel class="flex-1">
-            <InputText
-              id="requestingOffice"
-              class="w-full"
-              v-model="vehicleRequestFormStore.requestingOffice"
-              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.requestingOffice }"
-            />
-            <label for="requestingOffice"
-              >Requesting Office/Unit <span class="text-red-500">*</span></label
-            >
-          </FloatLabel>
+          <!-- Requesting Office -->
+          <div class="flex-1">
+            <FloatLabel class="relative w-full">
+              <InputText
+                id="requestingOffice"
+                v-model="form.requesting_office"
+                class="w-full"
+                :class="{ 'p-invalid': v$.requesting_office.$error }"
+              />
+              <label for="requestingOffice">
+                Requesting Office/Unit <span class="text-red-500">*</span>
+              </label>
+            </FloatLabel>
+            <small v-if="v$.requesting_office.$error" class="text-red-500 text-xs block mt-1">
+              Requesting Office/Unit is required.
+            </small>
+          </div>
 
-          <FloatLabel class="flex-1">
-            <InputText
-              id="purpose"
-              class="w-full"
-              v-model="vehicleRequestFormStore.purpose"
-              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.purpose }"
-            />
-            <label for="purpose">Purpose of Trip <span class="text-red-500">*</span></label>
-          </FloatLabel>
+          <!-- Purpose -->
+          <div class="flex-1">
+            <FloatLabel class="relative w-full">
+              <InputText
+                id="purpose"
+                v-model="form.purpose"
+                class="w-full"
+                :class="{ 'p-invalid': v$.purpose.$error }"
+              />
+              <label for="purpose"> Purpose of Trip <span class="text-red-500">*</span> </label>
+            </FloatLabel>
+            <small v-if="v$.purpose.$error" class="text-red-500 text-xs block mt-1">
+              Purpose is required.
+            </small>
+          </div>
         </div>
 
         <!-- Row 2 -->
-        <div>
+        <div class="relative">
           <FloatLabel>
             <Textarea
               id="passengers"
+              v-model="form.passengers"
               class="w-full"
-              v-model="vehicleRequestFormStore.passengers"
-              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.passengers }"
+              :class="{ 'p-invalid': v$.passengers.$error }"
               autoResize
               rows="2"
             />
             <label for="passengers">Name of Passengers <span class="text-red-500">*</span></label>
           </FloatLabel>
+          <small v-if="v$.passengers.$error" class="text-red-500 text-xs"
+            >Passengers are required.</small
+          >
         </div>
 
         <!-- Row 3: Date & Time -->
         <div class="flex flex-col sm:flex-row gap-6">
-          <FloatLabel class="flex-1">
-            <DatePicker
-              id="dateNeeded"
-              class="w-full"
-              v-model="vehicleRequestFormStore.dateNeeded"
-              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.dateNeeded }"
-              showIcon
-              fluid
-              iconDisplay="input"
-            />
-            <label for="dateNeeded">Date Needed (Start) <span class="text-red-500">*</span></label>
-          </FloatLabel>
+          <!-- Start Date -->
+          <div class="flex-1">
+            <FloatLabel class="w-full">
+              <DatePicker
+                id="dateNeeded"
+                v-model="form.requested_start"
+                class="w-full"
+                showIcon
+                fluid
+                iconDisplay="input"
+                :class="{ 'p-invalid': v$.requested_start.$error }"
+              />
+              <label for="dateNeeded"
+                >Date Needed (Start) <span class="text-red-500">*</span></label
+              >
+            </FloatLabel>
+            <small v-if="v$.requested_start.$error" class="text-red-500 text-xs block mt-1">
+              Start date is required.
+            </small>
+          </div>
 
-          <FloatLabel class="flex-1">
-            <DatePicker
-              id="startTime"
-              class="w-full"
-              v-model="vehicleRequestFormStore.startTime"
-              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.startTime }"
-              showIcon
-              fluid
-              hourFormat="12"
-              iconDisplay="input"
-              timeOnly
-            >
-              <template #inputicon="slotProps">
-                <i class="pi pi-clock" @click="slotProps.clickCallback" />
-              </template>
-            </DatePicker>
-            <label for="startTime">Time Needed (Start) <span class="text-red-500">*</span></label>
-          </FloatLabel>
+          <!-- Start Time -->
+          <div class="flex-1">
+            <FloatLabel class="w-full">
+              <DatePicker
+                id="startTime"
+                v-model="form.requested_time"
+                class="w-full"
+                showIcon
+                fluid
+                hourFormat="12"
+                iconDisplay="input"
+                timeOnly
+                :class="{ 'p-invalid': v$.requested_time.$error }"
+              >
+                <template #inputicon="slotProps">
+                  <i class="pi pi-clock" @click="slotProps.clickCallback" />
+                </template>
+              </DatePicker>
+              <label for="startTime">Time Needed (Start) <span class="text-red-500">*</span></label>
+            </FloatLabel>
+            <small v-if="v$.requested_time.$error" class="text-red-500 text-xs block mt-1">
+              Start time is required.
+            </small>
+          </div>
 
-          <FloatLabel class="flex-1">
-            <DatePicker
-              id="dateEnding"
-              class="w-full"
-              v-model="vehicleRequestFormStore.dateEnding"
-              :class="[
-                'w-full',
-                (showErrors && !vehicleRequestFormStore.dateEnding) || isDateInvalid
-                  ? 'p-invalid border border-red-200 ring-1 ring-red-500 focus:ring-red-500 rounded-lg'
-                  : '',
-              ]"
-              showIcon
-              fluid
-              iconDisplay="input"
-            />
-            <label for="dateEnding">Date Needed (End) <span class="text-red-500">*</span></label>
-          </FloatLabel>
+          <!-- End Date -->
+          <div class="flex-1">
+            <FloatLabel class="w-full">
+              <DatePicker
+                id="dateEnding"
+                v-model="form.requested_end"
+                class="w-full"
+                showIcon
+                fluid
+                iconDisplay="input"
+                :class="{ 'p-invalid': v$.requested_end.$error || isDateInvalid }"
+              />
+              <label for="dateEnding">Date Needed (End) <span class="text-red-500">*</span></label>
+            </FloatLabel>
+            <small v-if="v$.requested_end.$error" class="text-red-500 text-xs block mt-1">
+              End date is required.
+            </small>
+            <small v-if="isDateInvalid" class="text-red-500 text-xs block mt-1">
+              End date must be after start date.
+            </small>
+          </div>
         </div>
 
         <!-- Row 4 -->
-        <div>
+        <div class="relative">
           <FloatLabel>
             <Textarea
               id="placeOfTravel"
+              v-model="form.destination"
               class="w-full"
-              v-model="vehicleRequestFormStore.placeOfTravel"
-              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.placeOfTravel }"
+              :class="{ 'p-invalid': v$.destination.$error }"
               autoResize
               rows="2"
             />
             <label for="placeOfTravel">Place of Travel <span class="text-red-500">*</span></label>
           </FloatLabel>
+          <small v-if="v$.destination.$error" class="text-red-500 text-xs"
+            >Destination is required.</small
+          >
         </div>
 
         <!-- Row 5 -->
         <div class="flex flex-col sm:flex-row gap-6">
-          <FloatLabel class="flex-1">
-            <InputText
-              id="requestedBy"
-              class="w-full"
-              v-model="vehicleRequestFormStore.requestedBy"
-              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.requestedBy }"
-            />
-            <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
-          </FloatLabel>
-          <FloatLabel class="flex-1">
-            <InputText
-              id="position"
-              class="w-full"
-              v-model="vehicleRequestFormStore.position"
-              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.position }"
-            />
-            <label for="position">Position <span class="text-red-500">*</span></label>
-          </FloatLabel>
-          <FloatLabel class="flex-1">
-            <InputMask
-              id="contactNo"
-              class="w-full"
-              v-model="vehicleRequestFormStore.contactNo"
-              mask="0999 999 9999"
-              :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.contactNo }"
-            />
-            <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
-          </FloatLabel>
+          <!-- Requested By -->
+          <div class="flex-1">
+            <FloatLabel class="w-full">
+              <InputText
+                id="requestedBy"
+                v-model="form.requester_name"
+                class="w-full"
+                :class="{ 'p-invalid': v$.requester_name.$error }"
+              />
+              <label for="requestedBy">Requested by <span class="text-red-500">*</span></label>
+            </FloatLabel>
+            <small v-if="v$.requester_name.$error" class="text-red-500 text-xs">
+              Requested by is required.
+            </small>
+          </div>
 
-          <FloatLabel class="flex-1">
-            <InputText
-              id="emailOfRequester"
-              v-model="vehicleRequestFormStore.emailOfRequester"
-              class="w-full"
-              type="email"
-              :class="{
-                'p-invalid': showErrors && !isValidEmail(vehicleRequestFormStore.emailOfRequester),
-              }"
-              required
-            />
-            <label for="emailOfRequester"
-              >Email of Requester <span class="text-red-500">*</span></label
-            >
-          </FloatLabel>
+          <!-- Position -->
+          <div class="flex-1">
+            <FloatLabel class="w-full">
+              <InputText
+                id="position"
+                v-model="form.requester_position"
+                class="w-full"
+                :class="{ 'p-invalid': v$.requester_position.$error }"
+              />
+              <label for="position">Position <span class="text-red-500">*</span></label>
+            </FloatLabel>
+            <small v-if="v$.requester_position.$error" class="text-red-500 text-xs">
+              Position is required.
+            </small>
+          </div>
+
+          <!-- Contact No -->
+          <div class="flex-1">
+            <FloatLabel class="w-full">
+              <InputMask
+                id="contactNo"
+                v-model="form.requester_contact_number"
+                mask="0999 999 9999"
+                class="w-full"
+                :class="{ 'p-invalid': v$.requester_contact_number.$error }"
+              />
+              <label for="contactNo">Contact No. <span class="text-red-500">*</span></label>
+            </FloatLabel>
+            <small v-if="v$.requester_contact_number.$error" class="text-red-500 text-xs">
+              Contact number is required.
+            </small>
+          </div>
+
+          <!-- Email -->
+          <div class="flex-1">
+            <FloatLabel class="w-full">
+              <InputText
+                id="emailOfRequester"
+                v-model="form.requester_email"
+                type="email"
+                class="w-full"
+                :class="{ 'p-invalid': v$.requester_email.$error }"
+              />
+              <label for="emailOfRequester">
+                Email of Requester <span class="text-red-500">*</span>
+              </label>
+            </FloatLabel>
+            <small v-if="v$.requester_email.$error" class="text-red-500 text-xs">
+              {{ v$.requester_email.$errors[0]?.$message }}
+            </small>
+          </div>
         </div>
 
         <!-- Row 6 -->
@@ -197,13 +259,11 @@
             @select="onFileSelect"
             chooseLabel="Choose File"
             class="w-full sm:w-auto"
-            :class="{ 'p-invalid': showErrors && !vehicleRequestFormStore.src }"
+            :class="{ 'p-invalid': v$.src.$error }"
           />
-
-          <div v-if="vehicleRequestFormStore.src" class="mt-4 sm:mt-0">
+          <div v-if="form.src" class="mt-4 sm:mt-0">
             <img
-              :key="vehicleRequestFormStore.src"
-              :src="vehicleRequestFormStore.src"
+              :src="form.src"
               alt="E-Signature Preview"
               class="shadow-md rounded-xl w-full sm:w-32"
               style="filter: grayscale(100%)"
@@ -211,10 +271,8 @@
           </div>
           <div class="text-sm text-gray-500 mt-2">
             Upload your e-signature (PNG, JPG, JPEG) - Max size: 1MB
-            <span class="text-red-500">*</span
-            ><span v-if="showErrors && !vehicleRequestFormStore.src" class="text-red-500 block"
-              >E-signature is required.</span
-            >
+            <span class="text-red-500">*</span>
+            <span v-if="v$.src.$error" class="text-red-500 block">E-signature is required.</span>
           </div>
         </div>
 
@@ -238,105 +296,114 @@
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+
+// Vuelidate imports
+import useVuelidate from '@vuelidate/core'
+import { required, email, helpers } from '@vuelidate/validators'
 
 const vehicleRequestFormStore = useVehicleRequestFormStore()
+const form = vehicleRequestFormStore
 
 const showErrors = ref(false)
-const isDateInvalid = ref(false)
 const submitting = ref(false)
-const router = useRouter()
 const loading = ref(true)
+const router = useRouter()
 
-onMounted(async () => {
-  await new Promise((resolve) => setTimeout(resolve, 1500)) // Simulate API call
-  loading.value = false
+const isDateInvalid = computed(() => {
+  if (!form.requested_start || !form.requested_end) return false
+  return new Date(form.requested_end) < new Date(form.requested_start)
 })
 
+onMounted(async () => {
+  setTimeout(() => {
+    loading.value = false
+  }, 1500)
+})
+
+// Custom email domain validator
+const validEmailDomain = helpers.withMessage(
+  'Email must be @gmail.com or @dswd.gov.ph',
+  (value) => {
+    if (!value) return false
+    const allowedDomains = ['@gmail.com', '@dswd.gov.ph']
+    return allowedDomains.some((domain) => value.toLowerCase().endsWith(domain))
+  },
+)
+
+// Validation rules
+const rules = {
+  requesting_office: { required },
+  purpose: { required },
+  passengers: { required },
+  requested_start: { required },
+  requested_time: { required },
+  requested_end: { required },
+  destination: { required },
+  requester_name: { required },
+  requester_position: { required },
+  requester_contact_number: { required },
+  requester_email: { required, email, validEmailDomain },
+  src: { required },
+}
+
+// Attach Vuelidate
+const v$ = useVuelidate(rules, form)
+
 // File upload handler
+function validateFile(file) {
+  const validTypes = ['image/png', 'image/jpeg']
+  const maxSize = 1 * 1024 * 1024
+
+  if (!validTypes.includes(file.type)) {
+    return 'Only PNG or JPEG files are allowed.'
+  }
+  if (file.size > maxSize) {
+    return 'Maximum file size is 1MB.'
+  }
+  return null
+}
+
 function onFileSelect(event) {
   const file = event.files[0]
   if (!file) return
 
-  const validTypes = ['image/png', 'image/jpeg', 'image/jpg']
-  const maxSize = 1 * 1024 * 1024
-
-  if (!validTypes.includes(file.type)) {
-    alert('Only PNG, JPG, or JPEG files are allowed.')
-    vehicleRequestFormStore.src = null
-    return
-  }
-
-  if (file.size > maxSize) {
-    alert('Maximum file size is 1MB.')
-    vehicleRequestFormStore.src = null
+  const error = validateFile(file)
+  if (error) {
+    alert(error)
+    form.src = null
     return
   }
 
   const reader = new FileReader()
-  reader.onload = (e) => {
-    vehicleRequestFormStore.src = e.target.result
-  }
+  reader.onload = (e) => (form.src = e.target.result)
   reader.readAsDataURL(file)
 }
 
-function isValidEmail(email) {
-  const allowedDomains = ['@gmail.com', '@dswd.gov.ph']
-  const trimmed = email?.trim().toLowerCase()
-
-  return (
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed) &&
-    allowedDomains.some((domain) => trimmed.endsWith(domain))
-  )
-}
-
-function submitRequest() {
-  showErrors.value = true
-  isDateInvalid.value = false
-
-  const f = vehicleRequestFormStore
-  const errors = []
-
-  if (!f.requestingOffice) errors.push('Requesting Office/Unit is required.')
-  if (!f.purpose) errors.push('Purpose is required.')
-  if (!f.passengers) errors.push('Passenger(s) field is required.')
-  if (!f.dateNeeded) errors.push('Date Needed (Start) is required.')
-  if (!f.dateEnding) errors.push('Date Needed (End) is required.')
-  if (!f.startTime) errors.push('Time Needed (Start) is required.')
-  if (!f.placeOfTravel) errors.push('Place of Travel is required.')
-  if (!f.requestedBy) errors.push('Requested by is required.')
-  if (!f.position) errors.push('Requester position is required.')
-  if (!f.contactNo) errors.push('Contact number is required.')
-  if (!f.emailOfRequester || !isValidEmail(f.emailOfRequester))
-    errors.push('A valid email (gmail.com or dswd.gov.ph) is required.')
-  if (!f.src) errors.push('E-signature is required.')
-
-  if (f.dateNeeded && f.dateEnding) {
-    if (new Date(f.dateEnding) < new Date(f.dateNeeded)) {
-      isDateInvalid.value = true
-      errors.push('End date must be after start date.')
-    }
+// Submit handler
+async function submitRequest() {
+  const isValid = await v$.value.$validate()
+  if (!isValid) {
+    alert('Please correct the highlighted errors.')
+    return
   }
 
-  if (errors.length) {
-    alert(errors.join('\n'))
+  if (isDateInvalid.value) {
+    alert('End date must be after start date.')
     return
   }
 
   submitting.value = true
-
-  setTimeout(async () => {
-    try {
-      await f.submitForm()
-      alert('Form submitted successfully!')
-      f.resetForm()
-      router.push({ name: 'clientview' }) // or { path: '/dashboard' }
-    } catch (error) {
-      console.error('Form submission failed:', error)
-      alert('There was an error submitting the form. Please try again.')
-    } finally {
-      submitting.value = false
-    }
-  }, 1000)
+  try {
+    await form.submitForm()
+    alert('Form submitted successfully!')
+    form.resetForm()
+    router.push({ name: 'clientview' })
+  } catch (error) {
+    console.error('Form submission failed:', error)
+    alert('There was an error submitting the form. Please try again.')
+  } finally {
+    submitting.value = false
+  }
 }
 </script>

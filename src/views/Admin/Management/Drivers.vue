@@ -238,6 +238,7 @@ const driverFormStore = useDriverFormStore()
 const authStore = useAuthStore()
 
 onMounted(async () => {
+  driverFormStore.loading = true
   try {
     await Promise.all([
       authStore.fetchUser(),

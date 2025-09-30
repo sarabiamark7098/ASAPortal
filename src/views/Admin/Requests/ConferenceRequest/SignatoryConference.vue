@@ -14,29 +14,12 @@
         />
         <label for="">Checked By</label>
       </FloatLabel>
-      <FloatLabel class="flex-1">
-        <Select
-          v-model="form.requestingSignatory"
-          :options="signatoryList"
-          option-label="full_name"
-          option-value="id"
-          id="check"
-          required
-          class="w-full input"
-        />
-        <label for="">Requesting Officer</label>
-      </FloatLabel>
     </div>
 
     <!-- Row 2 -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1 position-label">
         <InputText class="w-full" :value="form.checkedSignatoryPosition" readonly disabled />
-        <label>Position</label>
-      </FloatLabel>
-
-      <FloatLabel class="flex-1 position-label">
-        <InputText class="w-full" :value="form.requestingSignatoryPosition" readonly disabled />
         <label>Position</label>
       </FloatLabel>
     </div>
@@ -55,18 +38,6 @@
         />
         <label for="">Request Approval</label>
       </FloatLabel>
-      <FloatLabel class="flex-1">
-        <Select
-          v-model="form.SOSignatory"
-          :options="signatoryList"
-          option-label="full_name"
-          option-value="id"
-          id="check"
-          required
-          class="w-full input"
-        />
-        <label for="">Special Order Approval</label>
-      </FloatLabel>
     </div>
 
     <!-- Row 4 -->
@@ -75,13 +46,9 @@
         <InputText class="w-full" :value="form.approvalSignatoryPosition" readonly disabled />
         <label>Position</label>
       </FloatLabel>
-
-      <FloatLabel class="flex-1 position-label">
-        <InputText class="w-full" :value="form.SOSignatoryPosition" readonly disabled />
-        <label>Position</label>
-      </FloatLabel>
     </div>
   </div>
+
   <div v-if="form.editModeCNAS" class="flex flex-col gap-8">
     <!-- Row 1 -->
     <div class="flex flex-col sm:flex-row gap-6">
@@ -97,28 +64,12 @@
         />
         <label for="">Checked By</label>
       </FloatLabel>
-      <FloatLabel class="flex-1">
-        <Select
-          v-model="form.approvalSignatory"
-          :options="signatoryList"
-          option-label="full_name"
-          option-value="id"
-          id="check"
-          required
-          class="w-full input"
-        />
-        <label for="">Request Approval</label>
-      </FloatLabel>
     </div>
 
     <!-- Row 2 -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1 position-label">
         <InputText class="w-full" :value="form.checkedSignatoryPosition" readonly disabled />
-        <label>Position</label>
-      </FloatLabel>
-      <FloatLabel class="flex-1 position-label">
-        <InputText class="w-full" :value="form.approvalSignatoryPosition" readonly disabled />
         <label>Position</label>
       </FloatLabel>
     </div>
@@ -152,11 +103,11 @@
 <script setup>
 import { onMounted, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
+import { useConferenceRequestFormStore } from '@/stores/conferenceRequestFormStore'
 import { useAuthStore } from '@/stores/auth'
 import { useDropdownStore } from '@/stores/dropdown'
 
-const form = useVehicleRequestFormStore()
+const form = useConferenceRequestFormStore()
 const dropdownStore = useDropdownStore()
 const { signatoryList } = storeToRefs(dropdownStore)
 const { fetchSignatories } = dropdownStore
@@ -173,14 +124,8 @@ watchEffect(() => {
   const checked = list.find((s) => s.id == form.checkedSignatory)
   form.checkedSignatoryPosition = checked ? checked.position : ''
 
-  const to = list.find((s) => s.id == form.requestingSignatory)
-  form.requestingSignatoryPosition = to ? to.position : ''
-
   const approval = list.find((s) => s.id == form.approvalSignatory)
   form.approvalSignatoryPosition = approval ? approval.position : ''
-
-  const so = list.find((s) => s.id == form.SOSignatory)
-  form.SOSignatoryPosition = so ? so.position : ''
 
   const cnas = list.find((s) => s.id == form.CNASSignatory)
   form.CNASSignatoryPosition = cnas ? cnas.position : ''

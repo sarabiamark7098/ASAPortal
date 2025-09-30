@@ -13,16 +13,6 @@
       </FloatLabel>
 
       <FloatLabel class="flex-1">
-        <InputText
-          id="requestingOffice"
-          class="w-full"
-          v-model="form.selectedRequest.requesting_office"
-          readonly
-        />
-        <label for="requestingOffice"> Requesting Office/Unit </label>
-      </FloatLabel>
-
-      <FloatLabel class="flex-1">
         <DatePicker
           id="dateNeeded"
           class="w-full"
@@ -35,36 +25,34 @@
         <label for="dateNeeded">Date Requested</label>
       </FloatLabel>
     </div>
-    <div class="flex flex-col sm:flex-row gap-6">
-      <FloatLabel class="flex-1">
-        <Textarea
-          id="purpose"
-          class="w-full"
-          v-model="form.selectedRequest.purpose"
-          autoResize
-          rows="2"
-          readonly
-        />
-        <label for="purpose">Purpose of Trip</label>
-      </FloatLabel>
-    </div>
 
     <!-- Row 2 -->
-    <div>
-      <FloatLabel>
-        <Textarea
-          id="passengers"
+    <div class="flex flex-col sm:flex-row gap-6">
+      <FloatLabel class="flex-1">
+        <InputText
+          id="requestingOffice"
           class="w-full"
-          v-model="form.selectedRequest.passengers"
-          autoResize
-          rows="2"
+          v-model="form.selectedRequest.requesting_office"
           readonly
         />
-        <label for="passengers">Name of Passengers</label>
+        <label for="requestingOffice"> Requesting Office/Unit </label>
+      </FloatLabel>
+      <FloatLabel class="flex-1">
+        <InputText id="focal" class="w-full" v-model="form.selectedRequest.focal" readonly />
+        <label for="focal"> Focal Person </label>
+      </FloatLabel>
+      <FloatLabel class="flex-1">
+        <InputText
+          id="pax"
+          class="w-full"
+          v-model="form.selectedRequest.number_of_persons"
+          readonly
+        />
+        <label for="pax"> Number of Pax </label>
       </FloatLabel>
     </div>
 
-    <!-- Row 3: Date & Time -->
+    <!-- Row 3A: Date & Time -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1">
         <DatePicker
@@ -78,26 +66,6 @@
         />
         <label for="dateNeeded">Date Needed (Start)</label>
       </FloatLabel>
-
-      <FloatLabel class="flex-1">
-        <DatePicker
-          id="startTime"
-          class="w-full"
-          v-model="form.selectedRequest.requested_time"
-          showIcon
-          fluid
-          hourFormat="12"
-          iconDisplay="input"
-          timeOnly
-          readonly
-        >
-          <template #inputicon="slotProps">
-            <i class="pi pi-clock" @click="slotProps.clickCallback" />
-          </template>
-        </DatePicker>
-        <label for="startTime">Time Needed (Start)</label>
-      </FloatLabel>
-
       <FloatLabel class="flex-1">
         <DatePicker
           id="dateEnding"
@@ -112,22 +80,47 @@
       </FloatLabel>
     </div>
 
-    <!-- Row 4 -->
-    <div>
-      <FloatLabel>
-        <Textarea
-          id="placeOfTravel"
+    <!-- Row 3B: Date & Time -->
+    <div class="flex flex-col sm:flex-row gap-6">
+      <FloatLabel class="flex-1">
+        <DatePicker
+          id="startTime"
           class="w-full"
-          v-model="form.selectedRequest.destination"
-          autoResize
-          rows="2"
+          v-model="form.selectedRequest.requested_time_start"
+          showIcon
+          fluid
+          hourFormat="12"
+          iconDisplay="input"
+          timeOnly
           readonly
-        />
-        <label for="placeOfTravel">Place of Travel</label>
+        >
+          <template #inputicon="slotProps">
+            <i class="pi pi-clock" @click="slotProps.clickCallback" />
+          </template>
+        </DatePicker>
+        <label for="startTime">Time Needed (Start)</label>
+      </FloatLabel>
+      <FloatLabel class="flex-1">
+        <DatePicker
+          id="startTime"
+          class="w-full"
+          v-model="form.selectedRequest.requested_time_end"
+          showIcon
+          fluid
+          hourFormat="12"
+          iconDisplay="input"
+          timeOnly
+          readonly
+        >
+          <template #inputicon="slotProps">
+            <i class="pi pi-clock" @click="slotProps.clickCallback" />
+          </template>
+        </DatePicker>
+        <label for="startTime">Time Needed (Start)</label>
       </FloatLabel>
     </div>
 
-    <!-- Row 5 -->
+    <!-- Row 4 -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1">
         <InputText
@@ -148,6 +141,8 @@
         <label for="position">Position</label>
       </FloatLabel>
     </div>
+
+    <!-- Row 5 -->
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1">
         <InputMask
@@ -176,7 +171,7 @@
 </template>
 
 <script setup>
-import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
+import { useConferenceRequestFormStore } from '@/stores/conferenceRequestFormStore'
 
-const form = useVehicleRequestFormStore()
+const form = useConferenceRequestFormStore()
 </script>

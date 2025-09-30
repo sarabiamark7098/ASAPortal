@@ -10,7 +10,12 @@
             <ShowPrint />
           </div>
           <div class="flex pt-6 justify-between">
-            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="Menu()" />
+            <Button
+              label="Back"
+              severity="secondary"
+              icon="pi pi-arrow-left"
+              @click="Menu()"
+            />
             <Button label="Done" @click="Menu()" icon="pi pi-check" iconPos="left" />
           </div>
         </StepPanel>
@@ -19,10 +24,10 @@
   </div>
 </template>
 <script setup>
-import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
+import { useTARequestFormStore } from '@/stores/TARequestFormStore'
 import ShowPrint from './ShowPrint.vue'
 
-const form = useVehicleRequestFormStore()
+const form = useTARequestFormStore()
 
 function Menu() {
   form.printMode = false

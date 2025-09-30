@@ -84,18 +84,25 @@
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Driver:</dt>
               <dd class="text-green-600">
-                {{ vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.full_name || 'N/A' }}
+                {{
+                  vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.full_name || 'N/A'
+                }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Contact Number:</dt>
               <dd class="text-green-600">
-                {{ vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.contact_number || 'N/A' }}
+                {{
+                  vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.contact_number ||
+                  'N/A'
+                }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Email:</dt>
-              <dd class="text-green-600">{{ vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.email || 'N/A' }}</dd>
+              <dd class="text-green-600">
+                {{ vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.email || 'N/A' }}
+              </dd>
             </div>
           </dl>
 
@@ -239,6 +246,7 @@ const vehicleFormStore = useVehicleFormStore()
 const driverFormStore = useDriverFormStore()
 const authStore = useAuthStore()
 onMounted(async () => {
+  vehicleFormStore.loading = true
   try {
     await Promise.all([authStore.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1000))])
     loadRequests(1)

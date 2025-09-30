@@ -3,21 +3,26 @@ import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
 import dayjs from 'dayjs'
 
-export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
+export const useConferenceRequestFormStore = defineStore('conferenceRequestFormStore', {
   state: () => ({
     requesting_office: '',
+    date_requested: new Date(),
     purpose: '',
-    passengers: '',
     requested_start: null,
     requested_end: null,
-    requested_time: null,
-    destination: '',
+    requested_time_start: null,
+    requested_time_end: null,
+    number_of_persons: '',
+    focal: '',
+    conference_room: '',
     requester_name: '',
     requester_position: '',
     requester_contact_number: '',
     requester_email: '',
-    src: '',
-    vehicleList: [],
+    src: null,
+
+    room: '',
+
     selectedRequest: '',
     loading: false,
     loading2: false,
@@ -25,14 +30,6 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
     editModeCNAS: false,
     printMode: false,
     error: null,
-
-    checkedSignatory: '',
-    requestingSignatory: '',
-    approvalSignatory: '',
-    SOSignatory: '',
-    CNASSignatory: '',
-
-    vehicleAssigned: '',
 
     approveDisapprove: '',
 
@@ -50,53 +47,58 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
     submitting: false,
     showErrors: false,
 
+    checkedSignatory: '',
+    requestingSignatory: '',
+    approvalSignatory: '',
+    SOSignatory: '',
+    CNASSignatory: '',
+
     checkedSignatoryPosition: '',
     requestingSignatoryPosition: '',
     approvalSignatoryPosition: '',
     SOSignatoryPosition: '',
     CNASSignatoryPosition: '',
-
-    vehicleOptions: [],
-    selectedVehicle: null,
-    model: '',
-    brand: '',
-    unit_type: '',
-    last_name: '',
-    first_name: '',
-    driver_position: '',
-    official_station: '',
-    email: '',
-    contact_number: '',
   }),
-  getters: {
-    isComplete: (state) =>
-      !!state.requesting_office &&
-      !!state.purpose &&
-      !!state.passengers &&
-      !!state.requested_start &&
-      !!state.requested_end &&
-      !!state.requested_time &&
-      !!state.destination &&
-      !!state.requester_name &&
-      !!state.requester_position &&
-      !!state.requester_contact_number &&
-      !!state.requester_email &&
-      !!state.src,
-  },
+
   actions: {
-    resetForm() {
+    async resetForm() {
       this.requesting_office = ''
       this.purpose = ''
-      this.passengers = ''
       this.requested_start = null
       this.requested_end = null
-      this.requested_time = null
-      this.destination = ''
+      this.requested_time_start = null
+      this.requested_time_end = null
+      this.number_of_persons = ''
+      this.focal = ''
+      this.conference_room = ''
       this.requester_name = ''
       this.requester_position = ''
       this.requester_contact_number = ''
       this.requester_email = ''
       this.src = null
+    },
+    async resetRoutes() {
+      this.requesting_office = ''
+      this.purpose = ''
+      this.requested_start = null
+      this.requested_end = null
+      this.requested_time_start = null
+      this.requested_time_end = null
+      this.number_of_persons = ''
+      this.focal = ''
+      this.conference_room = ''
+      this.requester_name = ''
+      this.requester_position = ''
+      this.requester_contact_number = ''
+      this.requester_email = ''
+      this.src = null
+      this.selectedRequest = ''
+      this.loading = false
+      this.loading2 = false
+      this.editMode = false
+      this.editModeCNAS = false
+      this.printMode = false
+      this.error = null
     },
 
     async submitForm() {
@@ -106,26 +108,20 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
           date_requested: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           requesting_office: this.requesting_office,
           purpose: this.purpose,
-          passengers: this.passengers,
           requested_start: dayjs(this.requested_start).format('YYYY-MM-DD'),
-          requested_time: dayjs(this.requested_time).format('HH:mm:ss'),
+          requested_time_start: dayjs(this.requested_time_start).format('HH:mm:ss'),
           requested_end: dayjs(this.requested_end).format('YYYY-MM-DD'),
-          destination: this.destination,
+          requested_time_end: dayjs(this.requested_time_end).format('HH:mm:ss'),
+          conference_room: this.conference_room,
+          number_of_persons: this.number_of_persons,
+          focal: this.focal,
           requester_name: this.requester_name,
           requester_position: this.requester_position,
           requester_contact_number: this.requester_contact_number,
           requester_email: this.requester_email,
         }
 
-        const isEmpty = Object.values(formData).some(
-          (value) => value === null || value === '' || value === undefined,
-        )
-
-        if (isEmpty) {
-          throw new Error('Form contains empty fields.')
-        }
-
-        const response = await axios.post('/api/vehicle-requests', formData, {
+        const response = await axios.post('/api/conference-requests', formData, {
           headers: {
             Authorization: `Bearer ${authStore.token}`,
           },
@@ -143,8 +139,7 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
         const isAvailable = availability === 'Available'
 
         const formData = {
-          vehicle_assignment_id: isAvailable ? this.vehicleAssigned : 'N/A',
-          is_vehicle_available: isAvailable,
+          is_conference_available: isAvailable,
           signatories: [],
         }
 
@@ -152,30 +147,18 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
           formData.signatories = [
             {
               id: this.checkedSignatory,
-              label: 'Dispatcher',
-            },
-            {
-              id: this.requestingSignatory,
-              label: 'GSS Head',
+              label: 'checker',
             },
             {
               id: this.approvalSignatory,
               label: 'Division Chief',
-            },
-            {
-              id: this.SOSignatory,
-              label: 'Approval Officer',
             },
           ]
         } else {
           formData.signatories = [
             {
               id: this.checkedSignatory,
-              label: 'Dispatcher',
-            },
-            {
-              id: this.approvalSignatory,
-              label: 'Division Chief',
+              label: 'checker',
             },
             {
               id: this.CNASSignatory,
@@ -192,7 +175,7 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
           throw new Error('Form contains empty fields.')
         }
 
-        const response = await axios.post(`/api/vehicle-requests/${id}/process`, formData, {
+        const response = await axios.post(`/api/conference-requests/${id}/process`, formData, {
           headers: {
             Authorization: `Bearer ${authStore.token}`,
           },
@@ -203,11 +186,12 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
         throw error
       }
     },
+
     async putApprovalStatus(id, status) {
       try {
         const authStore = useAuthStore()
         const response = await axios.put(
-          `/api/vehicle-requests/${id}`,
+          `/api/conference-requests/${id}`,
           { status },
           {
             headers: {
@@ -238,8 +222,8 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
       }
     },
 
-    async getVehicleRequests(token, page, perPage, query = '', sortBy = '', sortDir = '') {
-      const response = await axios.get('/api/vehicle-requests', {
+    async getRoomRequests(token, page, perPage, query = '', sortBy = '', sortDir = '', room = '') {
+      const response = await axios.get('/api/conference-requests', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -249,9 +233,10 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
           query,
           sort_by: sortBy,
           sort_order: sortDir,
+          room: room,
         },
       })
-      this.vehicleRequests = response.data.data
+      this.conferenceRequests = response.data.data
       this.totalRecords = response.data.total
     },
   },

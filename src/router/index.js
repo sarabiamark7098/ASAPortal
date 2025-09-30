@@ -8,7 +8,7 @@ import AdminLayout from '@/layouts/AdminLayout.vue'
 import Login from '@/views/Login.vue'
 import Dashboard from '@/views/Admin/Dashboard.vue'
 import Register from '@/views/Register.vue'
-import UserAccounts from '@/views/Admin/UserAccounts.vue'
+import UserAccounts from '@/views/Admin/Management/UserAccounts.vue'
 import ClientView from '@/views/Client/ClientView.vue'
 
 import RequestVehicle from '@/views/Requests/RequestVehicle.vue'
@@ -45,6 +45,8 @@ import AirTravelOrderRequest from '@/views/Admin/Requests/AirTravelOrder.vue'
 import EntryRequest from '@/views/Admin/Requests/Entry.vue'
 import ParkingRequest from '@/views/Admin/Requests/Parking.vue'
 import JanitorialRequest from '@/views/Admin/Requests/Janitorial.vue'
+
+import { useConferenceRequestFormStore } from '@/stores/conferenceRequestFormStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -125,7 +127,7 @@ const router = createRouter({
       meta: { requiresAuth: true, role: ['superadmin', 'supervisor', 'manager'] },
       children: [
         {
-          path: 'ta',
+          path: 'technical-assistance',
           name: 'TARequest',
           component: TARequest,
         },
@@ -150,7 +152,7 @@ const router = createRouter({
           component: SeminarRequest,
         },
         {
-          path: 'ato',
+          path: 'travel-order',
           name: 'AirTravelOrderRequest',
           component: AirTravelOrderRequest,
         },
@@ -336,6 +338,12 @@ router.afterEach((to) => {
   const users = useUsersStore()
   if (to.name === 'useraccounts') {
     users.fetchAllUsers()
+  }
+
+  const resetRoutes = ['MaagapRequest', 'MagitingRequest', 'SeminarRequest']
+  if (resetRoutes.includes(to.name)) {
+    const requestConferenceStore = useConferenceRequestFormStore()
+    requestConferenceStore.resetRoutes()
   }
 })
 export default router

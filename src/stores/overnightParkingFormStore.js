@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export const useOvernightFormStore = defineStore('overnightForm', {
   state: () => ({
-    requestingOffice: '',
+    requesting_office: '',
     dateRequested: null,
     dateNeeded: null,
     dateEnding: null,
@@ -22,7 +22,7 @@ export const useOvernightFormStore = defineStore('overnightForm', {
 
   getters: {
     isComplete: (state) =>
-      !!state.requestingOffice &&
+      !!state.requesting_office &&
       !!state.dateRequested &&
       !!state.dateNeeded &&
       !!state.dateEnding &&
@@ -41,7 +41,7 @@ export const useOvernightFormStore = defineStore('overnightForm', {
 
   actions: {
     resetForm() {
-      this.requestingOffice = ''
+      this.requesting_office = ''
       this.dateRequested = null
       this.dateNeeded = null
       this.dateEnding = null
@@ -62,7 +62,7 @@ export const useOvernightFormStore = defineStore('overnightForm', {
       try {
         const formData = new FormData()
 
-        formData.append('requestingOffice', this.requestingOffice)
+        formData.append('requesting_office', this.requesting_office)
         formData.append('dateRequested', this.dateRequested)
         formData.append('dateNeeded', this.dateNeeded)
         formData.append('dateEnding', this.dateEnding)

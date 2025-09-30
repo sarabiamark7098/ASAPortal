@@ -5,8 +5,8 @@
     <div class="flex flex-col sm:flex-row gap-6">
       <FloatLabel class="flex-1">
         <Select
-          v-model="vehicleRequestFormStore.vehicleAssigned"
-          :options="vehicleRequestFormStore.vehicleOptions"
+          v-model="form.vehicleAssigned"
+          :options="form.vehicleOptions"
           option-label="label"
           option-value="value"
           id="platenumber"
@@ -19,7 +19,7 @@
         <InputText
           class="w-full"
           id="model"
-          :value="vehicleRequestFormStore.model"
+          :value="form.model"
           readonly
           disabled
         />
@@ -32,7 +32,7 @@
         <InputText
           class="w-full"
           id="brand"
-          :value="vehicleRequestFormStore.brand"
+          :value="form.brand"
           readonly
           disabled
         />
@@ -42,7 +42,7 @@
         <InputText
           class="w-full"
           id="unit_type"
-          :value="vehicleRequestFormStore.unit_type"
+          :value="form.unit_type"
           readonly
           disabled
         />
@@ -57,7 +57,7 @@
         <InputText
           class="w-full"
           id="last_name"
-          :value="vehicleRequestFormStore.last_name"
+          :value="form.last_name"
           readonly
           disabled
         />
@@ -67,7 +67,7 @@
         <InputText
           class="w-full"
           id="first_name"
-          :value="vehicleRequestFormStore.first_name"
+          :value="form.first_name"
           readonly
           disabled
         />
@@ -81,7 +81,7 @@
         <InputText
           class="w-full"
           id="driverposition"
-          :value="vehicleRequestFormStore.driver_position"
+          :value="form.driver_position"
           readonly
           disabled
         />
@@ -91,7 +91,7 @@
         <InputText
           class="w-full"
           id="official_station"
-          :value="vehicleRequestFormStore.official_station"
+          :value="form.official_station"
           readonly
           disabled
         />
@@ -105,7 +105,7 @@
         <InputText
           class="w-full"
           id="email"
-          :value="vehicleRequestFormStore.email"
+          :value="form.email"
           readonly
           disabled
         />
@@ -115,7 +115,7 @@
         <InputText
           class="w-full"
           id="contact_number"
-          :value="vehicleRequestFormStore.contact_number"
+          :value="form.contact_number"
           readonly
           disabled
         />
@@ -131,7 +131,7 @@ import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 import { useAuthStore } from '@/stores/auth'
 import { useDropdownStore } from '@/stores/dropdown'
 
-const vehicleRequestFormStore = useVehicleRequestFormStore()
+const form = useVehicleRequestFormStore()
 const authStore = useAuthStore()
 const dropdownStore = useDropdownStore()
 
@@ -141,32 +141,32 @@ onMounted(async () => {
 
 // Update options and selected vehicle reactively
 watchEffect(() => {
-  vehicleRequestFormStore.vehicleOptions = (dropdownStore.vehicle?.data || []).map((a) => ({
+  form.vehicleOptions = (dropdownStore.vehicle?.data || []).map((a) => ({
     label: a.vehicle.plate_number,
     value: a.id,
     original: a,
   }))
 
-  vehicleRequestFormStore.selectedVehicle =
-    vehicleRequestFormStore.vehicleOptions.find(
-      (v) => v.value === vehicleRequestFormStore.vehicleAssigned,
+  form.selectedVehicle =
+    form.vehicleOptions.find(
+      (v) => v.value === form.vehicleAssigned,
     )?.original || null
 
-  vehicleRequestFormStore.model = vehicleRequestFormStore.selectedVehicle?.vehicle.model || ''
-  vehicleRequestFormStore.brand = vehicleRequestFormStore.selectedVehicle?.vehicle.brand || ''
-  vehicleRequestFormStore.unit_type =
-    vehicleRequestFormStore.selectedVehicle?.vehicle.unit_type || ''
-  vehicleRequestFormStore.last_name =
-    vehicleRequestFormStore.selectedVehicle?.driver.last_name || ''
-  vehicleRequestFormStore.first_name =
-    vehicleRequestFormStore.selectedVehicle?.driver.first_name || ''
-  vehicleRequestFormStore.driver_position =
-    vehicleRequestFormStore.selectedVehicle?.driver.position || ''
-  vehicleRequestFormStore.official_station =
-    vehicleRequestFormStore.selectedVehicle?.driver.official_station || ''
-  vehicleRequestFormStore.email = vehicleRequestFormStore.selectedVehicle?.driver.email || ''
-  vehicleRequestFormStore.contact_number =
-    vehicleRequestFormStore.selectedVehicle?.driver.contact_number || ''
+  form.model = form.selectedVehicle?.vehicle.model || ''
+  form.brand = form.selectedVehicle?.vehicle.brand || ''
+  form.unit_type =
+    form.selectedVehicle?.vehicle.unit_type || ''
+  form.last_name =
+    form.selectedVehicle?.driver.last_name || ''
+  form.first_name =
+    form.selectedVehicle?.driver.first_name || ''
+  form.driver_position =
+    form.selectedVehicle?.driver.position || ''
+  form.official_station =
+    form.selectedVehicle?.driver.official_station || ''
+  form.email = form.selectedVehicle?.driver.email || ''
+  form.contact_number =
+    form.selectedVehicle?.driver.contact_number || ''
 })
 </script>
 

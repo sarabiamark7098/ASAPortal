@@ -24,8 +24,8 @@
             <InputText
               id="requestingOffice"
               class="w-full"
-              v-model="entryFormStore.requestingOffice"
-              :class="{ 'p-invalid': showErrors && !entryFormStore.requestingOffice }"
+              v-model="entryFormStore.requesting_office"
+              :class="{ 'p-invalid': showErrors && !entryFormStore.requesting_office }"
             />
             <label for="requestingOffice"
               >Requesting Office/Unit <span class="text-red-500">*</span></label
@@ -253,7 +253,7 @@ function submitRequest() {
   const f = entryFormStore
   const errors = []
 
-  if (!f.requestingOffice) errors.push('Requesting Office/Unit is required.')
+  if (!f.requesting_office) errors.push('Requesting Office/Unit is required.')
   if (!f.dateRequested) errors.push('Date Requested is required.')
   if (!f.dateNeeded) errors.push('Expected Date is required.')
   if (!f.requestedBy) errors.push('Requested by is required.')

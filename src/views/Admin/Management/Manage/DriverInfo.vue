@@ -1,5 +1,6 @@
 <template>
-  <div class="px-4 sm:px-6 lg:px-10 py-6">
+  <FullScreenLoader :visible="driverFormStore.loadingaction" message="" />
+  <div v-if="!driverFormStore.loadingaction" class="px-4 sm:px-6 lg:px-10 py-6">
     <div class="flex flex-col lg:flex-row gap-6">
       <!-- Driver Information -->
       <div
@@ -26,7 +27,7 @@
         class="w-full lg:w-1/2 shadow-sm rounded-lg p-5 overflow-y-auto flex flex-col bg-white max-h-[600px]"
       >
         <h3 class="text-lg font-semibold mb-7 sticky top-0 bg-white z-10 pb-2">
-          Update Driver Information
+          {{ driverFormStore.addDriver ? 'Add' : 'Update' }} Driver Information
         </h3>
 
         <div class="flex flex-col w-full gap-8 bg-white">
@@ -41,6 +42,7 @@
                 Last Name is required.
               </small>
             </div>
+
             <div>
               <FloatLabel>
                 <InputText
@@ -165,7 +167,8 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { useDriverFormStore } from '@/stores/driverFormStore'
 import { useAuthStore } from '@/stores/auth'
 import useVuelidate from '@vuelidate/core'
@@ -176,6 +179,17 @@ const authStore = useAuthStore()
 
 // Alias for readability
 const driver = driverFormStore.selectedDriver
+
+onMounted(async () => {
+  driverFormStore.loadingaction = true
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 500))
+  } catch (error) {
+    console.error('Error on mount:', error)
+  } finally {
+    driverFormStore.loadingaction = false
+  }
+})
 
 function back() {
   driverFormStore.updateDriver = false

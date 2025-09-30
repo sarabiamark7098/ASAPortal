@@ -52,6 +52,7 @@ export const useDropdownStore = defineStore('dropdown', {
         console.error('Error fetching signatories:', this.error)
       }
     },
+
     async fetchVehicleAssignments(token) {
       try {
         const response = await axios.get('/api/vehicle-assignments', {
@@ -63,6 +64,7 @@ export const useDropdownStore = defineStore('dropdown', {
         console.error('Error fetching Vehicle Assignments:', this.error)
       }
     },
+    
     async fetchVehicleTypes() {
       try {
         const authStore = useAuthStore()

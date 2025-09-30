@@ -20,6 +20,7 @@ export const useVehicleFormStore = defineStore('vehicleForm', {
     vehicleList: [],
     loading: false,
     loading2: false,
+    loadingaction: false,
     error: null,
 
     // Table interaction refs

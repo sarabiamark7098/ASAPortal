@@ -1,34 +1,33 @@
 <template>
-  <div class="px-3 sm:px-6 lg:px-10 py-4 sm:py-6">
+  <FullScreenLoader :visible="vehicleFormStore.loadingaction" message="" />
+  <div v-if="!vehicleFormStore.loadingaction" class="px-3 sm:px-6 lg:px-10 py-4 sm:py-6">
     <div class="flex flex-col lg:flex-row gap-6">
       <!-- Vehicle Information -->
-      <div class="w-full lg:w-1/2 shadow-md rounded-xl px-5 overflow-y-auto bg-white max-h-[600px]">
-        <h3
-          class="text-base sm:text-lg font-semibold mb-4 sticky top-0 bg-white z-10 py-5 pb-2 border-b"
-        >
+      <div
+        class="w-full lg:w-1/2 shadow-sm rounded-lg p-5 overflow-y-auto flex flex-col bg-white max-h-[400px] sm:max-h-[500px] lg:max-h-[600px]"
+      >
+        <h3 class="text-lg font-semibold mb-4 sticky top-0 bg-white z-10 pb-2">
           Vehicle Information
         </h3>
 
-        <dl class="space-y-2 text-sm sm:text-base">
+        <dl class="space-y-2 text-sm sm:text-base flex-grow">
           <div
             v-for="(value, label) in vehicleInfo"
             :key="label"
-            class="flex flex-col sm:flex-row sm:justify-between border-b border-gray-200 py-2"
+            class="flex justify-between border-b border-gray-400 py-1"
           >
             <dt class="font-semibold">{{ label }}:</dt>
-            <dd class="text-green-600 break-words sm:text-right">
-              {{ value || 'N/A' }}
-            </dd>
+            <dd class="text-green-600">{{ value || 'N/A' }}</dd>
           </div>
         </dl>
       </div>
 
       <!-- Update Form -->
-      <div class="w-full lg:w-1/2 shadow-md rounded-xl p-5 overflow-y-auto bg-white max-h-[600px]">
-        <h3
-          class="text-base sm:text-lg font-semibold mb-6 sticky top-0 bg-white z-10 pb-2 border-b"
-        >
-          Update Vehicle Information
+      <div
+        class="w-full lg:w-1/2 shadow-sm rounded-lg p-5 overflow-y-auto flex flex-col bg-white max-h-[600px]"
+      >
+        <h3 class="text-lg font-semibold mb-7 sticky top-0 bg-white z-10 pb-2">
+          {{ vehicleFormStore.addVehicle ? 'Add' : 'Update' }} Vehicle Information
         </h3>
 
         <div class="flex flex-col w-full gap-6">
@@ -164,6 +163,7 @@
 
 <script setup>
 import { computed, onMounted, watch } from 'vue'
+import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { useVehicleFormStore } from '@/stores/vehicleFormStore'
 import { useDropdownStore } from '@/stores/dropdown'
 import { storeToRefs } from 'pinia'
@@ -186,8 +186,15 @@ if (vehicleFormStore.selectedVehicle && vehicleFormStore.selectedVehicle.vehicle
 }
 
 onMounted(async () => {
-  await dropdownStore.fetchDrivers()
-  await dropdownStore.fetchVehicleTypes()
+  vehicleFormStore.loadingaction = true
+  try {
+    await dropdownStore.fetchDrivers()
+    await dropdownStore.fetchVehicleTypes()
+  } catch (error) {
+    console.error('Error on mount:', error)
+  } finally {
+    vehicleFormStore.loadingaction = false
+  }
 })
 
 watch(

@@ -37,21 +37,13 @@
     </div>
     <div class="flex flex-col sm:flex-row gap-6 justify-center mt-12">
       <Button
-        id="printVehicleRequest"
-        class="w-1/4"
-        label="Print Vehicle Request"
-        @click="openPrint"
-        icon="pi pi-print"
-      />
-      <Button
         v-if="
-          form.selectedRequest.status === 'processed' ||
-          form.selectedRequest.status === 'approved'
+          form.selectedRequest.status === 'processed' || form.selectedRequest.status === 'approved'
         "
-        id="printTravelOrder"
+        id="printConferenceRequest"
         class="w-1/4"
-        label="Print Travel Order"
-        @click="openPrintTO"
+        label="Print Conference Request"
+        @click="openPrint"
         icon="pi pi-print"
       />
       <Button
@@ -67,24 +59,19 @@
 </template>
 
 <script setup>
-import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
+import { useConferenceRequestFormStore } from '@/stores/conferenceRequestFormStore'
 import axios from 'axios'
 
-const form = useVehicleRequestFormStore()
+const form = useConferenceRequestFormStore()
 
 function openPrint() {
   if (!form.selectedRequest) return
   const id = form.selectedRequest.id
-  window.open(`${axios.defaults.baseURL}/api/pdf/vehicle-request/${id}`, '_blank')
-}
-function openPrintTO() {
-  if (!form.selectedRequest) return
-  const id = form.selectedRequest.id
-  window.open(`${axios.defaults.baseURL}/api/pdf/travel-order/${id}`, '_blank')
+  window.open(`${axios.defaults.baseURL}/api/pdf/conference-request/${id}`, '_blank')
 }
 function openPrintCNAS() {
   if (!form.selectedRequest) return
   const id = form.selectedRequest.id
-  window.open(`${axios.defaults.baseURL}/api/pdf/vehicle-cnas/${id}`, '_blank')
+  window.open(`${axios.defaults.baseURL}/api/pdf/conference-cnas/${id}`, '_blank')
 }
 </script>

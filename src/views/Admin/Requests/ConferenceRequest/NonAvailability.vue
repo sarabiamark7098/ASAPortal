@@ -9,7 +9,7 @@
       <StepPanels>
         <StepPanel v-slot="{ activateCallback }" value="1">
           <div class="flex flex-col min-h-[400px] border-4 border-double rounded p-9 gap-4">
-            <PreviewVehicle />
+            <PreviewConference />
           </div>
           <div class="flex pt-6 justify-between">
             <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="Menu()" />
@@ -23,7 +23,7 @@
         </StepPanel>
         <StepPanel v-slot="{ activateCallback }" value="2">
           <div class="flex flex-col min-h-[400px] border-4 border-double rounded p-9 gap-4">
-            <SignatoryVehicle />
+            <SignatoryConference />
           </div>
           <div class="flex pt-6 justify-between">
             <Button
@@ -35,7 +35,7 @@
 
             <Button
               label="Submit"
-              :disabled="form.submitting"
+              :disabled="submitting"
               @click="handleSubmit(activateCallback)"
               icon="pi pi-check"
               iconPos="left"
@@ -55,14 +55,17 @@
   </div>
 </template>
 <script setup>
-import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
+import { ref } from 'vue'
+import { useConferenceRequestFormStore } from '@/stores/conferenceRequestFormStore'
 import { useAuthStore } from '@/stores/auth'
-import PreviewVehicle from './PreviewVehicle.vue'
-import SignatoryVehicle from './SignatoryVehicle.vue'
+import PreviewConference from './PreviewConference.vue'
+import SignatoryConference from './SignatoryConference.vue'
 import ShowPrint from './ShowPrint.vue'
 
-const form = useVehicleRequestFormStore()
+const form = useConferenceRequestFormStore()
 const authStore = useAuthStore()
+
+const submitting = ref(false)
 
 function Menu() {
   form.editModeCNAS = false
@@ -82,9 +85,6 @@ const handleSubmit = (activateCallback) => {
   if (!form.checkedSignatory) {
     errors.push('Checked By is required')
   }
-  if (!form.approvalSignatory) {
-    errors.push('Request Approval is required')
-  }
   if (!form.CNASSignatory) {
     errors.push('CNAS Approving is required')
   }
@@ -94,7 +94,7 @@ const handleSubmit = (activateCallback) => {
     return
   }
 
-  form.submitting = true
+  submitting.value = true
 
   setTimeout(async () => {
     try {

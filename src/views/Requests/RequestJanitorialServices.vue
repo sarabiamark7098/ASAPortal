@@ -25,8 +25,8 @@
             <InputText
               id="requestingOffice"
               class="w-full"
-              v-model="janitorialFormStore.requestingOffice"
-              :class="{ 'p-invalid': showErrors && !janitorialFormStore.requestingOffice }"
+              v-model="janitorialFormStore.requesting_office"
+              :class="{ 'p-invalid': showErrors && !janitorialFormStore.requesting_office }"
             />
             <label for="requestingOffice"
               >Requesting Office/Unit <span class="text-red-500">*</span></label
@@ -291,7 +291,7 @@ function submitRequest() {
   const f = janitorialFormStore
   const errors = []
 
-  if (!f.requestingOffice) errors.push('Requesting Office/Unit is required.')
+  if (!f.requesting_office) errors.push('Requesting Office/Unit is required.')
   if (!f.purpose) errors.push('Purpose is required.')
   if (!f.utilityWorker) errors.push('Number of Utility Workers is required.')
   if (!f.dateNeeded) errors.push('Date Needed is required.')

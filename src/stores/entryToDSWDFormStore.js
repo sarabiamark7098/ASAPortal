@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export const usePremisesFormStore = defineStore('premisesForm', {
   state: () => ({
-    requestingOffice: '',
+    requesting_office: '',
     dateRequested: null,
     dateNeeded: null,
     requestedBy: '',
@@ -16,7 +16,7 @@ export const usePremisesFormStore = defineStore('premisesForm', {
 
   getters: {
     isComplete: (state) =>
-      !!state.requestingOffice &&
+      !!state.requesting_office &&
       !!state.dateRequested &&
       !!state.dateNeeded &&
       !!state.requestedBy &&
@@ -30,7 +30,7 @@ export const usePremisesFormStore = defineStore('premisesForm', {
 
   actions: {
     resetForm() {
-      this.requestingOffice = ''
+      this.requesting_office = ''
       this.dateRequested = null
       this.dateNeeded = null
       this.requestedBy = ''
@@ -56,7 +56,7 @@ export const usePremisesFormStore = defineStore('premisesForm', {
     async submitForm() {
       try {
         const formData = {
-          requestingOffice: this.requestingOffice,
+          requesting_office: this.requesting_office,
           dateRequested: this.dateRequested,
           dateNeeded: this.dateNeeded,
           position: this.position,
