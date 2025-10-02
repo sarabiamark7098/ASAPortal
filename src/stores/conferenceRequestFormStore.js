@@ -206,22 +206,6 @@ export const useConferenceRequestFormStore = defineStore('conferenceRequestFormS
       }
     },
 
-    async getVehicleTransactions(token) {
-      this.loading = true
-      this.error = null
-      try {
-        const response = await axios.get('/api/vehicle-requests', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        this.vehicleRequests = response.data.data || response.data
-      } catch (err) {
-        this.error = err
-        console.error('Failed to fetch:', err)
-      } finally {
-        this.loading = false
-      }
-    },
-
     async getRoomRequests(token, page, perPage, query = '', sortBy = '', sortDir = '', room = '') {
       const response = await axios.get('/api/conference-requests', {
         headers: {
