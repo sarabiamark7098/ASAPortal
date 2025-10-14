@@ -347,7 +347,7 @@ onMounted(async () => {
       authStore.fetchUser(),
       (form.loading = true),
       (form.room = 'seminar'),
-      new Promise((resolve) => setTimeout(resolve, 1000)),
+      new Promise((resolve) => setTimeout(resolve, 1500)),
     ])
     loadRequests(1)
   } catch (error) {
@@ -432,7 +432,7 @@ const handleSubmit = () => {
       form.submitting = false
       handleUpdated()
     }
-  }, 1000)
+  }, 1500)
 }
 
 function handleCancelEdit() {

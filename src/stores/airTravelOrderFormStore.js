@@ -1,12 +1,15 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
+import dayjs from 'dayjs'
 
 export const useAirTravelOrderFormStore = defineStore('airTravelOrderForm', {
   state: () => ({
     requesting_office: '',
     fund_source: '',
     requested_date: new Date(),
-    trip: null, // ✅ Start as null for validation
+    trip_ticket_type: null,
+
     guests: [
       {
         first_name: '',
@@ -19,27 +22,26 @@ export const useAirTravelOrderFormStore = defineStore('airTravelOrderForm', {
     ],
     flights: [
       {
-        destination: '',
-        date_departure: null,
-        departure_etd: '',
-        departure_eta: '',
-        date_arrival: null,
-        arrival_etd: '',
-        arrival_eta: '',
+        destination_from: '',
+        destination_to: '',
+        trip_type: null,
+        date_depart: null,
+        etd: '',
+        eta: '',
       },
     ],
     requester_name: '',
     requester_position: '',
     requester_contact_number: '',
     requester_email: '',
+
     specialOrderFile: null,
     specialOrderFileName: '',
     travelOrderFile: null,
     travelOrderFileName: '',
+
     maxGuests: 10,
     maxFlights: 10,
-    showSpecialOrderError: false,
-    showTravelOrderError: false,
 
     submitting: false,
     loading: false,
@@ -50,66 +52,66 @@ export const useAirTravelOrderFormStore = defineStore('airTravelOrderForm', {
     errors: {
       guests: [],
       flights: [],
-      requester: {},
       files: {},
-      trip: null, // ✅ Add trip error here
     },
   }),
 
   actions: {
     validateForm() {
-      this.errors = { guests: [], flights: [], requester: {}, files: {}, trip: null }
+      this.errors = { guests: [], flights: [], files: {} }
+      let valid = true
 
-      // Trip validation
-      if (this.trip === null) {
-        this.errors.trip = 'Please select Yes or No for trip'
-      }
+      // ✅ Guests Validation
+      this.guests.forEach((guest, index) => {
+        const guestErrors = {}
 
-      // Guests validation
-      this.guests.forEach((g, i) => {
-        const gErrors = {}
-        if (!g.first_name) gErrors.first_name = 'First name is required'
-        if (!g.last_name) gErrors.last_name = 'Last name is required'
-        if (!g.birth_date) gErrors.birth_date = 'Birth date is required'
-        if (!g.position) gErrors.position = 'Position is required'
-        if (!g.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(g.email))
-          gErrors.email = 'Valid email is required'
-        if (!g.contact_number) gErrors.contact_number = 'Contact number is required'
-        this.errors.guests[i] = gErrors
+        if (!guest.first_name) guestErrors.first_name = 'First name is required.'
+        if (!guest.last_name) guestErrors.last_name = 'Last name is required.'
+        if (!guest.birth_date) guestErrors.birth_date = 'Birth date is required.'
+        if (!guest.position) guestErrors.position = 'Position is required.'
+
+        if (!guest.email) {
+          guestErrors.email = 'Email is required.'
+        } else if (
+          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guest.email) ||
+          !(guest.email.endsWith('@gmail.com') || guest.email.endsWith('@dswd.gov.ph'))
+        ) {
+          guestErrors.email = 'Invalid email domain. Use Gmail or DSWD email.'
+        }
+
+        if (!guest.contact_number) guestErrors.contact_number = 'Contact number is required.'
+
+        this.errors.guests[index] = guestErrors
+        if (Object.keys(guestErrors).length > 0) valid = false
       })
 
-      // Flights validation
-      this.flights.forEach((f, i) => {
-        const fErrors = {}
-        if (!f.destination) fErrors.destination = 'Destination is required'
-        this.errors.flights[i] = fErrors
+      // ✅ Flights Validation
+      this.flights.forEach((flight, index) => {
+        const flightErrors = {}
+
+        if (!flight.destination_from || !flight.destination_to) {
+          flightErrors.destination = 'Both destinations are required.'
+        }
+
+        if (!flight.trip_type) flightErrors.trip_type = 'Trip type is required.'
+        if (!flight.date_depart) flightErrors.date_depart = 'Departure date is required.'
+
+        this.errors.flights[index] = flightErrors
+        if (Object.keys(flightErrors).length > 0) valid = false
       })
 
-      // Requester validation
-      if (!this.requester_name) this.errors.requester.name = 'Requester name is required'
-      if (!this.requester_position)
-        this.errors.requester.position = 'Requester position is required'
-      if (!this.requester_contact_number)
-        this.errors.requester.contact_number = 'Contact number is required'
-      if (!this.requester_email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.requester_email)) {
-        this.errors.requester.email = 'Valid email is required'
-      }
-
-      // File validation (PDFs only)
+      // ✅ File Validation (PDF only)
+      const fileErrors = {}
       if (this.specialOrderFile && this.specialOrderFile.type !== 'application/pdf') {
-        this.errors.files.specialOrderFile = 'Only PDF files allowed'
+        fileErrors.specialOrderFile = 'Only PDF files are allowed.'
       }
       if (this.travelOrderFile && this.travelOrderFile.type !== 'application/pdf') {
-        this.errors.files.travelOrderFile = 'Only PDF files allowed'
+        fileErrors.travelOrderFile = 'Only PDF files are allowed.'
       }
+      this.errors.files = fileErrors
+      if (Object.keys(fileErrors).length > 0) valid = false
 
-      return (
-        this.errors.trip === null && // ✅ ensure trip is selected
-        !this.errors.guests.some((e) => Object.keys(e).length > 0) &&
-        !this.errors.flights.some((e) => Object.keys(e).length > 0) &&
-        Object.keys(this.errors.requester).length === 0 &&
-        Object.keys(this.errors.files).length === 0
-      )
+      return valid
     },
 
     async submitForm() {
@@ -135,9 +137,7 @@ export const useAirTravelOrderFormStore = defineStore('airTravelOrderForm', {
 
         const formattedFlights = this.flights.map((flight) => ({
           ...flight,
-          date_departure: flight.date_departure
-            ? new Date(flight.date_departure).toISOString()
-            : null,
+          date_depart: flight.date_depart ? new Date(flight.date_depart).toISOString() : null,
           date_arrival: flight.date_arrival ? new Date(flight.date_arrival).toISOString() : null,
         }))
         formData.append('flights', JSON.stringify(formattedFlights))
@@ -175,7 +175,8 @@ export const useAirTravelOrderFormStore = defineStore('airTravelOrderForm', {
       this.requesting_office = ''
       this.fund_source = ''
       this.requested_date = new Date()
-      this.trip = null // ✅ reset to null so validation runs
+      this.trip_ticket_type = null
+
       this.guests = [
         {
           first_name: '',
@@ -186,26 +187,29 @@ export const useAirTravelOrderFormStore = defineStore('airTravelOrderForm', {
           contact_number: '',
         },
       ]
+
       this.flights = [
         {
-          destination: '',
-          date_departure: null,
-          departure_etd: '',
-          departure_eta: '',
-          date_arrival: null,
-          arrival_etd: '',
-          arrival_eta: '',
+          destination_from: '',
+          destination_to: '',
+          trip_type: null,
+          date_depart: null,
+          etd: '',
+          eta: '',
         },
       ]
+
       this.requester_name = ''
       this.requester_position = ''
       this.requester_contact_number = ''
       this.requester_email = ''
+
       this.specialOrderFile = null
       this.specialOrderFileName = ''
       this.travelOrderFile = null
       this.travelOrderFileName = ''
-      this.errors = { guests: [], flights: [], requester: {}, files: {}, trip: null }
+
+      this.errors = { guests: [], flights: [], files: {} }
     },
   },
 })

@@ -24,11 +24,14 @@
           <div class="flex-1">
             <FloatLabel>
               <InputText
+                id="requestingOffice"
                 v-model="form.requesting_office"
                 class="w-full"
                 :class="{ 'p-invalid': v$.requesting_office.$error }"
               />
-              <label>Requesting Office/Unit <span class="text-red-500">*</span></label>
+              <label for="requestingOffice"
+                >Requesting Office/Unit <span class="text-red-500">*</span></label
+              >
             </FloatLabel>
             <small v-if="v$.requesting_office.$error" class="text-red-500 text-xs">
               Requested by is required.
@@ -37,11 +40,12 @@
           <div class="flex-1">
             <FloatLabel>
               <InputText
+                id="fundSource"
                 v-model="form.fund_source"
                 class="w-full"
                 :class="{ 'p-invalid': v$.fund_source.$error }"
               />
-              <label>Source of Fund <span class="text-red-500">*</span></label>
+              <label for="fundSource">Source of Fund <span class="text-red-500">*</span></label>
             </FloatLabel>
             <small v-if="v$.fund_source.$error" class="text-red-500 text-xs">
               Fund Source is required.
@@ -50,6 +54,7 @@
           <div class="flex-1">
             <FloatLabel>
               <DatePicker
+                id="requestedDate"
                 v-model="form.requested_date"
                 class="w-full"
                 showIcon
@@ -57,7 +62,7 @@
                 iconDisplay="input"
                 :class="{ 'p-invalid': v$.requested_date.$error }"
               />
-              <label>Date Requested <span class="text-red-500">*</span></label>
+              <label for="requestedDate">Date Requested <span class="text-red-500">*</span></label>
             </FloatLabel>
             <small v-if="v$.requested_date.$error" class="text-red-500 text-xs"> Required. </small>
           </div>
@@ -75,11 +80,12 @@
                 <div>
                   <FloatLabel variant="on">
                     <InputText
+                      :id="`firstname-${index}`"
                       v-model="guest.first_name"
                       class="w-full"
                       :class="{ 'p-invalid': form.errors.guests[index]?.first_name }"
                     />
-                    <label>First Name</label>
+                    <label :for="`firstname-${index}`">First Name</label>
                   </FloatLabel>
                   <small v-if="form.errors.guests[index]?.first_name" class="text-red-500 text-xs">
                     {{ form.errors.guests[index].first_name }}
@@ -89,11 +95,12 @@
                 <div>
                   <FloatLabel variant="on">
                     <InputText
+                      :id="`lastname-${index}`"
                       v-model="guest.last_name"
                       class="w-full"
                       :class="{ 'p-invalid': form.errors.guests[index]?.last_name }"
                     />
-                    <label>Last Name</label>
+                    <label :for="`lastname-${index}`">Last Name</label>
                   </FloatLabel>
                   <small v-if="form.errors.guests[index]?.last_name" class="text-red-500 text-xs">
                     {{ form.errors.guests[index].last_name }}
@@ -103,12 +110,13 @@
                 <div>
                   <FloatLabel variant="on">
                     <DatePicker
+                      :id="`birthDate-${index}`"
                       v-model="guest.birth_date"
                       showIcon
                       class="w-full"
                       :class="{ 'p-invalid': form.errors.guests[index]?.birth_date }"
                     />
-                    <label>Birth Date</label>
+                    <label :for="`birthDate-${index}`">Birth Date</label>
                   </FloatLabel>
                   <small v-if="form.errors.guests[index]?.birth_date" class="text-red-500 text-xs">
                     {{ form.errors.guests[index].birth_date }}
@@ -118,11 +126,12 @@
                 <div>
                   <FloatLabel variant="on">
                     <InputText
+                      :id="`position-${index}`"
                       v-model="guest.position"
                       class="w-full"
                       :class="{ 'p-invalid': form.errors.guests[index]?.position }"
                     />
-                    <label>Position</label>
+                    <label :for="`position-${index}`">Position</label>
                   </FloatLabel>
                   <small v-if="form.errors.guests[index]?.position" class="text-red-500 text-xs">
                     {{ form.errors.guests[index].position }}
@@ -132,11 +141,12 @@
                 <div>
                   <FloatLabel variant="on">
                     <InputText
+                      :id="`email-${index}`"
                       v-model="guest.email"
                       class="w-full"
                       :class="{ 'p-invalid': form.errors.guests[index]?.email }"
                     />
-                    <label>Email</label>
+                    <label :for="`email-${index}`">Email</label>
                   </FloatLabel>
                   <small v-if="form.errors.guests[index]?.email" class="text-red-500 text-xs">
                     {{ form.errors.guests[index].email }}
@@ -146,12 +156,13 @@
                 <div>
                   <FloatLabel variant="on">
                     <InputMask
+                      :id="`contactNumber-${index}`"
                       v-model="guest.contact_number"
                       mask="0999 999 9999"
                       class="w-full"
                       :class="{ 'p-invalid': form.errors.guests[index]?.contact_number }"
                     />
-                    <label>Contact Number</label>
+                    <label :for="`contactNumber-${index}`">Contact Number</label>
                   </FloatLabel>
                   <small
                     v-if="form.errors.guests[index]?.contact_number"
@@ -176,8 +187,20 @@
         <hr class="border-gray-300" />
 
         <!-- Flights -->
-        <div class="flex border border-gray-300 rounded-xl justify-center py-2 bg-white" >
-        <SelectButton class="border border-gray-400" v-model="trip_type" :options="form.options_type" aria-labelledby="basic" allowEmpty :invalid="value === null"  />
+        <div class="flex border border-gray-300 rounded-xl justify-center py-2 bg-white">
+          <div class="flex-col">
+            <SelectButton
+              class="border border-gray-400"
+              v-model="form.trip_ticket_type"
+              :options="form.options_type"
+              aria-labelledby="basic"
+              allowEmpty
+              :class="{ 'p-invalid': v$.trip_ticket_type.$error }"
+            />
+            <small v-if="v$.trip_ticket_type.$error" class="text-red-500 text-xs">
+              Required.
+            </small>
+          </div>
         </div>
         <div class="p-4">
           <h2 class="text-xl font-semibold mb-4">Flight Information</h2>
@@ -204,42 +227,75 @@
             <div class="mb-3">
               <label class="block mb-1 font-medium">Destination</label>
               <div class="flex gap-5">
-                <FloatLabel class="flex-1" variant="on">
-                  <InputText
-                    v-model="flight.destination_from"
-                    class="w-full"
-                    :class="{ 'p-invalid': form.errors.flights[index]?.destination }"
-                  />
-                  <label for="">From</label>
-                </FloatLabel>
-                <FloatLabel class="flex-1" variant="on">
-                  <InputText
-                    v-model="flight.destination_to"
-                    class="w-full"
-                    :class="{ 'p-invalid': form.errors.flights[index]?.destination }"
-                  />
-                  <label for="">To</label>
-                </FloatLabel>
+                <div class="flex-1">
+                  <FloatLabel variant="on">
+                    <InputText
+                      :id="`destinationFrom-${index}`"
+                      v-model="flight.destination_from"
+                      class="w-full"
+                      :class="{ 'p-invalid': form.errors.flights[index]?.destination }"
+                    />
+                    <label :for="`destinationFrom-${index}`">From</label>
+                  </FloatLabel>
+
+                  <small
+                    v-if="form.errors.flights[index]?.destination"
+                    class="text-red-500 text-xs"
+                  >
+                    {{ form.errors.flights[index].destination }}
+                  </small>
+                </div>
+
+                <div class="flex-1">
+                  <FloatLabel variant="on">
+                    <InputText
+                      :id="`destinationTo-${index}`"
+                      v-model="flight.destination_to"
+                      class="w-full"
+                      :class="{ 'p-invalid': form.errors.flights[index]?.destination }"
+                    />
+                    <label :for="`destinationTo-${index}`">To</label>
+                  </FloatLabel>
+                </div>
               </div>
-              <small v-if="form.errors.flights[index]?.destination" class="text-red-500 text-xs">
-                {{ form.errors.flights[index].destination }}
-              </small>
             </div>
 
             <!-- Trip -->
             <div class="grid grid-cols-1 gap-4 mb-3">
               <div>
                 <label class="block mb-1 font-medium">Trip</label>
-                <SelectButton class="w-full" v-model="flight.trip_type" :options="form.options_mode" aria-labelledby="basic" allowEmpty :invalid="value === null"  />
+                <div class="w-full">
+                  <SelectButton
+                    :id="`tripType-${index}`"
+                    v-model="flight.trip_type"
+                    :options="form.options_mode"
+                    aria-labelledby="basic"
+                    allowEmpty
+                    :class="{ 'p-invalid': form.errors.flights[index]?.trip_type }"
+                  />
+                </div>
+
+                <small v-if="form.errors.flights[index]?.trip_type" class="text-red-500 text-xs">
+                  {{ form.errors.flights[index].trip_type }}
+                </small>
               </div>
             </div>
 
             <!-- Departure -->
             <div class="grid grid-cols-1 gap-4 mb-3">
-              <div>
-                <label class="block mb-1 font-medium">Date</label>
-                <DatePicker v-model="flight.date_departure" showIcon class="w-full" />
-              </div>
+              <FloatLabel variant="on">
+                <DatePicker
+                  :id="`dateDepart-${index}`"
+                  v-model="flight.date_depart"
+                  showIcon
+                  class="w-full"
+                  :class="{ 'p-invalid': form.errors.flights[index]?.date_depart }"
+                />
+                <label :for="`dateDepart-${index}`" class="block mb-1 font-medium">Date</label>
+              </FloatLabel>
+              <small v-if="form.errors.flights[index]?.date_depart" class="text-red-500 text-xs">
+                {{ form.errors.flights[index].date_depart }}
+              </small>
             </div>
 
             <!-- Departure & Arrival Times -->
@@ -247,7 +303,8 @@
               <div>
                 <label class="block mb-1 font-medium">Estimated Time Departure</label>
                 <DatePicker
-                  v-model="flight.departure_etd"
+                  :id="`etd-${index}`"
+                  v-model="flight.etd"
                   showIcon
                   class="w-full"
                   hourFormat="12"
@@ -262,7 +319,8 @@
               <div>
                 <label class="block mb-1 font-medium">Estimated Time Arrival</label>
                 <DatePicker
-                  v-model="flight.departure_eta"
+                  :id="`eta-${index}`"
+                  v-model="flight.eta"
                   showIcon
                   class="w-full"
                   hourFormat="12"
@@ -288,11 +346,12 @@
           <div class="flex-1">
             <FloatLabel>
               <InputText
+                id="requesterName"
                 v-model="form.requester_name"
                 class="w-full"
                 :class="{ 'p-invalid': v$.requester_name.$error }"
               />
-              <label>Requested by <span class="text-red-500">*</span></label>
+              <label for="requesterName">Requested by <span class="text-red-500">*</span></label>
             </FloatLabel>
             <small v-if="v$.requester_name.$error" class="text-red-500 text-xs"
               >Requester is required.</small
@@ -301,11 +360,12 @@
           <div class="flex-1">
             <FloatLabel>
               <InputText
+                id="requesterPosition"
                 v-model="form.requester_position"
                 class="w-full"
                 :class="{ 'p-invalid': v$.requester_position.$error }"
               />
-              <label>Position <span class="text-red-500">*</span></label>
+              <label for="requesterPosition">Position <span class="text-red-500">*</span></label>
             </FloatLabel>
             <small v-if="v$.requester_position.$error" class="text-red-500 text-xs"
               >Requester Position is required.</small
@@ -314,12 +374,13 @@
           <div class="flex-1">
             <FloatLabel>
               <InputMask
+                id="requesterContact"
                 v-model="form.requester_contact_number"
                 mask="0999 999 9999"
                 class="w-full"
                 :class="{ 'p-invalid': v$.requester_contact_number.$error }"
               />
-              <label>Contact No. <span class="text-red-500">*</span></label>
+              <label for="requesterContact">Contact No. <span class="text-red-500">*</span></label>
             </FloatLabel>
             <small v-if="v$.requester_contact_number.$error" class="text-red-500 text-xs"
               >Requester Contact Number is required.</small
@@ -328,12 +389,15 @@
           <div class="flex-1">
             <FloatLabel>
               <InputText
+                id="requesterEmail"
                 v-model="form.requester_email"
                 type="email"
                 class="w-full"
                 :class="{ 'p-invalid': v$.requester_email.$error }"
               />
-              <label>Email of Requester <span class="text-red-500">*</span></label>
+              <label for="requesterEmail"
+                >Email of Requester <span class="text-red-500">*</span></label
+              >
             </FloatLabel>
             <small v-if="v$.requester_email.$error" class="text-red-500 text-xs">{{
               v$.requester_email.$errors[0]?.$message
@@ -437,6 +501,7 @@ const rules = computed(() => ({
   requesting_office: { required },
   fund_source: { required },
   requested_date: { required },
+  trip_ticket_type: { required },
   requester_name: { required },
   requester_position: { required },
   requester_contact_number: { required },
@@ -448,7 +513,7 @@ const v$ = useVuelidate(rules, form)
 onMounted(() => {
   setTimeout(() => {
     form.loading = false
-  }, 1000)
+  }, 1500)
 })
 
 // Guests
@@ -476,13 +541,12 @@ function removeGuest(index) {
 function addFlight() {
   if (form.flights.length < form.maxFlights) {
     form.flights.push({
-      destination: '',
-      date_departure: null,
-      date_arrival: null,
-      departure_etd: '',
-      departure_eta: '',
-      arrival_etd: '',
-      arrival_eta: '',
+      destination_from: '',
+      destination_to: '',
+      trip_type: '',
+      date_depart: null,
+      etd: null,
+      eta: null,
     })
     form.errors.flights.push({})
   }

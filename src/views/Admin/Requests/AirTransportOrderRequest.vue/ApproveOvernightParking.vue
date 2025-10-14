@@ -9,7 +9,7 @@
       <StepPanels>
         <StepPanel v-slot="{ activateCallback }" value="1">
           <div class="flex flex-col min-h-[400px] border-4 border-double rounded p-9 gap-4">
-            <PreviewTechnicalAssistance />
+            <PreviewOvernightParking />
           </div>
           <div class="flex pt-6 justify-between">
             <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="Menu()" />
@@ -23,7 +23,7 @@
         </StepPanel>
         <StepPanel v-slot="{ activateCallback }" value="2">
           <div class="flex flex-col min-h-[400px] border-4 border-double rounded p-9 gap-4">
-            <SignatoryTechnicalAssistance />
+            <SignatoryOvernightParking />
           </div>
           <div class="flex pt-6 justify-between">
             <Button
@@ -57,13 +57,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useTARequestFormStore } from '@/stores/TARequestFormStore'
+import { useOvernightParkingRequestFormStore } from '@/stores/overnightParkingRequestFormStore'
 import { useAuthStore } from '@/stores/auth'
-import PreviewTechnicalAssistance from './PreviewTechnicalAssistance.vue'
-import SignatoryTechnicalAssistance from './SignatoryTechnicalAssistance.vue'
+import PreviewOvernightParking from './PreviewOvernightParking.vue'
+import SignatoryOvernightParking from './SignatoryOvernightParking.vue'
 import ShowPrint from './ShowPrint.vue'
 
-const form = useTARequestFormStore()
+const form = useOvernightParkingRequestFormStore()
 const authStore = useAuthStore()
 
 const submitting = ref(false)

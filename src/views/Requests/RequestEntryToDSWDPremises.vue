@@ -277,6 +277,6 @@ function submitRequest() {
   setTimeout(() => {
     alert('Form submitted successfully!')
     submitting.value = false
-  }, 1000)
+  }, 1500)
 }
 </script>

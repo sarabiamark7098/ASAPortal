@@ -65,8 +65,8 @@
                 v-if="form.selectedRequest.status === 'pending'"
                 label="Process"
                 size="small"
-                icon="pi pi-check"
-                severity="success"
+                icon="pi pi-book"
+                severity="info"
                 @click="handleAvailableClick"
                 class="w-full"
               />
@@ -113,8 +113,8 @@
               v-if="form.selectedRequest.status === 'pending'"
               label="Process"
               size="small"
-              icon="pi pi-check"
-              severity="success"
+              icon="pi pi-book"
+              severity="info"
               @click="handleAvailableClick"
             />
             <Button
@@ -322,7 +322,7 @@ onMounted(async () => {
     await Promise.all([
       authStore.fetchUser(),
       (form.loading = true),
-      new Promise((resolve) => setTimeout(resolve, 1000)),
+      new Promise((resolve) => setTimeout(resolve, 1500)),
     ])
     loadRequests(1)
   } catch (error) {
@@ -412,7 +412,7 @@ const handleSubmit = () => {
       form.submitting = false
       handleUpdated()
     }
-  }, 1000)
+  }, 1500)
 }
 
 function handleCancelEdit() {

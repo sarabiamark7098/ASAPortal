@@ -248,7 +248,7 @@ const authStore = useAuthStore()
 onMounted(async () => {
   vehicleFormStore.loading = true
   try {
-    await Promise.all([authStore.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1000))])
+    await Promise.all([authStore.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1500))])
     loadRequests(1)
   } catch (error) {
     console.error('Error on mount:', error)

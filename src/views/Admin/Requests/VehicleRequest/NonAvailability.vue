@@ -108,6 +108,6 @@ const handleSubmit = (activateCallback) => {
     } finally {
       form.submitting = false
     }
-  }, 1000)
+  }, 1500)
 }
 </script>

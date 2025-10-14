@@ -242,7 +242,7 @@ onMounted(async () => {
   try {
     await Promise.all([
       authStore.fetchUser(),
-      new Promise((resolve) => setTimeout(resolve, 1000)), // Delay for UX smoothness
+      new Promise((resolve) => setTimeout(resolve, 1500)), // Delay for UX smoothness
     ])
     loadRequests(1)
   } catch (error) {
