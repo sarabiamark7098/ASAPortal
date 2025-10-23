@@ -204,8 +204,6 @@
                   >
                     <td class="px-2 sm:px-4 py-2">{{ item.date_requested }}</td>
                     <td class="px-2 sm:px-4 py-2">{{ item.control_number }}</td>
-                    <td class="px-2 sm:px-4 py-2">{{ form.formatDate(item.requested_date) }}</td>
-                    <td class="px-2 sm:px-4 py-2">{{ form.formatTime(item.requested_time) }}</td>
                     <td class="px-2 sm:px-4 py-2">{{ item.requesting_office }}</td>
                     <td class="px-2 sm:px-4 py-2">
                       <Tag
@@ -343,7 +341,7 @@ const requestSummary = computed(() => {
   return {
     'Control Number': req.control_number ?? 'N/A',
     'Requesting Office': req.requesting_office ?? 'N/A',
-    'Source of Fund for Overtime': req.fund_source ?? 'N/A',
+    'Source of Fund': req.fund_source ?? 'N/A',
     Requester: req.requester_name ?? 'N/A',
     'Contact Number': req.requester_contact_number ?? 'N/A',
     Email: req.requester_email ?? 'N/A',
