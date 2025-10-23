@@ -24,10 +24,10 @@
   </div>
 </template>
 <script setup>
-import { useOvernightParkingRequestFormStore } from '@/stores/overnightParkingRequestFormStore'
+import { useAirTransportOrderFormStore } from '@/stores/airTransportOrderFormStore'
 import ShowPrint from './ShowPrint.vue'
 
-const form = useOvernightParkingRequestFormStore()
+const form = useAirTransportOrderFormStore()
 
 function Menu() {
   form.printMode = false

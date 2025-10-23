@@ -10,6 +10,7 @@ import Dashboard from '@/views/Admin/Dashboard.vue'
 import Register from '@/views/Register.vue'
 import UserAccounts from '@/views/Admin/Management/UserAccounts.vue'
 import ClientView from '@/views/Client/ClientView.vue'
+import PrintView from '@/views/Requests/PrintRequest.vue'
 
 import RequestVehicle from '@/views/Requests/RequestVehicle.vue'
 import RequestBuildingAndGroundsTA from '@/views/Requests/RequestBuildingAndGroundsTA.vue'
@@ -41,7 +42,7 @@ import VehicleRequest from '@/views/Admin/Requests/Vehicle.vue'
 import MaagapRequest from '@/views/Admin/Requests/Maagap.vue'
 import MagitingRequest from '@/views/Admin/Requests/Magiting.vue'
 import SeminarRequest from '@/views/Admin/Requests/Seminar.vue'
-import AirTravelOrderRequest from '@/views/Admin/Requests/AirTravelOrder.vue'
+import AirTransportOrderRequest from '@/views/Admin/Requests/AirTransportOrder.vue'
 import EntryRequest from '@/views/Admin/Requests/Entry.vue'
 import ParkingRequest from '@/views/Admin/Requests/Parking.vue'
 import JanitorialRequest from '@/views/Admin/Requests/Janitorial.vue'
@@ -152,9 +153,9 @@ const router = createRouter({
           component: SeminarRequest,
         },
         {
-          path: 'travel-order',
-          name: 'AirTravelOrderRequest',
-          component: AirTravelOrderRequest,
+          path: 'transport-order',
+          name: 'AirTransportOrderRequest',
+          component: AirTransportOrderRequest,
         },
         {
           path: 'entry',
@@ -182,6 +183,11 @@ const router = createRouter({
           path: '',
           name: 'clientview',
           component: ClientView,
+        },
+        {
+          path: '/print-view',
+          name: 'printview',
+          component: PrintView,
         },
         {
           path: '/request-forms/buildingAndGroundsTARequest',

@@ -42,7 +42,7 @@
         "
         id="printRequest"
         class="w-1/4"
-        label="Print Overnight Parking Request"
+        label="Print ATO Request"
         @click="openPrint"
         icon="pi pi-print"
       />
@@ -51,14 +51,14 @@
 </template>
 
 <script setup>
-import { useOvernightParkingRequestFormStore } from '@/stores/overnightParkingRequestFormStore'
+import { useAirTransportOrderFormStore } from '@/stores/airTransportOrderFormStore'
 import axios from 'axios'
 
-const form = useOvernightParkingRequestFormStore()
+const form = useAirTransportOrderFormStore()
 
 function openPrint() {
   if (!form.selectedRequest) return
   const id = form.selectedRequest.id
-  window.open(`${axios.defaults.baseURL}/api/pdf/overnight-parking-request/${id}`, '_blank')
+  window.open(`${axios.defaults.baseURL}/api/pdf/air-transport-request/${id}`, '_blank')
 }
 </script>

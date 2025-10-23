@@ -27,7 +27,7 @@ const items = [
   {
     name: 'Air Transport Order',
     image: new URL('@/assets/airplane.svg', import.meta.url).href,
-    description: 'Request air travel arrangements for official business',
+    description: 'Request air transport arrangements for official business',
     route: '/request-forms/airTransportOrderRequest',
   },
   {

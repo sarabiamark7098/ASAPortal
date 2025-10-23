@@ -1,5 +1,5 @@
 <template>
-  <FullScreenLoader :visible="form.loading" message="Loading Air Travel Order Request Form..." />
+  <FullScreenLoader :visible="form.loading" message="Loading Air Transport Order Request Form..." />
 
   <div v-if="!form.loading">
     <div
@@ -70,10 +70,10 @@
 
         <hr class="border-gray-300" />
 
-        <!-- Guests -->
+        <!-- Passengers -->
         <div class="p-4">
           <h2 class="text-xl font-semibold mb-4">Passenger List</h2>
-          <div v-for="(guest, index) in form.guests" :key="index" class="mb-4">
+          <div v-for="(passenger, index) in form.passengers" :key="index" class="mb-4">
             <div class="border border-gray-300 p-5 rounded-2xl bg-white">
               <div class="grid gap-3 md:grid-cols-2">
                 <!-- First Name -->
@@ -81,14 +81,17 @@
                   <FloatLabel variant="on">
                     <InputText
                       :id="`firstname-${index}`"
-                      v-model="guest.first_name"
+                      v-model="passenger.first_name"
                       class="w-full"
-                      :class="{ 'p-invalid': form.errors.guests[index]?.first_name }"
+                      :class="{ 'p-invalid': form.errors.passengers[index]?.first_name }"
                     />
                     <label :for="`firstname-${index}`">First Name</label>
                   </FloatLabel>
-                  <small v-if="form.errors.guests[index]?.first_name" class="text-red-500 text-xs">
-                    {{ form.errors.guests[index].first_name }}
+                  <small
+                    v-if="form.errors.passengers[index]?.first_name"
+                    class="text-red-500 text-xs"
+                  >
+                    {{ form.errors.passengers[index].first_name }}
                   </small>
                 </div>
                 <!-- Last Name -->
@@ -96,14 +99,17 @@
                   <FloatLabel variant="on">
                     <InputText
                       :id="`lastname-${index}`"
-                      v-model="guest.last_name"
+                      v-model="passenger.last_name"
                       class="w-full"
-                      :class="{ 'p-invalid': form.errors.guests[index]?.last_name }"
+                      :class="{ 'p-invalid': form.errors.passengers[index]?.last_name }"
                     />
                     <label :for="`lastname-${index}`">Last Name</label>
                   </FloatLabel>
-                  <small v-if="form.errors.guests[index]?.last_name" class="text-red-500 text-xs">
-                    {{ form.errors.guests[index].last_name }}
+                  <small
+                    v-if="form.errors.passengers[index]?.last_name"
+                    class="text-red-500 text-xs"
+                  >
+                    {{ form.errors.passengers[index].last_name }}
                   </small>
                 </div>
                 <!-- Birth Date -->
@@ -111,15 +117,18 @@
                   <FloatLabel variant="on">
                     <DatePicker
                       :id="`birthDate-${index}`"
-                      v-model="guest.birth_date"
+                      v-model="passenger.birth_date"
                       showIcon
                       class="w-full"
-                      :class="{ 'p-invalid': form.errors.guests[index]?.birth_date }"
+                      :class="{ 'p-invalid': form.errors.passengers[index]?.birth_date }"
                     />
                     <label :for="`birthDate-${index}`">Birth Date</label>
                   </FloatLabel>
-                  <small v-if="form.errors.guests[index]?.birth_date" class="text-red-500 text-xs">
-                    {{ form.errors.guests[index].birth_date }}
+                  <small
+                    v-if="form.errors.passengers[index]?.birth_date"
+                    class="text-red-500 text-xs"
+                  >
+                    {{ form.errors.passengers[index].birth_date }}
                   </small>
                 </div>
                 <!-- Position -->
@@ -127,14 +136,17 @@
                   <FloatLabel variant="on">
                     <InputText
                       :id="`position-${index}`"
-                      v-model="guest.position"
+                      v-model="passenger.position"
                       class="w-full"
-                      :class="{ 'p-invalid': form.errors.guests[index]?.position }"
+                      :class="{ 'p-invalid': form.errors.passengers[index]?.position }"
                     />
                     <label :for="`position-${index}`">Position</label>
                   </FloatLabel>
-                  <small v-if="form.errors.guests[index]?.position" class="text-red-500 text-xs">
-                    {{ form.errors.guests[index].position }}
+                  <small
+                    v-if="form.errors.passengers[index]?.position"
+                    class="text-red-500 text-xs"
+                  >
+                    {{ form.errors.passengers[index].position }}
                   </small>
                 </div>
                 <!-- Email -->
@@ -142,14 +154,14 @@
                   <FloatLabel variant="on">
                     <InputText
                       :id="`email-${index}`"
-                      v-model="guest.email"
+                      v-model="passenger.email"
                       class="w-full"
-                      :class="{ 'p-invalid': form.errors.guests[index]?.email }"
+                      :class="{ 'p-invalid': form.errors.passengers[index]?.email }"
                     />
                     <label :for="`email-${index}`">Email</label>
                   </FloatLabel>
-                  <small v-if="form.errors.guests[index]?.email" class="text-red-500 text-xs">
-                    {{ form.errors.guests[index].email }}
+                  <small v-if="form.errors.passengers[index]?.email" class="text-red-500 text-xs">
+                    {{ form.errors.passengers[index].email }}
                   </small>
                 </div>
                 <!-- Contact -->
@@ -157,31 +169,31 @@
                   <FloatLabel variant="on">
                     <InputMask
                       :id="`contactNumber-${index}`"
-                      v-model="guest.contact_number"
+                      v-model="passenger.contact_number"
                       mask="0999 999 9999"
                       class="w-full"
-                      :class="{ 'p-invalid': form.errors.guests[index]?.contact_number }"
+                      :class="{ 'p-invalid': form.errors.passengers[index]?.contact_number }"
                     />
                     <label :for="`contactNumber-${index}`">Contact Number</label>
                   </FloatLabel>
                   <small
-                    v-if="form.errors.guests[index]?.contact_number"
+                    v-if="form.errors.passengers[index]?.contact_number"
                     class="text-red-500 text-xs"
                   >
-                    {{ form.errors.guests[index].contact_number }}
+                    {{ form.errors.passengers[index].contact_number }}
                   </small>
                 </div>
               </div>
             </div>
             <Button
-              v-if="form.guests.length > 1"
+              v-if="form.passengers.length > 1"
               icon="pi pi-times"
               severity="danger"
               class="mt-2"
-              @click="removeGuest(index)"
+              @click="removePassenger(index)"
             />
           </div>
-          <Button label="Add Guest" icon="pi pi-plus" @click="addGuest" />
+          <Button label="Add Passenger" icon="pi pi-plus" @click="addPassenger" />
         </div>
 
         <hr class="border-gray-300" />
@@ -267,16 +279,16 @@
                 <div class="w-full">
                   <SelectButton
                     :id="`tripType-${index}`"
-                    v-model="flight.trip_type"
+                    v-model="flight.trip_mode"
                     :options="form.options_mode"
                     aria-labelledby="basic"
                     allowEmpty
-                    :class="{ 'p-invalid': form.errors.flights[index]?.trip_type }"
+                    :class="{ 'p-invalid': form.errors.flights[index]?.trip_mode }"
                   />
                 </div>
 
-                <small v-if="form.errors.flights[index]?.trip_type" class="text-red-500 text-xs">
-                  {{ form.errors.flights[index].trip_type }}
+                <small v-if="form.errors.flights[index]?.trip_mode" class="text-red-500 text-xs">
+                  {{ form.errors.flights[index].trip_mode }}
                 </small>
               </div>
             </div>
@@ -286,15 +298,15 @@
               <FloatLabel variant="on">
                 <DatePicker
                   :id="`dateDepart-${index}`"
-                  v-model="flight.date_depart"
+                  v-model="flight.date_departure"
                   showIcon
                   class="w-full"
-                  :class="{ 'p-invalid': form.errors.flights[index]?.date_depart }"
+                  :class="{ 'p-invalid': form.errors.flights[index]?.date_departure }"
                 />
                 <label :for="`dateDepart-${index}`" class="block mb-1 font-medium">Date</label>
               </FloatLabel>
-              <small v-if="form.errors.flights[index]?.date_depart" class="text-red-500 text-xs">
-                {{ form.errors.flights[index].date_depart }}
+              <small v-if="form.errors.flights[index]?.date_departure" class="text-red-500 text-xs">
+                {{ form.errors.flights[index].date_departure }}
               </small>
             </div>
 
@@ -479,13 +491,19 @@
 </template>
 
 <script setup>
-import { useAirTravelOrderFormStore } from '@/stores/airTravelOrderFormStore'
+import { useAirTransportOrderFormStore } from '@/stores/airTransportOrderFormStore'
+import { useDropdownStore } from '@/stores/dropdown'
+import { useAuthStore } from '@/stores/auth'
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { required, email, helpers } from '@vuelidate/validators'
 
-const form = useAirTravelOrderFormStore()
+const form = useAirTransportOrderFormStore()
+const router = useRouter()
+const dropdown = useDropdownStore()
+const authStore = useAuthStore()
 
 // ✅ Custom email validator
 const emailWithDomain = helpers.withMessage('Email must be @gmail.com or @dswd.gov.ph', (value) => {
@@ -517,9 +535,9 @@ onMounted(() => {
 })
 
 // Guests
-function addGuest() {
-  if (form.guests.length < form.maxGuests) {
-    form.guests.push({
+function addPassenger() {
+  if (form.passengers.length < form.maxPassengers) {
+    form.passengers.push({
       first_name: '',
       last_name: '',
       birth_date: null,
@@ -527,13 +545,13 @@ function addGuest() {
       email: '',
       contact_number: '',
     })
-    form.errors.guests.push({})
+    form.errors.passengers.push({})
   }
 }
-function removeGuest(index) {
-  if (form.guests.length > 1) {
-    form.guests.splice(index, 1)
-    form.errors.guests.splice(index, 1)
+function removePassenger(index) {
+  if (form.passengers.length > 1) {
+    form.passengers.splice(index, 1)
+    form.errors.passengers.splice(index, 1)
   }
 }
 
@@ -543,8 +561,8 @@ function addFlight() {
     form.flights.push({
       destination_from: '',
       destination_to: '',
-      trip_type: '',
-      date_depart: null,
+      trip_mode: '',
+      date_departure: null,
       etd: null,
       eta: null,
     })
@@ -580,12 +598,21 @@ async function submitRequest() {
     return
   }
 
+  const checker = await dropdown.fetchSignatory(authStore.token, 'Air Transport')
+  const rd = await dropdown.fetchSignatory(authStore.token, 'Regional Director')
+  const dc = await dropdown.fetchSignatory(authStore.token, 'Administrative Division')
+  form.signatories = [
+    { id: checker.id, label: 'Reserved By' },
+    { id: rd.id, label: 'Approved By' },
+    { id: dc.id, label: 'Verified By' },
+  ]
+
   form.submitting = true
   try {
     await form.submitForm()
-    form.reset()
-    v$.value.$reset()
     alert('Form submitted successfully!')
+    form.resetForm()
+    router.push({ name: 'printview' })
   } catch (err) {
     console.error('Submission failed:', err)
     alert('Submission failed. Please try again.')

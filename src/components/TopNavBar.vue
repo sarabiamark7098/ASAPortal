@@ -237,7 +237,7 @@ const menuItems = [
       { label: 'Maagap Conference', icon: 'pi pi-home', to: '/request/maagap' },
       { label: 'Magiting Conference', icon: 'pi pi-home', to: '/request/magiting' },
       { label: 'Seminar Hall', icon: 'pi pi-home', to: '/request/seminar' },
-      { label: 'Air Travel Orders', icon: 'pi pi-map-marker', to: '/request/travel-order' },
+      { label: 'Air Transport Orders', icon: 'pi pi-map-marker', to: '/request/transport-order' },
       { label: 'Entry To DSWD Premises', icon: 'pi pi-building', to: '/request/entry' },
       { label: 'Overnight Parking', icon: 'pi pi-moon', to: '/request/parking' },
       { label: 'Janitorial', icon: 'pi pi-th-large', to: '/request/janitorial' },

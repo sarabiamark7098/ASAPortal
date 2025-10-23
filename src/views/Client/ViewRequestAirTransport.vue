@@ -1,5 +1,5 @@
 <template>
-  <FullScreenLoader :visible="loading" message="Loading Air Travel Order Requests..." />
+  <FullScreenLoader :visible="loading" message="Loading Air Transport Order Requests..." />
 
   <div v-if="!loading">
     <div
@@ -7,7 +7,7 @@
     >
       <div class="justify-center h-full pt-32 pb-12 w-full px-6 sm:px-24">
         <div class="flex flex-col items-center text-center">
-          <p class="text-3xl sm:text-5xl lg:text-5xl font-bold">Air Travel Order Requests</p>
+          <p class="text-3xl sm:text-5xl lg:text-5xl font-bold">Air Transport Order Requests</p>
         </div>
         <div
           class="p-[2px] rounded-3xl bg-gradient-to-br from-white to-gray-200 w-full max-w-8xl mx-auto mt-9 relative z-20 inset-shadow-sm inset-shadow-gray-100"
@@ -53,3 +53,5 @@ const scrollToTop = () => {
   overflow: hidden;
 }
 </style>
+
+
