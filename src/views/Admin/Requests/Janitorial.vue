@@ -6,7 +6,7 @@
       <!-- Header -->
       <div class="mb-4">
         <h1 class="text-2xl sm:text-3xl font-bold">Janitorial Service Requests</h1>
-        <span class="text-sm sm:text-base">Manage Janitorial Service Requests</span>
+        <span class="text-sm sm:text-base">Manage Requests</span>
       </div>
 
       <!-- Conditional Edit/Print Modes -->

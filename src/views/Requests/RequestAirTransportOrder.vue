@@ -612,7 +612,7 @@ async function submitRequest() {
     await form.submitForm()
     alert('Form submitted successfully!')
     form.resetForm()
-    router.push({ name: 'printview' })
+    router.push({ name: 'printview', params: { printview: 'air-transport-request' } })
   } catch (err) {
     console.error('Submission failed:', err)
     alert('Submission failed. Please try again.')

@@ -6,7 +6,7 @@
       <!-- Header -->
       <div class="mb-4">
         <h1 class="text-2xl sm:text-3xl font-bold">Air Transport Reservation Requests</h1>
-        <span class="text-sm sm:text-base">Manage Air Transport Order Requests</span>
+        <span class="text-sm sm:text-base">Manage Requests</span>
       </div>
 
       <div v-if="form.printMode" class="flex flex-col md:flex-row gap-4">

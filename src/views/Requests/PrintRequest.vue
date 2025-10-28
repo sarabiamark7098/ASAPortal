@@ -30,17 +30,6 @@
           </div>
           <div class="flex-1">
             <FloatLabel>
-              <InputText
-                id="fundSource"
-                v-model="form.selectedRequest.fund_source"
-                class="w-full"
-                readonly
-              />
-              <label for="fundSource">Source of Fund <span class="text-red-500">*</span></label>
-            </FloatLabel>
-          </div>
-          <div class="flex-1">
-            <FloatLabel>
               <DatePicker
                 id="requestedDate"
                 v-model="form.selectedRequest.date_requested"
@@ -83,14 +72,22 @@
 
 <script setup>
 import { useAirTransportOrderFormStore } from '@/stores/airTransportOrderFormStore'
+import { usePremisesFormStore } from '@/stores/entryToDSWDFormStore'
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import axios from 'axios'
 
-const form = useAirTransportOrderFormStore()
 const router = useRouter()
-
+const route = useRoute()
+const printview = route.params.printview
+console.log(printview)
+let form = ''
+if (printview === 'entry-request') {
+  form = usePremisesFormStore()
+} else {
+  form = useAirTransportOrderFormStore()
+}
 onMounted(() => {
   form.loading = true
   setTimeout(() => {
@@ -103,13 +100,22 @@ function Done() {
   setTimeout(() => {
     form.submitting = false
   }, 1500)
-  router.push({ name: 'clientview' })
+  router.push({ name: 'clientview' }).then(() => {
+    window.location.reload()
+  })
 }
 
 function openPrint() {
   if (!form.selectedRequest) return
   const id = form.selectedRequest.id
-  console.log(id)
-  window.open(`${axios.defaults.baseURL}/api/pdf/air-transport-request/${id}`, '_blank')
+  console.log('Printing request ID:', id)
+
+  // Optional: choose different API endpoints based on route param
+  const endpoint =
+    printview === 'entry-request'
+      ? `${axios.defaults.baseURL}/api/pdf/entry-request/${id}`
+      : `${axios.defaults.baseURL}/api/pdf/air-transport-request/${id}`
+
+  window.open(endpoint, '_blank')
 }
 </script>

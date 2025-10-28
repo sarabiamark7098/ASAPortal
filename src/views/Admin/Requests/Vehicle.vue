@@ -6,7 +6,7 @@
       <!-- Header -->
       <div class="mb-4">
         <h1 class="text-2xl sm:text-3xl font-bold">Vehicle Requests</h1>
-        <span class="text-sm sm:text-base">Manage Vehicle Requests</span>
+        <span class="text-sm sm:text-base">Manage Requests</span>
       </div>
 
       <!-- Conditional Edit/Print Modes -->
@@ -345,7 +345,7 @@ onMounted(async () => {
   try {
     await Promise.all([
       authStore.fetchUser(),
-      form.loading = false,
+      (form.loading = false),
       form.getVehicleTransactions(authStore.token),
       new Promise((resolve) => setTimeout(resolve, 1500)),
     ])

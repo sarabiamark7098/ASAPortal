@@ -51,14 +51,14 @@
 </template>
 
 <script setup>
-import { useAirTransportOrderFormStore } from '@/stores/airTransportOrderFormStore'
+import { usePremisesFormStore } from '@/stores/entryToDSWDFormStore'
 import axios from 'axios'
 
-const form = useAirTransportOrderFormStore()
+const form = usePremisesFormStore()
 
 function openPrint() {
   if (!form.selectedRequest) return
   const id = form.selectedRequest.id
-  window.open(`${axios.defaults.baseURL}/api/pdf/air-transport-request/${id}`, '_blank')
+  window.open(`${axios.defaults.baseURL}/api/pdf/entry-request/${id}`, '_blank')
 }
 </script>

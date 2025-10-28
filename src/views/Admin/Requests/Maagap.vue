@@ -6,7 +6,7 @@
       <!-- Header -->
       <div class="mb-4">
         <h1 class="text-2xl sm:text-3xl font-bold">Maagap Conference Requests</h1>
-        <span class="text-sm sm:text-base">Manage Maagap Conference Requests</span>
+        <span class="text-sm sm:text-base">Manage Requests</span>
       </div>
 
       <!-- Conditional Edit/Print Modes -->

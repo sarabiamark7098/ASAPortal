@@ -9,7 +9,7 @@
       <!-- Header -->
       <div class="mb-4">
         <h1 class="text-2xl sm:text-3xl font-bold">Building and Grounds Management Requests</h1>
-        <span class="text-sm sm:text-base">Manage Technical Assistance Requests</span>
+        <span class="text-sm sm:text-base">Manage Requests</span>
       </div>
 
       <!-- Conditional Edit/Print Modes -->

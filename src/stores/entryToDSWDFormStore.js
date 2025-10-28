@@ -1,49 +1,78 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
+import dayjs from 'dayjs'
 
 export const usePremisesFormStore = defineStore('premisesForm', {
   state: () => ({
+    date_requested: new Date(),
     requesting_office: '',
-    dateRequested: null,
-    dateNeeded: null,
-    requestedBy: '',
-    position: '',
-    contactNo: '',
-    emailOfRequester: '',
-    src: null, // base64 of e-signature
-    guests: [{ name: '', project: '' }], // initialize with one guest
+    requested_date: null,
+    requester_name: '',
+    requester_position: '',
+    requester_contact_number: '',
+    requester_email: '',
+    src: null,
+    guests: [{ full_name: '', purpose: '' }],
+    maxGuests: 20,
+    errors: {
+      guests: [],
+    },
+
+    selectedRequest: '',
+    loading: false,
+    loading2: false,
+    printMode: false,
+    error: null,
+
+    approveDisapprove: '',
+    editingRequest: null,
+
+    // Table interaction refs
+    rows: 20,
+    first: 0,
+    searchInput: '',
+    sortField: null,
+    sortOrder: null,
+    totalRecords: 0,
+
+    visible: false,
+    submitting: false,
   }),
 
-  getters: {
-    isComplete: (state) =>
-      !!state.requesting_office &&
-      !!state.dateRequested &&
-      !!state.dateNeeded &&
-      !!state.requestedBy &&
-      !!state.position &&
-      !!state.contactNo &&
-      !!state.emailOfRequester &&
-      !!state.src &&
-      state.guests.length > 0 &&
-      state.guests.every((g) => g.name && g.project),
-  },
-
   actions: {
+    validateForm() {
+      this.errors = { guests: [], files: {} }
+      let valid = true
+
+      // ✅ Guests Validation
+      this.guests.forEach((guest, index) => {
+        const guestErrors = {}
+
+        if (!guest.full_name) guestErrors.full_name = 'Guest name is required.'
+        if (!guest.purpose) guestErrors.purpose = 'Purpose is required.'
+
+        this.errors.guests[index] = guestErrors
+        if (Object.keys(guestErrors).length > 0) valid = false
+      })
+
+      return valid
+    },
     resetForm() {
+      this.date_requested = null
       this.requesting_office = ''
-      this.dateRequested = null
-      this.dateNeeded = null
-      this.requestedBy = ''
-      this.position = ''
-      this.contactNo = ''
-      this.emailOfRequester = ''
+      this.requested_date = null
+      this.requester_name = ''
+      this.requester_position = ''
+      this.requester_contact_number = ''
+      this.requester_email = ''
       this.src = null
-      this.guests = [{ name: '', project: '' }]
+      this.guests = [{ full_name: '', purpose: '' }]
     },
 
     addGuest() {
       if (this.guests.length < 20) {
-        this.guests.push({ name: '', project: '' })
+        this.guests.push({ full_name: '', purpose: '' })
       }
     },
 
@@ -55,23 +84,66 @@ export const usePremisesFormStore = defineStore('premisesForm', {
 
     async submitForm() {
       try {
+        const authStore = useAuthStore()
         const formData = {
+          date_requested: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           requesting_office: this.requesting_office,
-          dateRequested: this.dateRequested,
-          dateNeeded: this.dateNeeded,
-          position: this.position,
-          requestedBy: this.requestedBy,
-          contactNo: this.contactNo,
-          emailOfRequester: this.emailOfRequester,
+          requested_date: dayjs(this.requested_date).format('YYYY-MM-DD'),
+          requester_name: this.requester_name,
+          requester_position: this.requester_position,
+          requester_contact_number: this.requester_contact_number,
+          requester_email: this.requester_email,
           src: this.src,
           guests: this.guests,
+          signatories: this.signatories,
         }
 
-        const response = await axios.post('/api/premises-entry-request', formData)
+        const response = await axios.post('/api/entry-requests', formData, {
+          headers: {
+            Authorization: `Bearer ${authStore.token}`,
+          },
+        })
+        this.selectedRequest = response.data
         return response.data
       } catch (error) {
         throw error
       }
+    },
+
+    async putApprovalStatus(id, status) {
+      try {
+        const authStore = useAuthStore()
+        const response = await axios.put(
+          `/api/entry-requests/${id}`,
+          { status },
+          {
+            headers: {
+              Authorization: `Bearer ${authStore.token}`,
+            },
+          },
+        )
+        this.selectedRequest = response.data
+        return response.data
+      } catch (error) {
+        throw error
+      }
+    },
+
+    async getEntryRequests(token, page, perPage, query = '', sortBy = '', sortDir = '') {
+      const response = await axios.get('/api/entry-requests', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          page,
+          per_page: perPage,
+          query,
+          sort_by: sortBy,
+          sort_order: sortDir,
+        },
+      })
+      this.entryRequests = response.data.data
+      this.totalRecords = response.data.total
     },
   },
 })

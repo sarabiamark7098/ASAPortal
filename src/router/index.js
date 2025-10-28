@@ -185,7 +185,7 @@ const router = createRouter({
           component: ClientView,
         },
         {
-          path: '/print-view',
+          path: '/print-view/:printview',
           name: 'printview',
           component: PrintView,
         },
