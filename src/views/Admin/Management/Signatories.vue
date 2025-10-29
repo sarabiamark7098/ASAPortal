@@ -1,8 +1,8 @@
 <template>
   <div class="p-4 sm:p-6">
-    <FullScreenLoader :visible="signatoryFormStore.loading" message="Loading Signatories..." />
+    <FullScreenLoader :visible="form.loading" message="Loading Signatories..." />
 
-    <div v-if="!signatoryFormStore.loading" class="flex flex-col gap-6">
+    <div v-if="!form.loading" class="flex flex-col gap-6">
       <!-- Header Row -->
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -11,7 +11,7 @@
         </div>
         <div class="flex justify-end">
           <Button
-            v-if="!signatoryFormStore.updateSignatory && !signatoryFormStore.addSignatory"
+            v-if="!form.updateSignatory && !form.addSignatory"
             class="px-4 py-2 rounded-xl shadow-sm w-full sm:w-auto"
             severity="success"
             icon="pi pi-plus"
@@ -21,10 +21,7 @@
         </div>
       </div>
 
-      <div
-        v-if="signatoryFormStore.updateSignatory || signatoryFormStore.addSignatory"
-        class="flex flex-col gap-4"
-      >
+      <div v-if="form.updateSignatory || form.addSignatory" class="flex flex-col gap-4">
         <SignatoryInfo />
       </div>
 
@@ -42,26 +39,37 @@
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Name:</dt>
               <dd class="text-green-600">
-                {{ signatoryFormStore.selectedSignatory?.full_name || 'N/A' }}
+                {{ form.selectedSignatory?.full_name || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Position:</dt>
               <dd class="text-green-600">
-                {{ signatoryFormStore.selectedSignatory?.position || 'N/A' }}
+                {{ form.selectedSignatory?.position || 'N/A' }}
               </dd>
             </div>
           </dl>
+          <div class="flex flex-col sm:flex-row mt-4 w-full gap-5">
+            <Button
+              class="self-start w-full sm:w-1/2"
+              label="Update"
+              size="small"
+              icon="pi pi-pen-to-square"
+              :disabled="!form.selectedSignatory"
+              :severity="form.selectedSignatory ? 'success' : 'secondary'"
+              @click="updateSignatoryInfo"
+            />
 
-          <Button
-            class="mt-4 self-end w-full sm:w-1/2"
-            label="Update"
-            size="small"
-            icon="pi pi-pen-to-square"
-            :disabled="!signatoryFormStore.selectedSignatory"
-            :severity="signatoryFormStore.selectedSignatory ? 'success' : 'secondary'"
-            @click="updateSignatoryInfo"
-          />
+            <Button
+              class="self-end w-full sm:w-1/2"
+              label="Delete"
+              size="small"
+              icon="pi pi-trash"
+              :disabled="!form.selectedSignatory"
+              :severity="form.selectedSignatory ? 'danger' : 'secondary'"
+              @click="handleDeleteSignatory"
+            />
+          </div>
         </div>
 
         <!-- Right Section - Table -->
@@ -69,7 +77,7 @@
           <div class="bg-white rounded-xl h-full relative flex flex-col">
             <!-- Loading Overlay -->
             <div
-              v-if="signatoryFormStore.loading2"
+              v-if="form.loading2"
               class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10"
             >
               <i class="pi pi-spinner pi-spin text-blue-500 text-3xl" />
@@ -85,7 +93,7 @@
               >
                 <i class="pi pi-search mr-2 text-gray-500" />
                 <input
-                  v-model="signatoryFormStore.searchInput"
+                  v-model="form.searchInput"
                   type="text"
                   placeholder="Search..."
                   class="outline-none border-none focus:ring-0 text-sm bg-transparent w-full"
@@ -110,17 +118,11 @@
                       <div class="flex items-center">
                         {{ col.header }}
                         <i
-                          v-if="
-                            signatoryFormStore.sortField === col.field &&
-                            signatoryFormStore.sortOrder === 1
-                          "
+                          v-if="form.sortField === col.field && form.sortOrder === 1"
                           class="pi pi-sort-amount-up-alt ml-2 text-xs"
                         />
                         <i
-                          v-else-if="
-                            signatoryFormStore.sortField === col.field &&
-                            signatoryFormStore.sortOrder === -1
-                          "
+                          v-else-if="form.sortField === col.field && form.sortOrder === -1"
                           class="pi pi-sort-amount-down ml-2 text-xs"
                         />
                         <i v-else class="pi pi-sort-alt ml-2 text-xs text-gray-400" />
@@ -132,10 +134,10 @@
                   <tr
                     v-for="item in signatories"
                     :key="item.id"
-                    @click="signatoryFormStore.selectedSignatory = item"
+                    @click="form.selectedSignatory = item"
                     :class="[
                       'border-b hover:bg-gray-100 transition cursor-pointer',
-                      signatoryFormStore.selectedSignatory?.id === item.id ? 'bg-blue-50' : '',
+                      form.selectedSignatory?.id === item.id ? 'bg-blue-50' : '',
                     ]"
                   >
                     <td class="px-2 sm:px-4 py-2">{{ item.full_name }}</td>
@@ -180,6 +182,35 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal -->
+    <Dialog
+      v-model:visible="form.visible"
+      modal
+      header="Confirm Action"
+      :style="{ width: '25rem' }"
+      @hide="handleClose"
+    >
+      <template #header>
+        <div class="inline-flex items-center justify-center gap-2">
+          <span class="font-bold whitespace-nowrap">Delete!!</span>
+        </div>
+      </template>
+      <span class="text-surface-500 dark:text-surface-400 block mb-8">
+        Are you sure you want to delete this signatory?
+      </span>
+
+      <template #footer>
+        <Button label="No" text variant="outlined" @click="handleClose()" autofocus />
+        <Button
+          label="Yes"
+          variant="outlined"
+          severity="success"
+          @click="handleConfirmDelete()"
+          autofocus
+        />
+      </template>
+    </Dialog>
   </div>
 </template>
 
@@ -190,11 +221,11 @@ import { useAuthStore } from '@/stores/auth'
 import { useSignatoryFormStore } from '@/stores/signatoryFormStore'
 import SignatoryInfo from '@/views/Admin/Management/Manage/SignatoryInfo.vue'
 
-const signatoryFormStore = useSignatoryFormStore()
+const form = useSignatoryFormStore()
 const authStore = useAuthStore()
 
 onMounted(async () => {
-  signatoryFormStore.loading = true
+  form.loading = true
   try {
     await Promise.all([
       authStore.fetchUser(),
@@ -204,16 +235,14 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching data:', error)
   } finally {
-    signatoryFormStore.loading = false
+    form.loading = false
   }
 })
 
-const signatories = computed(() => signatoryFormStore.signatoryList)
-const totalRecords = computed(() => signatoryFormStore.totalRecords)
-const totalPages = computed(() => Math.ceil(totalRecords.value / signatoryFormStore.rows))
-const currentPage = computed(
-  () => Math.floor(signatoryFormStore.first / signatoryFormStore.rows) + 1,
-)
+const signatories = computed(() => form.signatoryList)
+const totalRecords = computed(() => form.totalRecords)
+const totalPages = computed(() => Math.ceil(totalRecords.value / form.rows))
+const currentPage = computed(() => Math.floor(form.first / form.rows) + 1)
 
 const visiblePages = computed(() => {
   const maxButtons = 5
@@ -231,47 +260,70 @@ const columns = [
 ]
 
 function insertNewSignatory() {
-  signatoryFormStore.addSignatory = true
-  signatoryFormStore.resetForm()
+  form.addSignatory = true
+  form.resetForm()
 }
 function updateSignatoryInfo() {
-  const signatory = signatoryFormStore.selectedSignatory
-  signatoryFormStore.setSignatory(signatory)
+  const signatory = form.selectedSignatory
+  form.setSignatory(signatory)
+}
+function handleDeleteSignatory() {
+  form.visible = true
+  form.deleteSignatoryFlag = true
+}
+function handleClose() {
+  form.visible = false
+  form.deleteSignatoryFlag = false
+}
+
+const handleConfirmDelete = () => {
+  form.submitting = true
+  setTimeout(async () => {
+    try {
+      await form.deleteSignatory()
+      alert('The signatory has been deleted!')
+    } catch (error) {
+      console.error('Request submission failed:', error)
+      alert('There was an error submitting the request. Please try again.')
+    } finally {
+      form.submitting = false
+      form.selectedSignatory = null
+      handleClose()
+      loadRequests(currentPage.value)
+    }
+  }, 1500)
 }
 
 function triggerSearch() {
-  signatoryFormStore.first = 0
+  form.first = 0
   loadRequests(1)
 }
 
 function sortBy(field) {
-  if (signatoryFormStore.sortField === field) {
-    signatoryFormStore.sortOrder = signatoryFormStore.sortOrder === 1 ? -1 : 1
+  if (form.sortField === field) {
+    form.sortOrder = form.sortOrder === 1 ? -1 : 1
   } else {
-    signatoryFormStore.sortField = field
-    signatoryFormStore.sortOrder = 1
+    form.sortField = field
+    form.sortOrder = 1
   }
   loadRequests(currentPage.value)
 }
 
 function goToPage(page) {
   if (page < 1 || page > totalPages.value) return
-  signatoryFormStore.first = (page - 1) * signatoryFormStore.rows
+  form.first = (page - 1) * form.rows
   loadRequests(page)
 }
 
 function loadRequests(page = currentPage.value) {
-  signatoryFormStore.loading2 = true
-  const search = signatoryFormStore.searchInput || ''
-  const sortBy = signatoryFormStore.sortField || ''
-  const sortDir =
-    signatoryFormStore.sortOrder === 1 ? 'asc' : signatoryFormStore.sortOrder === -1 ? 'desc' : ''
+  form.loading2 = true
+  const search = form.searchInput || ''
+  const sortBy = form.sortField || ''
+  const sortDir = form.sortOrder === 1 ? 'asc' : form.sortOrder === -1 ? 'desc' : ''
 
-  signatoryFormStore
-    .getSignatories(authStore.token, page, signatoryFormStore.rows, search, sortBy, sortDir)
-    .finally(() => {
-      signatoryFormStore.loading2 = false
-    })
+  form.getSignatories(authStore.token, page, form.rows, search, sortBy, sortDir).finally(() => {
+    form.loading2 = false
+  })
 }
 </script>
 

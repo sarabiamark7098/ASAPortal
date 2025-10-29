@@ -1,6 +1,6 @@
 <template>
-  <FullScreenLoader :visible="signatoryFormStore.loadingaction" message="" />
-  <div v-if="!signatoryFormStore.loadingaction" class="px-4 sm:px-6 lg:px-10 py-6">
+  <FullScreenLoader :visible="form.loadingaction" message="" />
+  <div v-if="!form.loadingaction" class="px-4 sm:px-6 lg:px-10 py-6">
     <div class="flex flex-col lg:flex-row gap-6">
       <!-- Signatory Information -->
       <div
@@ -27,7 +27,7 @@
         class="w-full lg:w-1/2 shadow-sm rounded-lg p-5 overflow-y-auto flex flex-col bg-white max-h-[600px]"
       >
         <h3 class="text-lg font-semibold mb-7 sticky top-0 bg-white z-10 pb-2">
-          {{ signatoryFormStore.addSignatory ? 'Add' : 'Update' }} Signatory Information
+          {{ form.addSignatory ? 'Add' : 'Update' }} Signatory Information
         </h3>
 
         <div class="flex flex-col w-full gap-8 bg-white">
@@ -37,7 +37,7 @@
               <FloatLabel>
                 <InputText
                   id="signatoryFullName"
-                  v-model="signatoryFormStore.full_name"
+                  v-model="form.full_name"
                   class="w-full"
                 />
                 <label for="signatoryFullName">Complete Name</label>
@@ -49,7 +49,7 @@
 
             <div>
               <FloatLabel>
-                <InputText id="position" v-model="signatoryFormStore.position" class="w-full" />
+                <InputText id="position" v-model="form.position" class="w-full" />
                 <label for="position">Position</label>
               </FloatLabel>
               <small v-if="v$.position.$error" class="text-red-500"> Position is required. </small>
@@ -67,10 +67,10 @@
           />
 
           <Button
-            :label="signatoryFormStore.addSignatory ? 'Add Signatory' : 'Save Changes'"
+            :label="form.addSignatory ? 'Add Signatory' : 'Save Changes'"
             class="w-full sm:w-auto"
             severity="success"
-            :loading="signatoryFormStore.submitting"
+            :loading="form.submitting"
             @click="submitForm"
           />
         </div>
@@ -87,26 +87,26 @@ import { useAuthStore } from '@/stores/auth'
 import useVuelidate from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
 
-const signatoryFormStore = useSignatoryFormStore()
+const form = useSignatoryFormStore()
 const authStore = useAuthStore()
 
 // Alias for readability
-const signatory = signatoryFormStore.selectedSignatory
+const signatory = form.selectedSignatory
 
 onMounted(async () => {
-  signatoryFormStore.loadingaction = true
+  form.loadingaction = true
   try {
     await new Promise((resolve) => setTimeout(resolve, 500))
   } catch (error) {
     console.error('Error on mount:', error)
   } finally {
-    signatoryFormStore.loadingaction = false
+    form.loadingaction = false
   }
 })
 
 function back() {
-  signatoryFormStore.updateSignatory = false
-  signatoryFormStore.addSignatory = false
+  form.updateSignatory = false
+  form.addSignatory = false
 }
 
 // Custom email validator with domain restriction
@@ -126,50 +126,50 @@ const rules = {
   position: { required },
 }
 
-const v$ = useVuelidate(rules, signatoryFormStore)
+const v$ = useVuelidate(rules, form)
 
 const signatoryInfo = computed(() => ({
-  Name: signatoryFormStore?.full_name,
-  Position: signatoryFormStore?.position,
+  Name: form?.full_name,
+  Position: form?.position,
 }))
 
 async function submitForm() {
   const isValid = await v$.value.$validate()
   if (!isValid) return
 
-  const original = signatoryFormStore.selectedSignatory || {}
+  const original = form.selectedSignatory || {}
   const current = {
-    full_name: signatoryFormStore.full_name,
-    position: signatoryFormStore.position,
+    full_name: form.full_name,
+    position: form.position,
   }
 
   const hasChanged = Object.keys(current).some(
     (key) => (current[key] || '') !== (original[key] || ''),
   )
 
-  if (!signatoryFormStore.addSignatory && !hasChanged) {
+  if (!form.addSignatory && !hasChanged) {
     window.alert('No changes detected. Please update some fields before saving.')
     return
   }
 
-  signatoryFormStore.submitting = true
+  form.submitting = true
   let errorOccurred = false
   try {
-    await signatoryFormStore.submitForm()
+    await form.submitForm()
   } catch (error) {
     console.error('Form submission failed:', error)
     errorOccurred = true
   } finally {
     if (!errorOccurred) {
-      if (signatoryFormStore.addSignatory) {
+      if (form.addSignatory) {
         window.alert('Signatory information successfully added.')
       } else {
         window.alert('Signatory information successfully updated.')
       }
       window.location.reload()
-      signatoryFormStore.addSignatory = false
-      signatoryFormStore.updateSignatory = false
-      signatoryFormStore.submitting = false
+      form.addSignatory = false
+      form.updateSignatory = false
+      form.submitting = false
     } else {
       window.alert('Form submission failed. Please try again.')
     }

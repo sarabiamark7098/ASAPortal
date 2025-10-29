@@ -24,9 +24,11 @@ export const useSignatoryFormStore = defineStore('signatoriesForm', {
     showEditDialog: false,
     editedUser: {},
     submitting: false,
+    visible: false,
 
     addSignatory: false,
     updateSignatory: false,
+    deleteSignatoryFlag: false,
   }),
   actions: {
     async resetForm() {
@@ -39,6 +41,18 @@ export const useSignatoryFormStore = defineStore('signatoriesForm', {
       this.updateSignatory = true
       this.full_name = signatory.full_name
       this.position = signatory.position
+    },
+
+    async deleteSignatory() {
+      try {
+        const authStore = useAuthStore()
+        await axios.delete(`/api/signatories/${this.selectedSignatory.id}`, {
+          headers: { Authorization: `Bearer ${authStore.token}` },
+        })
+      } catch (error) {
+        console.error('Failed to delete signatory:', error)
+        throw error
+      }
     },
 
     async getSignatories(token, page, perPage, query = '', sortBy = '', sortDir = '') {
