@@ -3,7 +3,7 @@
     <div class="bg-white rounded-xl p-6 relative">
       <!-- Loading Overlay -->
       <div
-        v-if="loading"
+        v-if="form.loading"
         class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10"
       >
         <i class="pi pi-spinner pi-spin text-blue-500 text-3xl" />
@@ -15,7 +15,7 @@
         <div class="flex items-center border border-gray-300 rounded-lg px-3 py-1">
           <i class="pi pi-search mr-2 text-gray-500" />
           <input
-            v-model="searchInput"
+            v-model="form.searchInput"
             type="text"
             placeholder="Search..."
             class="outline-none border-none focus:ring-0 text-sm"
@@ -38,11 +38,11 @@
                 <div class="flex items-center">
                   {{ col.header }}
                   <i
-                    v-if="sortField === col.field && sortOrder === 1"
+                    v-if="form.sortField === col.field && form.sortOrder === 1"
                     class="pi pi-sort-amount-up-alt ml-2 text-xs"
                   />
                   <i
-                    v-else-if="sortField === col.field && sortOrder === -1"
+                    v-else-if="form.sortField === col.field && form.sortOrder === -1"
                     class="pi pi-sort-amount-down ml-2 text-xs"
                   />
                   <i v-else class="pi pi-sort-alt ml-2 text-xs text-gray-400" />
@@ -53,7 +53,7 @@
           </thead>
           <tbody>
             <tr
-              v-for="item in vehicleRequests"
+              v-for="item in transactionRequests"
               :key="item.id"
               class="border-b text-sm even:bg-gray-50 hover:bg-gray-100 transition"
             >
@@ -62,7 +62,10 @@
               <td class="px-4 py-2 w-2">{{ item.requesting_office }}</td>
               <td class="px-4 py-2 w-2">{{ item.transactable_type }}</td>
               <td class="px-4 py-2 w-1">
-                <Tag :value="toUcWords(item.status === 'no_available' ? 'Not Available' : item.status)" :severity="getStatusLabel(item.status)" />
+                <Tag
+                  :value="toUcWords(item.status === 'no_available' ? 'Not Available' : item.status)"
+                  :severity="getStatusLabel(item.status)"
+                />
               </td>
               <td class="px-4 py-2 w-1">
                 <Button icon="pi pi-eye" outlined rounded @click="editTransaction(item)" />
@@ -115,19 +118,19 @@
       <div class="flex flex-col gap-4">
         <div v-for="(label, key) in detailFields" :key="key">
           <label class="font-semibold">{{ label }}:</label>
-          <p>{{ selectedTransactionData[key] }}</p>
+          <p>{{ form.selectedTransactionData[key] }}</p>
         </div>
         <div>
           <label class="font-semibold">Status:</label>
           <Tag
-            :value="toUcWords(selectedTransactionData.status)"
-            :severity="getStatusLabel(selectedTransactionData.status)"
+            :value="toUcWords(form.selectedTransactionData.status)"
+            :severity="getStatusLabel(form.selectedTransactionData.status)"
           />
         </div>
       </div>
       <template #footer>
         <div class="flex justify-end gap-2 mt-4">
-          <Button label="Close" icon="pi pi-times" text @click="transactionDialog = false" />
+          <Button label="Close" icon="pi pi-times" text @click="form.transactionDialog = false" />
         </div>
       </template>
     </Dialog>
@@ -136,26 +139,16 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useTransactionsFormStore } from '@/stores/transactionsStoreForm'
+import { useTransactionsFormStore } from '@/stores/transactionsFormStore'
 import { useAuthStore } from '@/stores/auth'
 
-const transactionStore = useTransactionsFormStore()
+const form = useTransactionsFormStore()
 const authStore = useAuthStore()
 
-const rows = ref(20)
-const first = ref(0)
-const searchInput = ref('')
-const sortField = ref(null)
-const sortOrder = ref(null)
-const loading = ref(false)
-
-const selectedTransactionData = ref({})
-const transactionDialog = ref(false)
-
-const vehicleRequests = computed(() => transactionStore.vehicleRequests)
-const totalRecords = computed(() => transactionStore.totalRecords)
-const totalPages = computed(() => Math.ceil(totalRecords.value / rows.value))
-const currentPage = computed(() => Math.floor(first.value / rows.value) + 1)
+const Requests = computed(() => form.transactionRequests)
+const totalRecords = computed(() => form.totalRecords)
+const totalPages = computed(() => Math.ceil(totalRecords.value / form.rows))
+const currentPage = computed(() => Math.floor(form.first / form.rows) + 1)
 
 // Pagination: show only a few pages at a time
 const visiblePages = computed(() => {
@@ -173,10 +166,6 @@ const visiblePages = computed(() => {
   }
 
   return pages
-})
-
-defineOptions({
-  name: 'Vehicle',
 })
 
 const columns = [
@@ -199,42 +188,42 @@ onMounted(() => {
 })
 
 function triggerSearch() {
-  first.value = 0
+  form.first = 0
   loadRequests(1)
 }
 
 function sortBy(field) {
-  if (sortField.value === field) {
-    sortOrder.value = sortOrder.value === 1 ? -1 : 1
+  if (form.sortField === field) {
+    form.sortOrder = form.sortOrder === 1 ? -1 : 1
   } else {
-    sortField.value = field
-    sortOrder.value = 1
+    form.sortField = field
+    form.sortOrder = 1
   }
   loadRequests(currentPage.value)
 }
 
 function goToPage(page) {
   if (page < 1 || page > totalPages.value) return
-  first.value = (page - 1) * rows.value
+  form.first = (page - 1) * form.rows
   loadRequests(page)
 }
 
 function loadRequests(page = currentPage.value) {
-  loading.value = true
-  const search = searchInput.value || ''
-  const sortBy = sortField.value || ''
-  const sortDir = sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : ''
+  form.loading = true
+  const search = form.searchInput || ''
+  const sortBy = form.sortField || ''
+  const sortDir = form.sortOrder === 1 ? 'asc' : form.sortOrder === -1 ? 'desc' : ''
 
-  transactionStore
-    .getVehicleRequests(authStore.token, page, rows.value, search, sortBy, sortDir)
+  form
+    .getTransactionRequests(authStore.token, page, form.rows, search, sortBy, sortDir)
     .finally(() => {
-      loading.value = false
+      form.loading = false
     })
 }
 
 function editTransaction(data) {
-  selectedTransactionData.value = data
-  transactionDialog.value = true
+  form.selectedTransactionData = data
+  form.transactionDialog = true
 }
 
 function getStatusLabel(status) {

@@ -324,9 +324,10 @@
                 :class="{ 'p-invalid': v$.src.$error }"
               />
 
-              <div v-if="form.src" class="mt-4 sm:mt-0">
+              <div v-if="form.preview" class="mt-4 sm:mt-0">
                 <img
-                  :src="form.src"
+                  :key="form.preview"
+                  :src="form.preview"
                   alt="E-Signature Preview"
                   class="shadow-md rounded-xl w-full sm:w-32 grayscale"
                 />
@@ -423,19 +424,36 @@ const invalidTime = computed(
     new Date(form.requested_time_end) <= new Date(form.requested_time_start),
 )
 
-// File handling
+// File upload handler
+function validateFile(file) {
+  const validTypes = ['image/png', 'image/jpeg']
+  const maxSize = 1 * 1024 * 1024
+
+  if (!validTypes.includes(file.type)) {
+    return 'Only PNG or JPEG files are allowed.'
+  }
+  if (file.size > maxSize) {
+    return 'Maximum file size is 1MB.'
+  }
+  return null
+}
+
 function onFileSelect(event) {
   const file = event.files[0]
   if (!file) return
 
-  const validTypes = ['image/png', 'image/jpeg']
-  const maxSize = 1 * 1024 * 1024
+  const error = validateFile(file)
+  if (error) {
+    alert(error)
+    form.src = null
+    form.preview = null
+    return
+  }
 
-  if (!validTypes.includes(file.type)) return alert('Only PNG or JPEG files are allowed.')
-  if (file.size > maxSize) return alert('Maximum file size is 1MB.')
+  form.src = file
 
   const reader = new FileReader()
-  reader.onload = (e) => (form.src = e.target.result)
+  reader.onload = (e) => (form.preview = e.target.result)
   reader.readAsDataURL(file)
 }
 

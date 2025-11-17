@@ -17,6 +17,7 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
     requester_contact_number: '',
     requester_email: '',
     src: '',
+    preview: '',
     vehicleList: [],
     selectedRequest: '',
     loading: false,
@@ -81,7 +82,8 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
       !!state.requester_position &&
       !!state.requester_contact_number &&
       !!state.requester_email &&
-      !!state.src,
+      !!state.src &&
+      !!state.preview,
   },
   actions: {
     resetForm() {
@@ -97,6 +99,7 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
       this.requester_contact_number = ''
       this.requester_email = ''
       this.src = null
+      this.preview = null
     },
 
     async submitForm() {
@@ -115,6 +118,12 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
           requester_position: this.requester_position,
           requester_contact_number: this.requester_contact_number,
           requester_email: this.requester_email,
+          files: [
+            {
+              label: 'Signature',
+              file: this.src,
+            },
+          ],
         }
 
         const isEmpty = Object.values(formData).some(
@@ -128,6 +137,7 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
         const response = await axios.post('/api/vehicle-requests', formData, {
           headers: {
             Authorization: `Bearer ${authStore.token}`,
+            'Content-Type': 'multipart/form-data',
           },
         })
         return response.data
@@ -253,6 +263,14 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
       })
       this.vehicleRequests = response.data.data
       this.totalRecords = response.data.total
+    },
+
+    formatDate(value) {
+      return value ? dayjs(value).format('MMMM DD, YYYY') : 'N/A'
+    },
+
+    formatTime(value) {
+      return value ? dayjs(`1970-01-01 ${value}`, 'HH:mm:ss').format('hh:mm A') : 'N/A'
     },
   },
 })

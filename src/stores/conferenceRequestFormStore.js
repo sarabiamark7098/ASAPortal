@@ -20,6 +20,7 @@ export const useConferenceRequestFormStore = defineStore('conferenceRequestFormS
     requester_contact_number: '',
     requester_email: '',
     src: null,
+    preview: '',
 
     room: '',
 
@@ -76,6 +77,7 @@ export const useConferenceRequestFormStore = defineStore('conferenceRequestFormS
       this.requester_contact_number = ''
       this.requester_email = ''
       this.src = null
+      this.preview = ''
     },
     async resetRoutes() {
       this.requesting_office = ''
@@ -92,6 +94,7 @@ export const useConferenceRequestFormStore = defineStore('conferenceRequestFormS
       this.requester_contact_number = ''
       this.requester_email = ''
       this.src = null
+      this.preview = ''
       this.selectedRequest = ''
       this.loading = false
       this.loading2 = false
@@ -119,11 +122,18 @@ export const useConferenceRequestFormStore = defineStore('conferenceRequestFormS
           requester_position: this.requester_position,
           requester_contact_number: this.requester_contact_number,
           requester_email: this.requester_email,
+          files: [
+            {
+              label: 'Signature',
+              file: this.src,
+            },
+          ],
         }
 
         const response = await axios.post('/api/conference-requests', formData, {
           headers: {
             Authorization: `Bearer ${authStore.token}`,
+            'Content-Type': 'multipart/form-data',
           },
         })
         return response.data
@@ -222,6 +232,14 @@ export const useConferenceRequestFormStore = defineStore('conferenceRequestFormS
       })
       this.conferenceRequests = response.data.data
       this.totalRecords = response.data.total
+    },
+
+    formatDate(value) {
+      return value ? dayjs(value).format('MMMM DD, YYYY') : 'N/A'
+    },
+
+    formatTime(value) {
+      return value ? dayjs(`1970-01-01 ${value}`, 'HH:mm:ss').format('hh:mm A') : 'N/A'
     },
   },
 })

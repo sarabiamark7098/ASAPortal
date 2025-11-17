@@ -18,6 +18,7 @@ export const useOvernightParkingRequestFormStore = defineStore('overnightParking
     requester_contact_number: '',
     requester_email: '',
     src: null, // base64 string for e-signature
+    preview: null,
     supportingDocument: null,
     supportingDocumentFileName: '',
 
@@ -67,6 +68,7 @@ export const useOvernightParkingRequestFormStore = defineStore('overnightParking
       this.requester_contact_number = ''
       this.requester_email = ''
       this.src = null
+      this.preview = null
       this.supportingDocument = null
       this.supportingDocumentFileName = ''
     },
@@ -74,6 +76,16 @@ export const useOvernightParkingRequestFormStore = defineStore('overnightParking
     async submitForm() {
       try {
         const authStore = useAuthStore()
+        const files = []
+        if (this.src) {
+          files.push({ label: 'Signature', file: this.src })
+        }
+        if (this.supportingDocument) {
+          files.push({
+            label: 'Supporting Document',
+            file: this.supportingDocument,
+          })
+        }
         const formData = {
           date_requested: dayjs().format('YYYY-MM-DD HH:mm:ss'),
           requested_start: dayjs(this.requested_start).format('YYYY-MM-DD HH:mm:ss'),
@@ -87,11 +99,13 @@ export const useOvernightParkingRequestFormStore = defineStore('overnightParking
           requester_position: this.requester_position,
           requester_contact_number: this.requester_contact_number,
           requester_email: this.requester_email,
+          files: files,
         }
 
         const response = await axios.post('/api/overnight-parking-requests', formData, {
           headers: {
             Authorization: `Bearer ${authStore.token}`,
+            'Content-Type': 'multipart/form-data',
           },
         })
         return response.data
