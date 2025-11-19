@@ -1,9 +1,47 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useUsersStore } from '@/stores/users'
+
 import GuestLayout from '@/layouts/GuestLayout.vue'
-import AuthenticatedLayout from '@/layouts/AdminLayout.vue'
+import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
+import AdminLayout from '@/layouts/AdminLayout.vue'
 import Login from '@/views/Login.vue'
-import Dashboard from '@/views/Dashboard.vue'
+import Dashboard from '@/views/Admin/Dashboard.vue'
+import Register from '@/views/Register.vue'
+import UserAccounts from '@/views/Admin/Management/UserAccounts.vue'
+import ClientView from '@/views/Client/ClientView.vue'
+import PrintView from '@/views/Requests/PrintRequest.vue'
+
+import RequestVehicle from '@/views/Requests/RequestVehicle.vue'
+import RequestBuildingAndGroundsTA from '@/views/Requests/RequestBuildingAndGroundsTA.vue'
+import RequestConferenceRoom from '@/views/Requests/RequestConferenceRoom.vue'
+import RequestAirTransportOrder from '@/views/Requests/RequestAirTransportOrder.vue'
+import RequestEntryToDSWDPremises from '@/views/Requests/RequestEntryToDSWDPremises.vue'
+import RequestOvernightParking from '@/views/Requests/RequestOvernightParking.vue'
+import RequestJanitorialServices from '@/views/Requests/RequestJanitorialServices.vue'
+
+import ViewRequests from '@/views/Client/ViewRequests.vue'
+
+import VehicleSchedule from '@/views/Calendar/VehicleSchedule.vue'
+import MaagapSchedule from '@/views/Calendar/MaagapSchedule.vue'
+import MagitingSchedule from '@/views/Calendar/MagitingSchedule.vue'
+import SeminarHallSchedule from '@/views/Calendar/SeminarSchedule.vue'
+
+import Drivers from '@/views/Admin/Management/Drivers.vue'
+import Vehicles from '@/views/Admin/Management/Vehicles.vue'
+import Signatories from '@/views/Admin/Management/Signatories.vue'
+
+import TARequest from '@/views/Admin/Requests/TechnicalAssistance.vue'
+import VehicleRequest from '@/views/Admin/Requests/Vehicle.vue'
+import MaagapRequest from '@/views/Admin/Requests/Maagap.vue'
+import MagitingRequest from '@/views/Admin/Requests/Magiting.vue'
+import SeminarRequest from '@/views/Admin/Requests/Seminar.vue'
+import AirTransportOrderRequest from '@/views/Admin/Requests/AirTransportOrder.vue'
+import EntryRequest from '@/views/Admin/Requests/Entry.vue'
+import ParkingRequest from '@/views/Admin/Requests/Parking.vue'
+import JanitorialRequest from '@/views/Admin/Requests/Janitorial.vue'
+
+import { useConferenceRequestFormStore } from '@/stores/conferenceRequestFormStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,9 +59,33 @@ const router = createRouter({
       ],
     },
     {
+      path: '/register',
+      component: GuestLayout,
+      meta: { requiresGuest: true },
+      children: [
+        {
+          path: '',
+          name: 'register',
+          component: Register,
+        },
+      ],
+    },
+    {
+      path: '/manage/useraccounts',
+      component: AdminLayout,
+      meta: { requiresAuth: true, role: ['superadmin'] },
+      children: [
+        {
+          path: '',
+          name: 'useraccounts',
+          component: UserAccounts,
+        },
+      ],
+    },
+    {
       path: '/dashboard',
-      component: AuthenticatedLayout,
-      meta: { requiresAuth: true },
+      component: AdminLayout,
+      meta: { requiresAuth: true, role: ['superadmin', 'supervisor', 'manager'] },
       children: [
         {
           path: '',
@@ -33,31 +95,225 @@ const router = createRouter({
       ],
     },
     {
+      path: '/manage',
+      component: AdminLayout,
+      meta: { requiresAuth: true, role: ['superadmin', 'supervisor', 'manager'] },
+      children: [
+        {
+          path: 'drivers',
+          name: 'drivers',
+          component: Drivers,
+        },
+        {
+          path: 'vehicles',
+          name: 'vehicles',
+          component: Vehicles,
+        },
+        {
+          path: 'signatories',
+          name: 'signatories',
+          component: Signatories,
+        },
+      ],
+    },
+    {
+      path: '/request',
+      component: AdminLayout,
+      meta: { requiresAuth: true, role: ['superadmin', 'supervisor', 'manager'] },
+      children: [
+        {
+          path: 'technical-assistance',
+          name: 'TARequest',
+          component: TARequest,
+        },
+        {
+          path: 'vehicle',
+          name: 'VehicleRequest',
+          component: VehicleRequest,
+        },
+        {
+          path: 'maagap',
+          name: 'MaagapRequest',
+          component: MaagapRequest,
+        },
+        {
+          path: 'magiting',
+          name: 'MagitingRequest',
+          component: MagitingRequest,
+        },
+        {
+          path: 'seminar',
+          name: 'SeminarRequest',
+          component: SeminarRequest,
+        },
+        {
+          path: 'transport-order',
+          name: 'AirTransportOrderRequest',
+          component: AirTransportOrderRequest,
+        },
+        {
+          path: 'entry',
+          name: 'EntryRequest',
+          component: EntryRequest,
+        },
+        {
+          path: 'parking',
+          name: 'ParkingRequest',
+          component: ParkingRequest,
+        },
+        {
+          path: 'janitorial',
+          name: 'JanitorialRequest',
+          component: JanitorialRequest,
+        },
+      ],
+    },
+    {
+      path: '/client',
+      component: AuthenticatedLayout,
+      meta: { requiresAuth: true, role: ['client', 'superadmin', 'supervisor', 'manager'] },
+      children: [
+        {
+          path: '',
+          name: 'clientview',
+          component: ClientView,
+        },
+        {
+          path: '/print-view/:printview',
+          name: 'printview',
+          component: PrintView,
+        },
+        {
+          path: '/request-forms/buildingAndGroundsTARequest',
+          name: 'RequestBuildingAndGroundsTA',
+          component: RequestBuildingAndGroundsTA,
+        },
+        {
+          path: '/request-forms/officialVehicleRequest',
+          name: 'RequestVehicle',
+          component: RequestVehicle,
+        },
+        {
+          path: '/request-forms/conferenceRoomRequest',
+          name: 'RequestConferenceRoom',
+          component: RequestConferenceRoom,
+        },
+        {
+          path: '/request-forms/airTransportOrderRequest',
+          name: 'RequestAirTransportOrder',
+          component: RequestAirTransportOrder,
+        },
+        {
+          path: '/request-forms/entryToDSWDPremisesRequest',
+          name: 'RequestEntryToDSWDPremises',
+          component: RequestEntryToDSWDPremises,
+        },
+        {
+          path: '/request-forms/overnightParkingRequest',
+          name: 'RequestOvernightParking',
+          component: RequestOvernightParking,
+        },
+        {
+          path: '/request-forms/janitorialServicesRequest',
+          name: 'RequestJanitorialServices',
+          component: RequestJanitorialServices,
+        },
+        {
+          path: '/view-requests',
+          name: 'ViewRequests',
+          component: ViewRequests,
+        },
+        {
+          path: '/calendar-views/vehicle-schedule',
+          name: 'vehicleschedule',
+          component: VehicleSchedule,
+        },
+        {
+          path: '/calendar-views/maagap-schedule',
+          name: 'maagapschedule',
+          component: MaagapSchedule,
+        },
+        {
+          path: '/calendar-views/magiting-schedule',
+          name: 'magitingschedule',
+          component: MagitingSchedule,
+        },
+        {
+          path: '/calendar-views/seminar-hall-schedule',
+          name: 'seminarhallschedule',
+          component: SeminarHallSchedule,
+        },
+      ],
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: () => import('@/views/NotFound.vue'), // Create a NotFound.vue view
+    },
+    {
+      path: '/unauthorized',
+      name: 'unauthorized',
+      component: () => import('@/views/Unauthorized.vue'),
     },
   ],
 })
 
 router.beforeEach(async (to, from, next) => {
-  const auth = useAuthStore()
-  if (!auth.user && !auth.loading) {
+  const authStore = useAuthStore()
+
+  // Fetch user only if token exists and user is not yet loaded
+  if (authStore.token && !authStore.user && !authStore.loading) {
     try {
-      await auth.fetchUser()
+      await authStore.fetchUser()
     } catch (error) {
-      console.error('Failed to fetch user:', error)
+      authStore.token = null
+      localStorage.removeItem('token')
     }
   }
 
-  if (to.meta.requiresAuth && !auth.user) {
+  // Requires authentication
+  if (to.meta.requiresAuth && !authStore.user) {
     return next({ name: 'login' })
   }
 
-  if (to.meta.requiresGuest && auth.user) {
-    return next({ name: 'dashboard' })
+  // Guest-only page (login, register)
+  if (to.meta.requiresGuest && authStore.user) {
+    // Redirect based on role
+    const roles = authStore.user.roles || []
+    if (roles.includes('superadmin') || roles.includes('supervisor') || roles.includes('manager')) {
+      return next({ name: 'dashboard' })
+    } else if (roles.includes('client')) {
+      return next({ name: 'clientview' })
+    } else {
+      return next({ name: 'unauthorized' })
+    }
+  }
+
+  // Role-based access control
+  if (to.meta.role && authStore.user) {
+    const allowedRoles = Array.isArray(to.meta.role) ? to.meta.role : [to.meta.role]
+    const userRoles = authStore.user.roles || []
+
+    const hasAccess = userRoles.some((role) => allowedRoles.includes(role))
+
+    if (!hasAccess) {
+      return next({ name: 'unauthorized' })
+    }
   }
 
   next()
+})
+
+router.afterEach((to) => {
+  const users = useUsersStore()
+  if (to.name === 'useraccounts') {
+    users.fetchAllUsers()
+  }
+
+  const resetRoutes = ['MaagapRequest', 'MagitingRequest', 'SeminarRequest']
+  if (resetRoutes.includes(to.name)) {
+    const requestConferenceStore = useConferenceRequestFormStore()
+    requestConferenceStore.resetRoutes()
+  }
 })
 export default router

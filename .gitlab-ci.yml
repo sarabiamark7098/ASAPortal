@@ -1,0 +1,31 @@
+stages:
+  - build_development
+  - deploy_development
+
+build_development:
+  stage: build_development
+  image: node:20
+  script:
+    - echo 'build_development'
+    - npm install --legacy-peer-deps
+    - npm run build:development
+  artifacts:
+    paths:
+      - dist/
+  tags:
+    - docker
+
+deploy_development:
+  stage: deploy_development
+  only:
+    - develop
+  environment:
+    name: nonprod
+  needs:
+  - job: build_development
+    artifacts: true
+  script:
+    - echo "$HTACCESS" > dist/.htaccess
+    - rsync -az --delete dist/ $NONPROD_USR@$NONPROD_SRV:$APP_DIR
+  tags:
+    - local
