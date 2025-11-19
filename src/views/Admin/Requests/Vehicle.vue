@@ -1,39 +1,36 @@
 <template>
   <div class="p-4 sm:p-6">
-    <FullScreenLoader
-      :visible="vehicleRequestFormStore.loading"
-      message="Loading Vehicle Request..."
-    />
+    <FullScreenLoader :visible="form.loading" message="Loading Vehicle Request..." />
 
-    <div v-if="!vehicleRequestFormStore.loading">
+    <div v-if="!form.loading">
       <!-- Header -->
       <div class="mb-4">
         <h1 class="text-2xl sm:text-3xl font-bold">Vehicle Requests</h1>
-        <span class="text-sm sm:text-base">Manage Vehicle Requests</span>
+        <span class="text-sm sm:text-base">Manage Requests</span>
       </div>
 
       <!-- Conditional Edit/Print Modes -->
-      <div v-if="vehicleRequestFormStore.editMode" class="flex flex-col md:flex-row gap-4">
+      <div v-if="form.editMode" class="flex flex-col md:flex-row gap-4">
         <ApproveVehicle
-          :request="vehicleRequestFormStore.editingRequest"
+          :request="form.editingRequest"
           @cancel="handleCancelEdit"
           @updated="handleUpdated"
           class="w-full"
         />
       </div>
 
-      <div v-else-if="vehicleRequestFormStore.editModeCNAS" class="flex flex-col md:flex-row gap-4">
+      <div v-else-if="form.editModeCNAS" class="flex flex-col md:flex-row gap-4">
         <NonAvailability
-          :request="vehicleRequestFormStore.editingRequest"
+          :request="form.editingRequest"
           @cancel="handleCancelEdit"
           @updated="handleUpdated"
           class="w-full"
         />
       </div>
 
-      <div v-else-if="vehicleRequestFormStore.printMode" class="flex flex-col md:flex-row gap-4">
+      <div v-else-if="form.printMode" class="flex flex-col md:flex-row gap-4">
         <PrintTransaction
-          :request="vehicleRequestFormStore.editingRequest"
+          :request="form.editingRequest"
           @cancel="handleCancelEdit"
           @updated="handleUpdated"
           class="w-full"
@@ -72,12 +69,9 @@
             </dl>
 
             <!-- Action Buttons (Mobile Only) -->
-            <div
-              v-if="vehicleRequestFormStore.selectedRequest"
-              class="flex flex-wrap gap-2 mt-4 md:hidden"
-            >
+            <div v-if="form.selectedRequest" class="flex flex-wrap gap-2 mt-4 md:hidden">
               <Button
-                v-if="vehicleRequestFormStore.selectedRequest.status === 'pending'"
+                v-if="form.selectedRequest.status === 'pending'"
                 label="Available"
                 size="small"
                 icon="pi pi-check"
@@ -86,7 +80,7 @@
                 class="w-full"
               />
               <Button
-                v-if="vehicleRequestFormStore.selectedRequest.status === 'pending'"
+                v-if="form.selectedRequest.status === 'pending'"
                 label="Not Available"
                 size="small"
                 icon="pi pi-times"
@@ -95,7 +89,7 @@
                 class="w-full"
               />
               <Button
-                v-if="vehicleRequestFormStore.selectedRequest.status === 'processed'"
+                v-if="form.selectedRequest.status === 'processed'"
                 label="Approved"
                 size="small"
                 icon="pi pi-check"
@@ -104,7 +98,7 @@
                 class="w-full"
               />
               <Button
-                v-if="vehicleRequestFormStore.selectedRequest.status === 'processed'"
+                v-if="form.selectedRequest.status === 'processed'"
                 label="Disapproved"
                 size="small"
                 icon="pi pi-times"
@@ -115,7 +109,7 @@
               <Button
                 v-if="
                   ['disapproved', 'approved', 'no_available', 'cancelled'].includes(
-                    vehicleRequestFormStore.selectedRequest.status,
+                    form.selectedRequest.status,
                   )
                 "
                 label="Print"
@@ -130,11 +124,11 @@
 
           <!-- Sticky Action Buttons (Desktop Only) -->
           <div
-            v-if="vehicleRequestFormStore.selectedRequest"
+            v-if="form.selectedRequest"
             class="hidden md:flex sticky bottom-0 bg-white z-10 px-4 py-4 flex-wrap gap-2 justify-between border-t border-gray-200"
           >
             <Button
-              v-if="vehicleRequestFormStore.selectedRequest.status === 'pending'"
+              v-if="form.selectedRequest.status === 'pending'"
               label="Available"
               size="small"
               icon="pi pi-check"
@@ -142,7 +136,7 @@
               @click="handleAvailableClick"
             />
             <Button
-              v-if="vehicleRequestFormStore.selectedRequest.status === 'pending'"
+              v-if="form.selectedRequest.status === 'pending'"
               label="Not Available"
               size="small"
               icon="pi pi-times"
@@ -150,7 +144,7 @@
               @click="handleNotAvailableClick"
             />
             <Button
-              v-if="vehicleRequestFormStore.selectedRequest.status === 'processed'"
+              v-if="form.selectedRequest.status === 'processed'"
               label="Approved"
               size="small"
               icon="pi pi-check"
@@ -158,7 +152,7 @@
               @click="handleApproved"
             />
             <Button
-              v-if="vehicleRequestFormStore.selectedRequest.status === 'processed'"
+              v-if="form.selectedRequest.status === 'processed'"
               label="Disapproved"
               size="small"
               icon="pi pi-times"
@@ -168,7 +162,7 @@
             <Button
               v-if="
                 ['disapproved', 'approved', 'no_available', 'cancelled'].includes(
-                  vehicleRequestFormStore.selectedRequest.status,
+                  form.selectedRequest.status,
                 )
               "
               label="Print"
@@ -187,7 +181,7 @@
           <div class="relative flex-1 overflow-y-auto">
             <!-- Loading Overlay -->
             <div
-              v-if="vehicleRequestFormStore.loading2"
+              v-if="form.loading2"
               class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10"
             >
               <i class="pi pi-spinner pi-spin text-blue-500 text-3xl" />
@@ -197,13 +191,13 @@
             <div
               class="sticky top-0 z-20 bg-white px-4 sm:px-6 pt-4 pb-2 flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-200 gap-2"
             >
-              <h4 class="text-lg font-semibold">Vehicle Requests</h4>
+              <h4 class="text-lg font-semibold">Requests</h4>
               <div
                 class="flex items-center border border-gray-300 rounded-lg px-2 sm:px-3 py-1 w-full sm:w-auto"
               >
                 <i class="pi pi-search mr-2 text-gray-500" />
                 <input
-                  v-model="vehicleRequestFormStore.searchInput"
+                  v-model="form.searchInput"
                   type="text"
                   placeholder="Search..."
                   class="outline-none border-none focus:ring-0 text-sm bg-transparent w-full"
@@ -226,17 +220,11 @@
                       <div class="flex items-center gap-1">
                         {{ col.header }}
                         <i
-                          v-if="
-                            vehicleRequestFormStore.sortField === col.field &&
-                            vehicleRequestFormStore.sortOrder === 1
-                          "
+                          v-if="form.sortField === col.field && form.sortOrder === 1"
                           class="pi pi-sort-amount-up-alt text-xs"
                         />
                         <i
-                          v-else-if="
-                            vehicleRequestFormStore.sortField === col.field &&
-                            vehicleRequestFormStore.sortOrder === -1
-                          "
+                          v-else-if="form.sortField === col.field && form.sortOrder === -1"
                           class="pi pi-sort-amount-down text-xs"
                         />
                         <i v-else class="pi pi-sort-alt text-xs text-gray-400" />
@@ -248,10 +236,10 @@
                   <tr
                     v-for="item in vehicleRequests"
                     :key="item.id"
-                    @click="vehicleRequestFormStore.selectedRequest = item"
+                    @click="form.selectedRequest = item"
                     :class="[
                       'border-b even:bg-gray-50 hover:bg-gray-100 transition cursor-pointer',
-                      vehicleRequestFormStore.selectedRequest?.id === item.id ? 'bg-blue-50' : '',
+                      form.selectedRequest?.id === item.id ? 'bg-blue-50' : '',
                     ]"
                   >
                     <td class="px-2 sm:px-4 py-2">{{ item.date_requested }}</td>
@@ -308,7 +296,7 @@
 
     <!-- Modal -->
     <Dialog
-      v-model:visible="vehicleRequestFormStore.visible"
+      v-model:visible="form.visible"
       modal
       header="Edit Approval"
       :style="{ width: '25rem' }"
@@ -321,7 +309,7 @@
       </template>
       <span class="text-surface-500 dark:text-surface-400 block mb-8">
         Are you sure you want to "{{
-          vehicleRequestFormStore.approveDisapprove === 'approved' ? 'Approve' : 'Disapprove'
+          form.approveDisapprove === 'approved' ? 'Approve' : 'Disapprove'
         }}" this request?
       </span>
 
@@ -349,7 +337,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 
 const authStore = useAuthStore()
-const vehicleRequestFormStore = useVehicleRequestFormStore()
+const form = useVehicleRequestFormStore()
 const summaryCollapsed = ref(false)
 
 // Fetch data on mount
@@ -357,23 +345,22 @@ onMounted(async () => {
   try {
     await Promise.all([
       authStore.fetchUser(),
-      vehicleRequestFormStore.getVehicleTransactions(authStore.token),
-      new Promise((resolve) => setTimeout(resolve, 1000)),
+      (form.loading = false),
+      form.getVehicleTransactions(authStore.token),
+      new Promise((resolve) => setTimeout(resolve, 1500)),
     ])
     loadRequests(1)
   } catch (error) {
     console.error('Error fetching data:', error)
   } finally {
-    vehicleRequestFormStore.loading = false
+    form.loading = false
   }
 })
 
-const vehicleRequests = computed(() => vehicleRequestFormStore.vehicleRequests)
-const totalRecords = computed(() => vehicleRequestFormStore.totalRecords)
-const totalPages = computed(() => Math.ceil(totalRecords.value / vehicleRequestFormStore.rows))
-const currentPage = computed(
-  () => Math.floor(vehicleRequestFormStore.first / vehicleRequestFormStore.rows) + 1,
-)
+const vehicleRequests = computed(() => form.vehicleRequests)
+const totalRecords = computed(() => form.totalRecords)
+const totalPages = computed(() => Math.ceil(totalRecords.value / form.rows))
+const currentPage = computed(() => Math.floor(form.first / form.rows) + 1)
 
 // Pagination: show only a few pages at a time
 const visiblePages = computed(() => {
@@ -392,7 +379,7 @@ const columns = [
 ]
 
 const requestSummary = computed(() => {
-  const req = vehicleRequestFormStore.selectedRequest || {}
+  const req = form.selectedRequest || {}
   return {
     'Control Number': req.control_number ?? 'N/A',
     'Requesting Office': req.requesting_office ?? 'N/A',
@@ -409,116 +396,101 @@ const requestSummary = computed(() => {
 })
 
 function handleAvailableClick() {
-  vehicleRequestFormStore.editingRequest = vehicleRequestFormStore.selectedRequest
-  vehicleRequestFormStore.editMode = true
+  form.editingRequest = form.selectedRequest
+  form.editMode = true
 }
 
 function handleNotAvailableClick() {
-  vehicleRequestFormStore.editingRequest = vehicleRequestFormStore.selectedRequest
-  vehicleRequestFormStore.editModeCNAS = true
+  form.editingRequest = form.selectedRequest
+  form.editModeCNAS = true
 }
 
 function handleApproved() {
-  vehicleRequestFormStore.editingRequest = vehicleRequestFormStore.selectedRequest
-  vehicleRequestFormStore.visible = true
-  vehicleRequestFormStore.approveDisapprove = 'approved'
+  form.editingRequest = form.selectedRequest
+  form.visible = true
+  form.approveDisapprove = 'approved'
 }
 
 function handleDisapproved() {
-  vehicleRequestFormStore.editingRequest = vehicleRequestFormStore.selectedRequest
-  vehicleRequestFormStore.visible = true
-  vehicleRequestFormStore.approveDisapprove = 'disapproved'
+  form.editingRequest = form.selectedRequest
+  form.visible = true
+  form.approveDisapprove = 'disapproved'
 }
 
 const handleSubmit = () => {
-  vehicleRequestFormStore.submitting = true
+  form.submitting = true
   setTimeout(async () => {
     try {
-      await vehicleRequestFormStore.putApprovalStatus(
-        vehicleRequestFormStore.selectedRequest.id,
-        vehicleRequestFormStore.approveDisapprove,
-      )
-      alert('The Request has been ' + vehicleRequestFormStore.approveDisapprove + '!')
-      vehicleRequestFormStore.resetForm()
+      await form.putApprovalStatus(form.selectedRequest.id, form.approveDisapprove)
+      alert('The Request has been ' + form.approveDisapprove + '!')
+      form.resetForm()
     } catch (error) {
       console.error('Request submission failed:', error)
       alert('There was an error submitting the request. Please try again.')
     } finally {
-      vehicleRequestFormStore.submitting = false
+      form.submitting = false
       handleUpdated()
     }
-  }, 1000)
+  }, 1500)
 }
 
 function handleCancelEdit() {
-  vehicleRequestFormStore.editMode = false
-  vehicleRequestFormStore.editModeCNAS = false
-  vehicleRequestFormStore.printMode = false
-  vehicleRequestFormStore.approveDisapprove = ''
-  vehicleRequestFormStore.visible = false
-  vehicleRequestFormStore.editingRequest = null
+  form.editMode = false
+  form.editModeCNAS = false
+  form.printMode = false
+  form.approveDisapprove = ''
+  form.visible = false
+  form.editingRequest = null
 }
 
 function handleUpdated() {
-  vehicleRequestFormStore.editMode = false
-  vehicleRequestFormStore.editModeCNAS = false
-  vehicleRequestFormStore.printMode = false
-  vehicleRequestFormStore.approveDisapprove = ''
-  vehicleRequestFormStore.visible = false
+  form.editMode = false
+  form.editModeCNAS = false
+  form.printMode = false
+  form.approveDisapprove = ''
+  form.visible = false
   loadRequests(currentPage.value)
 }
 
 function handlePrint() {
-  vehicleRequestFormStore.editingRequest = vehicleRequestFormStore.selectedRequest
-  vehicleRequestFormStore.printMode = true
+  form.editingRequest = form.selectedRequest
+  form.printMode = true
 }
 
 function triggerSearch() {
-  vehicleRequestFormStore.first = 0
+  form.first = 0
   loadRequests(1)
 }
 
 function sortBy(field) {
-  if (vehicleRequestFormStore.sortField === field) {
-    vehicleRequestFormStore.sortOrder = vehicleRequestFormStore.sortOrder === 1 ? -1 : 1
+  if (form.sortField === field) {
+    form.sortOrder = form.sortOrder === 1 ? -1 : 1
   } else {
-    vehicleRequestFormStore.sortField = field
-    vehicleRequestFormStore.sortOrder = 1
+    form.sortField = field
+    form.sortOrder = 1
   }
   loadRequests(currentPage.value)
 }
 
 function goToPage(page) {
   if (page < 1 || page > totalPages.value) return
-  vehicleRequestFormStore.first = (page - 1) * vehicleRequestFormStore.rows
+  form.first = (page - 1) * form.rows
   loadRequests(page)
 }
 
 function loadRequests(page = currentPage.value) {
-  vehicleRequestFormStore.loading2 = true
-  const search = vehicleRequestFormStore.searchInput || ''
-  const sortBy = vehicleRequestFormStore.sortField || ''
-  const sortDir =
-    vehicleRequestFormStore.sortOrder === 1
-      ? 'asc'
-      : vehicleRequestFormStore.sortOrder === -1
-        ? 'desc'
-        : ''
+  form.loading2 = true
+  const search = form.searchInput || ''
+  const sortBy = form.sortField || ''
+  const sortDir = form.sortOrder === 1 ? 'asc' : form.sortOrder === -1 ? 'desc' : ''
 
-  vehicleRequestFormStore
-    .getVehicleRequests(
-      authStore.token,
-      page,
-      vehicleRequestFormStore.rows,
-      search,
-      sortBy,
-      sortDir,
-    )
+  form
+    .getVehicleRequests(authStore.token, page, form.rows, search, sortBy, sortDir)
     .catch((err) => {
       console.error('Failed to load vehicle requests:', err)
     })
     .finally(() => {
-      vehicleRequestFormStore.loading2 = false
+      form.loading2 = false
     })
 }
 

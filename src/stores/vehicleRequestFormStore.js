@@ -5,17 +5,17 @@ import dayjs from 'dayjs'
 
 export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
   state: () => ({
-    requestingOffice: '',
+    requesting_office: '',
     purpose: '',
     passengers: '',
-    dateNeeded: null,
-    dateEnding: null,
-    startTime: null,
-    placeOfTravel: '',
-    requestedBy: '',
-    position: '',
-    contactNo: '',
-    emailOfRequester: '',
+    requested_start: null,
+    requested_end: null,
+    requested_time: null,
+    destination: '',
+    requester_name: '',
+    requester_position: '',
+    requester_contact_number: '',
+    requester_email: '',
     src: '',
     vehicleList: [],
     selectedRequest: '',
@@ -58,9 +58,9 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
 
     vehicleOptions: [],
     selectedVehicle: null,
-    vehiclemodel: '',
+    model: '',
     brand: '',
-    unitType: '',
+    unit_type: '',
     last_name: '',
     first_name: '',
     driver_position: '',
@@ -70,32 +70,32 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
   }),
   getters: {
     isComplete: (state) =>
-      !!state.requestingOffice &&
+      !!state.requesting_office &&
       !!state.purpose &&
       !!state.passengers &&
-      !!state.dateNeeded &&
-      !!state.dateEnding &&
-      !!state.startTime &&
-      !!state.placeOfTravel &&
-      !!state.requestedBy &&
-      !!state.position &&
-      !!state.contactNo &&
-      !!state.emailOfRequester &&
+      !!state.requested_start &&
+      !!state.requested_end &&
+      !!state.requested_time &&
+      !!state.destination &&
+      !!state.requester_name &&
+      !!state.requester_position &&
+      !!state.requester_contact_number &&
+      !!state.requester_email &&
       !!state.src,
   },
   actions: {
     resetForm() {
-      this.requestingOffice = ''
+      this.requesting_office = ''
       this.purpose = ''
       this.passengers = ''
-      this.dateNeeded = null
-      this.dateEnding = null
-      this.startTime = null
-      this.placeOfTravel = ''
-      this.requestedBy = ''
-      this.position = ''
-      this.contactNo = ''
-      this.emailOfRequester = ''
+      this.requested_start = null
+      this.requested_end = null
+      this.requested_time = null
+      this.destination = ''
+      this.requester_name = ''
+      this.requester_position = ''
+      this.requester_contact_number = ''
+      this.requester_email = ''
       this.src = null
     },
 
@@ -104,17 +104,17 @@ export const useVehicleRequestFormStore = defineStore('vehicleRequestForm', {
         const authStore = useAuthStore()
         const formData = {
           date_requested: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-          requesting_office: this.requestingOffice,
+          requesting_office: this.requesting_office,
           purpose: this.purpose,
           passengers: this.passengers,
-          requested_start: dayjs(this.dateNeeded).format('YYYY-MM-DD'),
-          requested_time: dayjs(this.startTime).format('HH:mm:ss'),
-          requested_end: dayjs(this.dateEnding).format('YYYY-MM-DD'),
-          destination: this.placeOfTravel,
-          requester_name: this.requestedBy,
-          requester_position: this.position,
-          requester_contact_number: this.contactNo,
-          requester_email: this.emailOfRequester,
+          requested_start: dayjs(this.requested_start).format('YYYY-MM-DD'),
+          requested_time: dayjs(this.requested_time).format('HH:mm:ss'),
+          requested_end: dayjs(this.requested_end).format('YYYY-MM-DD'),
+          destination: this.destination,
+          requester_name: this.requester_name,
+          requester_position: this.requester_position,
+          requester_contact_number: this.requester_contact_number,
+          requester_email: this.requester_email,
         }
 
         const isEmpty = Object.values(formData).some(

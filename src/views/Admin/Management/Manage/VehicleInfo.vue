@@ -1,12 +1,13 @@
 <template>
-  <div class="px-4 sm:px-6 lg:px-10 py-6">
+  <FullScreenLoader :visible="vehicleFormStore.loadingaction" message="" />
+  <div v-if="!vehicleFormStore.loadingaction" class="px-3 sm:px-6 lg:px-10 py-4 sm:py-6">
     <div class="flex flex-col lg:flex-row gap-6">
-      <!-- Driver Information -->
+      <!-- Vehicle Information -->
       <div
-        class="w-full lg:w-1/2 shadow-sm rounded-lg p-5 overflow-y-auto flex flex-col bg-white max-h-[600px]"
+        class="w-full lg:w-1/2 shadow-sm rounded-lg p-5 overflow-y-auto flex flex-col bg-white max-h-[400px] sm:max-h-[500px] lg:max-h-[600px]"
       >
         <h3 class="text-lg font-semibold mb-4 sticky top-0 bg-white z-10 pb-2">
-          Driver Information
+          Vehicle Information
         </h3>
 
         <dl class="space-y-2 text-sm sm:text-base flex-grow">
@@ -26,77 +27,92 @@
         class="w-full lg:w-1/2 shadow-sm rounded-lg p-5 overflow-y-auto flex flex-col bg-white max-h-[600px]"
       >
         <h3 class="text-lg font-semibold mb-7 sticky top-0 bg-white z-10 pb-2">
-          Update Vehicle Information
+          {{ vehicleFormStore.addVehicle ? 'Add' : 'Update' }} Vehicle Information
         </h3>
 
-        <div class="flex flex-col w-full gap-8 bg-white">
-          <!-- Row 1: Plate Number and Brand -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
-            <FloatLabel>
-              <InputText id="plate_number" v-model="vehicleFormStore.plate_number" class="w-full" />
-              <label for="plate_number">Plate Number</label>
-            </FloatLabel>
-            <small v-if="v$.plate_number.$error" class="text-red-500">
-              Plate Number is required.
-            </small>
-            <FloatLabel>
-              <InputText id="brand" v-model="vehicleFormStore.brand" class="w-full" />
-              <label for="brand">Brand</label>
+        <div class="flex flex-col w-full gap-6">
+          <!-- Row 1 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <FloatLabel>
+                <InputText
+                  id="plate_number"
+                  v-model="vehicleFormStore.plate_number"
+                  class="w-full"
+                />
+                <label for="plate_number">Plate Number</label>
+              </FloatLabel>
+              <small v-if="v$.plate_number.$error" class="text-red-500">
+                Plate Number is required.
+              </small>
+            </div>
+            <div>
+              <FloatLabel>
+                <InputText id="brand" v-model="vehicleFormStore.brand" class="w-full" />
+                <label for="brand">Brand</label>
+              </FloatLabel>
               <small v-if="v$.brand.$error" class="text-red-500"> Brand is required. </small>
-            </FloatLabel>
+            </div>
           </div>
-          <!-- Row 2: Model and Unit Type -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
-            <FloatLabel>
-              <InputText id="unit_type" v-model="vehicleFormStore.unit_type" class="w-full" />
-              <label for="unit_type">Unit Type</label>
-            </FloatLabel>
-            <small v-if="v$.unit_type.$error" class="text-red-500"> Unit Type is required. </small>
-            <FloatLabel>
-              <InputText id="model" v-model="vehicleFormStore.model" class="w-full" />
-              <label for="model">Model</label>
 
+          <!-- Row 2 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <FloatLabel>
+                <Select
+                  v-model="vehicleFormStore.unit_type"
+                  :options="vehicleTypeList"
+                  option-label="label"
+                  option-value="value"
+                  id="unit_type"
+                  class="w-full"
+                />
+                <label for="unit_type">Unit Type</label>
+              </FloatLabel>
+              <small v-if="v$.unit_type.$error" class="text-red-500">
+                Unit Type is required.
+              </small>
+            </div>
+            <div>
+              <FloatLabel>
+                <InputText id="model" v-model="vehicleFormStore.model" class="w-full" />
+                <label for="model">Model</label>
+              </FloatLabel>
               <small v-if="v$.model.$error" class="text-red-500"> Model is required. </small>
-            </FloatLabel>
+            </div>
           </div>
 
-          <!-- Row 3: Purchase and Model Year -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
+          <!-- Row 3 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FloatLabel>
-              <DatePicker
+              <InputMask
                 class="w-full"
                 id="purchase_year"
                 v-model="vehicleFormStore.purchase_year"
-                view="year"
-                dateFormat="yy"
-                showIcon
-                iconDisplay="input"
+                mask="9999"
               />
               <label for="purchase_year">Year of Purchase</label>
             </FloatLabel>
             <FloatLabel>
-              <DatePicker
+              <InputMask
                 class="w-full"
                 id="model_year"
                 v-model="vehicleFormStore.model_year"
-                view="year"
-                dateFormat="yy"
-                showIcon
-                iconDisplay="input"
+                mask="9999"
               />
               <label for="model_year">Year Model</label>
             </FloatLabel>
           </div>
 
-          <!-- Row 4: Chassis and Engine Numbers -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <!-- Row 4 -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FloatLabel>
               <InputText
-                id="chasis_number"
-                v-model="vehicleFormStore.chasis_number"
+                id="chassis_number"
+                v-model="vehicleFormStore.chassis_number"
                 class="w-full"
               />
-              <label for="chasis_number">Chassis Number</label>
+              <label for="chassis_number">Chassis Number</label>
             </FloatLabel>
             <FloatLabel>
               <InputText
@@ -107,35 +123,36 @@
               <label for="engine_number">Engine Number</label>
             </FloatLabel>
           </div>
-          
-          <!-- Row 5: Select Driver -->
-          <div class="grid grid-cols-1 sm:grid-cols-1 gap-4 sm:gap-6">
-            <FloatLabel>
-              <Select class="w-full" v-model="vehicleFormStore.driver" id="driver">
-                <option value="" disabled>Select a driver</option>
-                <option v-for="driver in dropdownStore.drivers" :key="driver.id" :value="driver.id">
-                  {{ driver.name }}
-                </option>
-              </Select>
-              <label for="driver">Driver</label>
-            </FloatLabel>
-          </div>
+
+          <!-- Row 5 -->
+          <FloatLabel>
+            <Select
+              v-model="vehicleFormStore.drivers"
+              :options="driverList"
+              option-label="full_name"
+              option-value="id"
+              id="driver"
+              class="w-full"
+            />
+            <label for="driver">Driver</label>
+          </FloatLabel>
         </div>
 
         <!-- Actions -->
-        <div class="sticky bottom-0 mt-6 flex justify-between">
+        <div
+          class="sticky bottom-0 mt-6 flex flex-col sm:flex-row gap-3 sm:gap-6 bg-white pt-3 justify-between"
+        >
           <Button
             label="Back"
             icon="pi pi-arrow-left"
             class="p-button-outlined p-button-secondary w-full sm:w-auto"
-            @click="driverFormStore.updateDriver = false"
+            @click="back"
           />
-
           <Button
-            :label="driverFormStore.addDriver ? 'Add Driver' : 'Save Changes'"
+            :label="vehicleFormStore.addVehicle ? 'Add Vehicle' : 'Save Changes'"
             class="w-full sm:w-auto"
             severity="success"
-            :loading="driverFormStore.submitting"
+            :loading="vehicleFormStore.submitting"
             @click="submitForm"
           />
         </div>
@@ -145,21 +162,64 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
+import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { useVehicleFormStore } from '@/stores/vehicleFormStore'
-import { useDriverFormStore } from '@/stores/driverFormStore'
+import { useDropdownStore } from '@/stores/dropdown'
+import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 import useVuelidate from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
-import { useDropdownStore } from '@/stores/dropdown'
 
 const vehicleFormStore = useVehicleFormStore()
-const driverFormStore = useDriverFormStore()
 const dropdownStore = useDropdownStore()
-const authStore = useAuthStore()
+const { driverList, vehicleTypeList } = storeToRefs(dropdownStore)
 
+const authStore = useAuthStore()
 // Alias for readability
-const vehicle = vehicleFormStore.selectedVehicle
+if (vehicleFormStore.selectedVehicle && vehicleFormStore.selectedVehicle.vehicle_assignment) {
+  vehicleFormStore.selectedDriver = vehicleFormStore.selectedVehicle.vehicle_assignment.driver
+  vehicleFormStore.drivers = vehicleFormStore.selectedDriver.id
+  vehicleFormStore.driver = vehicleFormStore.selectedDriver.full_name
+  vehicleFormStore.contact_number = vehicleFormStore.selectedDriver.contact_number || ''
+  vehicleFormStore.email = vehicleFormStore.selectedDriver.email || ''
+}
+
+onMounted(async () => {
+  vehicleFormStore.loadingaction = true
+  try {
+    await dropdownStore.fetchDrivers()
+    await dropdownStore.fetchVehicleTypes()
+  } catch (error) {
+    console.error('Error on mount:', error)
+  } finally {
+    vehicleFormStore.loadingaction = false
+  }
+})
+
+watch(
+  () => vehicleFormStore.drivers,
+  (driverId) => {
+    if (!driverId) {
+      vehicleFormStore.contact_number = ''
+      vehicleFormStore.email = ''
+      return
+    }
+
+    const selectedDriver = driverList.value.find((d) => d.id === driverId)
+    if (selectedDriver) {
+      vehicleFormStore.selectedDriver = selectedDriver
+      vehicleFormStore.driver = selectedDriver.full_name
+      vehicleFormStore.contact_number = selectedDriver.contact_number || ''
+      vehicleFormStore.email = selectedDriver.email || ''
+    }
+  },
+)
+
+function back() {
+  vehicleFormStore.addVehicle = false
+  vehicleFormStore.updateVehicle = false
+}
 
 // Custom email validator with domain restriction
 function emailWithDomain(value) {
@@ -172,15 +232,21 @@ function emailWithDomain(value) {
   )
 }
 
+function validYear(value) {
+  if (!value) return false
+  const year = parseInt(value, 10)
+  const currentYear = new Date().getFullYear()
+  return year >= 1886 && year <= currentYear
+}
+
 // Validation rules
 const rules = {
   plate_number: { required },
   model: { required },
   unit_type: { required },
   brand: { required },
-  driver: { required },
-  email: { required, emailWithDomain },
-  contact_number: { required },
+  purchase_year: { required, validYear },
+  model_year: { required, validYear },
 }
 
 const v$ = useVuelidate(rules, vehicleFormStore)
@@ -192,6 +258,8 @@ const vehicleInfo = computed(() => ({
   Brand: vehicleFormStore?.brand,
   'Year Purchased': vehicleFormStore?.purchase_year,
   'Year Model': vehicleFormStore?.model_year,
+  'Chassis Number': vehicleFormStore?.chassis_number,
+  'Engine Number': vehicleFormStore?.engine_number,
   Driver: vehicleFormStore?.driver,
   'Contact Number': vehicleFormStore?.contact_number,
   Email: vehicleFormStore?.email,
@@ -207,21 +275,60 @@ async function submitForm() {
   const isValid = await v$.value.$validate()
   if (!isValid) return
 
+  const original = vehicleFormStore.selectedVehicle || {}
+  const current = {
+    plate_number: vehicleFormStore.plate_number,
+    model: vehicleFormStore.model,
+    unit_type: vehicleFormStore.unit_type,
+    brand: vehicleFormStore.brand,
+    purchase_year: vehicleFormStore.purchase_year,
+    model_year: vehicleFormStore.model_year,
+    chassis_number: vehicleFormStore.chassis_number,
+    engine_number: vehicleFormStore.engine_number,
+    driver_id: vehicleFormStore.drivers,
+  }
+  const originalFlat = {
+    plate_number: original.plate_number || '',
+    model: original.model || '',
+    unit_type: original.unit_type || '',
+    brand: original.brand || '',
+    purchase_year: original.purchase_year || '',
+    model_year: original.model_year || '',
+    chassis_number: original.chassis_number || '',
+    engine_number: original.engine_number || '',
+    driver_id: original.vehicle_assignment?.driver?.id || '',
+  }
+
+  const hasChanged = Object.keys(current).some(
+    (key) => String(current[key] || '') !== String(originalFlat[key] || ''),
+  )
+
+  if (!vehicleFormStore.addVehicle && !hasChanged) {
+    window.alert('No changes detected. Please update some fields before saving.')
+    return
+  }
+
   vehicleFormStore.submitting = true
+  let errorOccurred = false
   try {
     await vehicleFormStore.submitForm()
   } catch (error) {
     console.error('Form submission failed:', error)
+    errorOccurred = true
   } finally {
-    if (vehicleFormStore.addVehicle) {
-      window.alert('Vehicle information successfully added.')
+    if (!errorOccurred) {
+      if (vehicleFormStore.addVehicle) {
+        window.alert('Vehicle information successfully added.')
+      } else {
+        window.alert('Vehicle information successfully updated.')
+      }
+      window.location.reload()
+      vehicleFormStore.addVehicle = false
+      vehicleFormStore.updateVehicle = false
+      vehicleFormStore.submitting = false
     } else {
-      window.alert('Vehicle information successfully updated.')
+      window.alert('Failed to submit vehicle information.')
     }
-    window.location.reload()
-    vehicleFormStore.addVehicle = false
-    vehicleFormStore.updateVehicle = false
-    vehicleFormStore.submitting = false
   }
 }
 </script>

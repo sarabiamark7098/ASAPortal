@@ -6,7 +6,7 @@
         <InputText
           id="controlNumber_print"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.control_number"
+          v-model="form.selectedRequest.control_number"
           readonly
         />
         <label for="controlNumber_print"> Control Number </label>
@@ -16,7 +16,7 @@
         <InputText
           id="requestingOffice_print"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.requesting_office"
+          v-model="form.selectedRequest.requesting_office"
           readonly
         />
         <label for="requestingOffice_print"> Requesting Office/Unit </label>
@@ -26,7 +26,7 @@
         <DatePicker
           id="dateNeeded"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.date_requested"
+          v-model="form.selectedRequest.date_requested"
           showIcon
           fluid
           iconDisplay="input"
@@ -45,8 +45,8 @@
       />
       <Button
         v-if="
-          vehicleRequestFormStore.selectedRequest.status === 'processed' ||
-          vehicleRequestFormStore.selectedRequest.status === 'approved'
+          form.selectedRequest.status === 'processed' ||
+          form.selectedRequest.status === 'approved'
         "
         id="printTravelOrder"
         class="w-1/4"
@@ -55,7 +55,7 @@
         icon="pi pi-print"
       />
       <Button
-        v-if="vehicleRequestFormStore.selectedRequest.status === 'no_available'"
+        v-if="form.selectedRequest.status === 'no_available'"
         id="printCNAS"
         class="w-1/4"
         label="Print CNAS"
@@ -70,21 +70,21 @@
 import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 import axios from 'axios'
 
-const vehicleRequestFormStore = useVehicleRequestFormStore()
+const form = useVehicleRequestFormStore()
 
 function openPrint() {
-  if (!vehicleRequestFormStore.selectedRequest) return
-  const id = vehicleRequestFormStore.selectedRequest.id
+  if (!form.selectedRequest) return
+  const id = form.selectedRequest.id
   window.open(`${axios.defaults.baseURL}/api/pdf/vehicle-request/${id}`, '_blank')
 }
 function openPrintTO() {
-  if (!vehicleRequestFormStore.selectedRequest) return
-  const id = vehicleRequestFormStore.selectedRequest.id
+  if (!form.selectedRequest) return
+  const id = form.selectedRequest.id
   window.open(`${axios.defaults.baseURL}/api/pdf/travel-order/${id}`, '_blank')
 }
 function openPrintCNAS() {
-  if (!vehicleRequestFormStore.selectedRequest) return
-  const id = vehicleRequestFormStore.selectedRequest.id
+  if (!form.selectedRequest) return
+  const id = form.selectedRequest.id
   window.open(`${axios.defaults.baseURL}/api/pdf/vehicle-cnas/${id}`, '_blank')
 }
 </script>

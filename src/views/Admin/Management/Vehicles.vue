@@ -44,8 +44,8 @@
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Model:</dt>
-              <dd class="text-green-600">{{ vehicleFormStore.selectedVehicle?.model || 'N/A' }}</dd>
+              <dt class="font-semibold">Brand:</dt>
+              <dd class="text-green-600">{{ vehicleFormStore.selectedVehicle?.brand || 'N/A' }}</dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Unit Type:</dt>
@@ -54,8 +54,8 @@
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Brand:</dt>
-              <dd class="text-green-600">{{ vehicleFormStore.selectedVehicle?.brand || 'N/A' }}</dd>
+              <dt class="font-semibold">Model:</dt>
+              <dd class="text-green-600">{{ vehicleFormStore.selectedVehicle?.model || 'N/A' }}</dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Year Purchased:</dt>
@@ -70,20 +70,39 @@
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Chassis Number:</dt>
+              <dd class="text-green-600">
+                {{ vehicleFormStore.selectedVehicle?.chassis_number || 'N/A' }}
+              </dd>
+            </div>
+            <div class="flex justify-between border-b border-gray-400 py-1">
+              <dt class="font-semibold">Engine Number:</dt>
+              <dd class="text-green-600">
+                {{ vehicleFormStore.selectedVehicle?.engine_number || 'N/A' }}
+              </dd>
+            </div>
+            <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Driver:</dt>
               <dd class="text-green-600">
-                {{ vehicleFormStore.selectedDriver?.full_name || 'N/A' }}
+                {{
+                  vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.full_name || 'N/A'
+                }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Contact Number:</dt>
               <dd class="text-green-600">
-                {{ vehicleFormStore.selectedDriver?.contact_number || 'N/A' }}
+                {{
+                  vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.contact_number ||
+                  'N/A'
+                }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Email:</dt>
-              <dd class="text-green-600">{{ vehicleFormStore.selectedDriver?.email || 'N/A' }}</dd>
+              <dd class="text-green-600">
+                {{ vehicleFormStore.selectedVehicle?.vehicle_assignment?.driver?.email || 'N/A' }}
+              </dd>
             </div>
           </dl>
 
@@ -226,10 +245,10 @@ import { useDriverFormStore } from '@/stores/driverFormStore'
 const vehicleFormStore = useVehicleFormStore()
 const driverFormStore = useDriverFormStore()
 const authStore = useAuthStore()
-
 onMounted(async () => {
+  vehicleFormStore.loading = true
   try {
-    await Promise.all([authStore.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1000))])
+    await Promise.all([authStore.fetchUser(), new Promise((resolve) => setTimeout(resolve, 1500))])
     loadRequests(1)
   } catch (error) {
     console.error('Error on mount:', error)
@@ -238,13 +257,11 @@ onMounted(async () => {
   }
 })
 function updateVehicleInfo() {
-  if (vehicleFormStore.selectedVehicle) {
-    vehicleFormStore.updateVehicle = true
-  }
+  vehicleFormStore.setVehicle(vehicleFormStore.selectedVehicle)
 }
 function addVehicle() {
-  vehicleFormStore.addVehicle = true
   vehicleFormStore.resetForm()
+  vehicleFormStore.addVehicle = true
 }
 
 const vehicles = computed(() => vehicleFormStore.vehicleList)

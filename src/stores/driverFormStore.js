@@ -18,6 +18,7 @@ export const useDriverFormStore = defineStore('driversForm', {
 
     loading: true,
     loading2: false,
+    loadingaction: false,
 
     // Table interaction refs
     rows: 20,

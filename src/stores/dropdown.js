@@ -18,6 +18,8 @@ export const useDropdownStore = defineStore('dropdown', {
     officeList: (state) => state.office,
     signatoryList: (state) => state.signatory,
     vehicleList: (state) => state.vehicle,
+    vehicleTypeList: (state) => state.vehicleType,
+    driverList: (state) => state.drivers,
   },
 
   actions: {
@@ -39,9 +41,10 @@ export const useDropdownStore = defineStore('dropdown', {
         console.error('Error fetching offices:', this.error)
       }
     },
+
     async fetchSignatories(token) {
       try {
-        const response = await axios.get('/api/signatories', {
+        const response = await axios.get('/api/signatories/fetch', {
           headers: { Authorization: `Bearer ${token}` },
         })
         this.signatory = response.data
@@ -50,6 +53,21 @@ export const useDropdownStore = defineStore('dropdown', {
         console.error('Error fetching signatories:', this.error)
       }
     },
+
+    async fetchSignatory(token, request) {
+      try {
+        const response = await axios.get('/api/signatories/get', {
+          params: { request: request }, // ✅ sends ?request=value
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        this.signatory = response.data
+        return response.data
+      } catch (error) {
+        this.error = error.response?.data?.message || 'Failed to fetch Signatories'
+        console.error('Error fetching signatories:', this.error)
+      }
+    },
+
     async fetchVehicleAssignments(token) {
       try {
         const response = await axios.get('/api/vehicle-assignments', {
@@ -61,9 +79,13 @@ export const useDropdownStore = defineStore('dropdown', {
         console.error('Error fetching Vehicle Assignments:', this.error)
       }
     },
+
     async fetchVehicleTypes() {
       try {
-        const response = await axios.get('/api/vehicles/types')
+        const authStore = useAuthStore()
+        const response = await axios.get('/api/vehicles/type', {
+          headers: { Authorization: `Bearer ${authStore.token}` },
+        })
         this.vehicleType = response.data
       } catch (error) {
         this.error = error.response?.data?.message || 'Failed to fetch Vehicle Types'
@@ -82,5 +104,5 @@ export const useDropdownStore = defineStore('dropdown', {
         console.error('Error fetching Drivers:', this.error)
       }
     },
-  }
+  },
 })

@@ -1,8 +1,8 @@
 <template>
   <div class="p-4 sm:p-6">
-    <FullScreenLoader :visible="driverFormStore.loading" message="Loading Drivers..." />
+    <FullScreenLoader :visible="form.loading" message="Loading Drivers..." />
 
-    <div v-if="!driverFormStore.loading" class="flex flex-col gap-6">
+    <div v-if="!form.loading" class="flex flex-col gap-6">
       <!-- Header Row -->
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
@@ -11,7 +11,7 @@
         </div>
         <div class="flex justify-end">
           <Button
-            v-if="!driverFormStore.updateDriver && !driverFormStore.addDriver"
+            v-if="!form.updateDriver && !form.addDriver"
             class="px-4 py-2 rounded-xl shadow-sm w-full sm:w-auto"
             severity="success"
             icon="pi pi-plus"
@@ -22,7 +22,7 @@
       </div>
 
       <div
-        v-if="driverFormStore.updateDriver || driverFormStore.addDriver"
+        v-if="form.updateDriver || form.addDriver"
         class="flex flex-col gap-4"
       >
         <DriverInfo />
@@ -42,55 +42,55 @@
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">First Name:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.first_name || 'N/A' }}
+                {{ form.selectedDriver?.first_name || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Middle Name:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.middle_name || 'N/A' }}
+                {{ form.selectedDriver?.middle_name || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Last Name:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.last_name || 'N/A' }}
+                {{ form.selectedDriver?.last_name || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Extension Name:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.extension_name || 'N/A' }}
+                {{ form.selectedDriver?.extension_name || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Position:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.position || 'N/A' }}
+                {{ form.selectedDriver?.position || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Designation:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.designation || 'N/A' }}
+                {{ form.selectedDriver?.designation || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Official Station:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.official_station || 'N/A' }}
+                {{ form.selectedDriver?.official_station || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Email:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.email || 'N/A' }}
+                {{ form.selectedDriver?.email || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Contact Number:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.contact_number || 'N/A' }}
+                {{ form.selectedDriver?.contact_number || 'N/A' }}
               </dd>
             </div>
           </dl>
@@ -100,8 +100,8 @@
             label="Update"
             size="small"
             icon="pi pi-pen-to-square"
-            :disabled="!driverFormStore.selectedDriver"
-            :severity="driverFormStore.selectedDriver ? 'success' : 'secondary'"
+            :disabled="!form.selectedDriver"
+            :severity="form.selectedDriver ? 'success' : 'secondary'"
             @click="updateDriverInfo"
           />
         </div>
@@ -111,7 +111,7 @@
           <div class="bg-white rounded-xl h-full relative flex flex-col">
             <!-- Loading Overlay -->
             <div
-              v-if="driverFormStore.loading2"
+              v-if="form.loading2"
               class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10"
             >
               <i class="pi pi-spinner pi-spin text-blue-500 text-3xl" />
@@ -127,7 +127,7 @@
               >
                 <i class="pi pi-search mr-2 text-gray-500" />
                 <input
-                  v-model="driverFormStore.searchInput"
+                  v-model="form.searchInput"
                   type="text"
                   placeholder="Search..."
                   class="outline-none border-none focus:ring-0 text-sm bg-transparent w-full"
@@ -153,15 +153,15 @@
                         {{ col.header }}
                         <i
                           v-if="
-                            driverFormStore.sortField === col.field &&
-                            driverFormStore.sortOrder === 1
+                            form.sortField === col.field &&
+                            form.sortOrder === 1
                           "
                           class="pi pi-sort-amount-up-alt ml-2 text-xs"
                         />
                         <i
                           v-else-if="
-                            driverFormStore.sortField === col.field &&
-                            driverFormStore.sortOrder === -1
+                            form.sortField === col.field &&
+                            form.sortOrder === -1
                           "
                           class="pi pi-sort-amount-down ml-2 text-xs"
                         />
@@ -174,10 +174,10 @@
                   <tr
                     v-for="item in drivers"
                     :key="item.id"
-                    @click="driverFormStore.selectedDriver = item"
+                    @click="form.selectedDriver = item"
                     :class="[
                       'border-b hover:bg-gray-100 transition cursor-pointer',
-                      driverFormStore.selectedDriver?.id === item.id ? 'bg-blue-50' : '',
+                      form.selectedDriver?.id === item.id ? 'bg-blue-50' : '',
                     ]"
                   >
                     <td class="px-2 sm:px-4 py-2">{{ item.first_name }}</td>
@@ -234,27 +234,28 @@ import { useAuthStore } from '@/stores/auth'
 import { useDriverFormStore } from '@/stores/driverFormStore'
 import DriverInfo from '@/views/Admin/Management/Manage/DriverInfo.vue'
 
-const driverFormStore = useDriverFormStore()
+const form = useDriverFormStore()
 const authStore = useAuthStore()
 
 onMounted(async () => {
+  form.loading = true
   try {
     await Promise.all([
       authStore.fetchUser(),
-      new Promise((resolve) => setTimeout(resolve, 1000)), // Delay for UX smoothness
+      new Promise((resolve) => setTimeout(resolve, 1500)), // Delay for UX smoothness
     ])
     loadRequests(1)
   } catch (error) {
     console.error('Error fetching data:', error)
   } finally {
-    driverFormStore.loading = false
+    form.loading = false
   }
 })
 
-const drivers = computed(() => driverFormStore.driverList)
-const totalRecords = computed(() => driverFormStore.totalRecords)
-const totalPages = computed(() => Math.ceil(totalRecords.value / driverFormStore.rows))
-const currentPage = computed(() => Math.floor(driverFormStore.first / driverFormStore.rows) + 1)
+const drivers = computed(() => form.driverList)
+const totalRecords = computed(() => form.totalRecords)
+const totalPages = computed(() => Math.ceil(totalRecords.value / form.rows))
+const currentPage = computed(() => Math.floor(form.first / form.rows) + 1)
 
 const visiblePages = computed(() => {
   const maxButtons = 5
@@ -274,46 +275,46 @@ const columns = [
 ]
 
 function insertNewDriver() {
-  driverFormStore.addDriver = true
-  driverFormStore.resetForm()
+  form.addDriver = true
+  form.resetForm()
 }
 function updateDriverInfo() {
-  const driver = driverFormStore.selectedDriver
-  driverFormStore.setDriver(driver)
+  const driver = form.selectedDriver
+  form.setDriver(driver)
 }
 
 function triggerSearch() {
-  driverFormStore.first = 0
+  form.first = 0
   loadRequests(1)
 }
 
 function sortBy(field) {
-  if (driverFormStore.sortField === field) {
-    driverFormStore.sortOrder = driverFormStore.sortOrder === 1 ? -1 : 1
+  if (form.sortField === field) {
+    form.sortOrder = form.sortOrder === 1 ? -1 : 1
   } else {
-    driverFormStore.sortField = field
-    driverFormStore.sortOrder = 1
+    form.sortField = field
+    form.sortOrder = 1
   }
   loadRequests(currentPage.value)
 }
 
 function goToPage(page) {
   if (page < 1 || page > totalPages.value) return
-  driverFormStore.first = (page - 1) * driverFormStore.rows
+  form.first = (page - 1) * form.rows
   loadRequests(page)
 }
 
 function loadRequests(page = currentPage.value) {
-  driverFormStore.loading2 = true
-  const search = driverFormStore.searchInput || ''
-  const sortBy = driverFormStore.sortField || ''
+  form.loading2 = true
+  const search = form.searchInput || ''
+  const sortBy = form.sortField || ''
   const sortDir =
-    driverFormStore.sortOrder === 1 ? 'asc' : driverFormStore.sortOrder === -1 ? 'desc' : ''
+    form.sortOrder === 1 ? 'asc' : form.sortOrder === -1 ? 'desc' : ''
 
-  driverFormStore
-    .getDrivers(authStore.token, page, driverFormStore.rows, search, sortBy, sortDir)
+  form
+    .getDrivers(authStore.token, page, form.rows, search, sortBy, sortDir)
     .finally(() => {
-      driverFormStore.loading2 = false
+      form.loading2 = false
     })
 }
 </script>

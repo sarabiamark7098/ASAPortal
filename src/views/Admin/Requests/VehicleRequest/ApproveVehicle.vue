@@ -13,12 +13,7 @@
             <PreviewVehicle />
           </div>
           <div class="flex pt-6 justify-between">
-            <Button
-              label="Back"
-              severity="secondary"
-              icon="pi pi-arrow-left"
-              @click="VehicleMenu()"
-            />
+            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="Menu()" />
             <Button
               label="Next"
               icon="pi pi-arrow-right"
@@ -60,7 +55,7 @@
 
             <Button
               label="Submit"
-              :disabled="submitting"
+              :disabled="form.submitting"
               @click="handleSubmit(activateCallback)"
               icon="pi pi-check"
               iconPos="left"
@@ -81,7 +76,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 import { useAuthStore } from '@/stores/auth'
 import PreviewVehicle from './PreviewVehicle.vue'
@@ -89,13 +83,11 @@ import SignatoryVehicle from './SignatoryVehicle.vue'
 import VehicleSelection from './VehicleSelection.vue'
 import ShowPrint from './ShowPrint.vue'
 
-const vehicleRequestFormStore = useVehicleRequestFormStore()
+const form = useVehicleRequestFormStore()
 const authStore = useAuthStore()
 
-const submitting = ref(false)
-
-function VehicleMenu() {
-  vehicleRequestFormStore.editMode = false
+function Menu() {
+  form.editMode = false
 }
 
 function Done() {
@@ -105,23 +97,23 @@ function Done() {
 }
 
 const handleSubmit = (activateCallback) => {
-  vehicleRequestFormStore.showErrors = true
+  form.showErrors = true
 
   const errors = []
 
-  if (!vehicleRequestFormStore.checkedSignatory) {
+  if (!form.checkedSignatory) {
     errors.push('Checked By is required')
   }
-  if (!vehicleRequestFormStore.requestingSignatory) {
+  if (!form.requestingSignatory) {
     errors.push('Requesting Officer is required')
   }
-  if (!vehicleRequestFormStore.approvalSignatory) {
+  if (!form.approvalSignatory) {
     errors.push('Request Approval is required')
   }
-  if (!vehicleRequestFormStore.SOSignatory) {
+  if (!form.SOSignatory) {
     errors.push('Special Order Approval is required')
   }
-  if (!vehicleRequestFormStore.vehicleAssigned) {
+  if (!form.vehicleAssigned) {
     errors.push('Assignment of vehicle is required')
   }
 
@@ -130,20 +122,20 @@ const handleSubmit = (activateCallback) => {
     return
   }
 
-  vehicleRequestFormStore.submitting = true
+  form.submitting = true
 
   setTimeout(async () => {
     try {
-      await vehicleRequestFormStore.submitApprovalForm(vehicleRequestFormStore.selectedRequest.id, 'Available')
+      await form.submitApprovalForm(form.selectedRequest.id, 'Available')
       alert('Form successfully submitted!')
       activateCallback('4')
-      vehicleRequestFormStore.resetForm()
+      form.resetForm()
     } catch (error) {
       console.error('Form submission failed:', error)
       alert('There was an error submitting the form. Please try again.')
     } finally {
-      vehicleRequestFormStore.submitting = false
+      form.submitting = false
     }
-  }, 1000)
+  }, 1500)
 }
 </script>

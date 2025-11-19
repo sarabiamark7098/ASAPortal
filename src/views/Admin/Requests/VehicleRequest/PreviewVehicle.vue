@@ -6,7 +6,7 @@
         <InputText
           id="controlNumber"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.control_number"
+          v-model="form.selectedRequest.control_number"
           readonly
         />
         <label for="controlNumber"> Control Number </label>
@@ -16,7 +16,7 @@
         <InputText
           id="requestingOffice"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.requesting_office"
+          v-model="form.selectedRequest.requesting_office"
           readonly
         />
         <label for="requestingOffice"> Requesting Office/Unit </label>
@@ -26,7 +26,7 @@
         <DatePicker
           id="dateNeeded"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.date_requested"
+          v-model="form.selectedRequest.date_requested"
           showIcon
           fluid
           iconDisplay="input"
@@ -40,7 +40,7 @@
         <Textarea
           id="purpose"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.purpose"
+          v-model="form.selectedRequest.purpose"
           autoResize
           rows="2"
           readonly
@@ -55,7 +55,7 @@
         <Textarea
           id="passengers"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.passengers"
+          v-model="form.selectedRequest.passengers"
           autoResize
           rows="2"
           readonly
@@ -70,7 +70,7 @@
         <DatePicker
           id="dateNeeded"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.requested_start"
+          v-model="form.selectedRequest.requested_start"
           showIcon
           fluid
           iconDisplay="input"
@@ -83,7 +83,7 @@
         <DatePicker
           id="startTime"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.requested_time"
+          v-model="form.selectedRequest.requested_time"
           showIcon
           fluid
           hourFormat="12"
@@ -102,7 +102,7 @@
         <DatePicker
           id="dateEnding"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.requested_end"
+          v-model="form.selectedRequest.requested_end"
           showIcon
           fluid
           iconDisplay="input"
@@ -118,7 +118,7 @@
         <Textarea
           id="placeOfTravel"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.destination"
+          v-model="form.selectedRequest.destination"
           autoResize
           rows="2"
           readonly
@@ -133,7 +133,7 @@
         <InputText
           id="requestedBy"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.requester_name"
+          v-model="form.selectedRequest.requester_name"
           readonly
         />
         <label for="requestedBy">Requested by</label>
@@ -142,7 +142,7 @@
         <InputText
           id="position"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.requester_position"
+          v-model="form.selectedRequest.requester_position"
           readonly
         />
         <label for="position">Position</label>
@@ -153,7 +153,7 @@
         <InputMask
           id="contactNo"
           class="w-full"
-          v-model="vehicleRequestFormStore.selectedRequest.requester_contact_number"
+          v-model="form.selectedRequest.requester_contact_number"
           mask="0999 999 9999"
           readonly
         />
@@ -163,7 +163,7 @@
       <FloatLabel class="flex-1">
         <InputText
           id="emailOfRequester"
-          v-model="vehicleRequestFormStore.selectedRequest.requester_email"
+          v-model="form.selectedRequest.requester_email"
           class="w-full"
           type="email"
           required
@@ -178,5 +178,5 @@
 <script setup>
 import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 
-const vehicleRequestFormStore = useVehicleRequestFormStore()
+const form = useVehicleRequestFormStore()
 </script>

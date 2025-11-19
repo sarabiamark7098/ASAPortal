@@ -12,12 +12,7 @@
             <PreviewVehicle />
           </div>
           <div class="flex pt-6 justify-between">
-            <Button
-              label="Back"
-              severity="secondary"
-              icon="pi pi-arrow-left"
-              @click="VehicleMenu()"
-            />
+            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" @click="Menu()" />
             <Button
               label="Next"
               icon="pi pi-arrow-right"
@@ -40,7 +35,7 @@
 
             <Button
               label="Submit"
-              :disabled="submitting"
+              :disabled="form.submitting"
               @click="handleSubmit(activateCallback)"
               icon="pi pi-check"
               iconPos="left"
@@ -60,20 +55,17 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
 import { useVehicleRequestFormStore } from '@/stores/vehicleRequestFormStore'
 import { useAuthStore } from '@/stores/auth'
 import PreviewVehicle from './PreviewVehicle.vue'
 import SignatoryVehicle from './SignatoryVehicle.vue'
 import ShowPrint from './ShowPrint.vue'
 
-const vehicleRequestFormStore = useVehicleRequestFormStore()
+const form = useVehicleRequestFormStore()
 const authStore = useAuthStore()
 
-const submitting = ref(false)
-
-function VehicleMenu() {
-  vehicleRequestFormStore.editModeCNAS = false
+function Menu() {
+  form.editModeCNAS = false
 }
 
 function Done() {
@@ -83,17 +75,17 @@ function Done() {
 }
 
 const handleSubmit = (activateCallback) => {
-  vehicleRequestFormStore.showErrors = true
+  form.showErrors = true
 
   const errors = []
 
-  if (!vehicleRequestFormStore.checkedSignatory) {
+  if (!form.checkedSignatory) {
     errors.push('Checked By is required')
   }
-  if (!vehicleRequestFormStore.approvalSignatory) {
+  if (!form.approvalSignatory) {
     errors.push('Request Approval is required')
   }
-  if (!vehicleRequestFormStore.CNASSignatory) {
+  if (!form.CNASSignatory) {
     errors.push('CNAS Approving is required')
   }
 
@@ -102,20 +94,20 @@ const handleSubmit = (activateCallback) => {
     return
   }
 
-  submitting.value = true
+  form.submitting = true
 
   setTimeout(async () => {
     try {
-      await vehicleRequestFormStore.submitApprovalForm(vehicleRequestFormStore.selectedRequest.id, 'No Available')
+      await form.submitApprovalForm(form.selectedRequest.id, 'No Available')
       alert('Form successfully submitted!')
       activateCallback('3')
-      vehicleRequestFormStore.resetForm()
+      form.resetForm()
     } catch (error) {
       console.error('Form submission failed:', error)
       alert('There was an error submitting the form. Please try again.')
     } finally {
-      vehicleRequestFormStore.submitting = false
+      form.submitting = false
     }
-  }, 1000)
+  }, 1500)
 }
 </script>

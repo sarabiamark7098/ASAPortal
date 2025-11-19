@@ -1,31 +1,28 @@
 <template>
   <div class="p-4 sm:p-6">
-    <FullScreenLoader :visible="driverFormStore.loading" message="Loading Drivers..." />
+    <FullScreenLoader :visible="form.loading" message="Loading Signatories..." />
 
-    <div v-if="!driverFormStore.loading" class="flex flex-col gap-6">
+    <div v-if="!form.loading" class="flex flex-col gap-6">
       <!-- Header Row -->
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 class="text-xl sm:text-2xl font-bold">Drivers Management</h1>
-          <p class="text-gray-600 text-sm sm:text-base">Manage drivers directory</p>
+          <h1 class="text-xl sm:text-2xl font-bold">Signatories Management</h1>
+          <p class="text-gray-600 text-sm sm:text-base">Manage signatories directory</p>
         </div>
         <div class="flex justify-end">
           <Button
-            v-if="!driverFormStore.updateDriver && !driverFormStore.addDriver"
+            v-if="!form.updateSignatory && !form.addSignatory"
             class="px-4 py-2 rounded-xl shadow-sm w-full sm:w-auto"
             severity="success"
             icon="pi pi-plus"
-            label="Add New Driver"
-            @click="insertNewDriver"
+            label="Add New Signatory"
+            @click="insertNewSignatory"
           />
         </div>
       </div>
 
-      <div
-        v-if="driverFormStore.updateDriver || driverFormStore.addDriver"
-        class="flex flex-col gap-4"
-      >
-        <DriverInfo />
+      <div v-if="form.updateSignatory || form.addSignatory" class="flex flex-col gap-4">
+        <SignatoryInfo />
       </div>
 
       <!-- Main Content -->
@@ -35,75 +32,44 @@
           class="w-full lg:w-1/3 shadow-sm rounded-lg p-5 overflow-y-auto flex flex-col bg-white max-h-[400px] sm:max-h-[500px] lg:max-h-[600px]"
         >
           <h3 class="text-lg font-semibold mb-4 sticky top-0 bg-white z-10 pb-2">
-            Driver Information
+            Signatory Information
           </h3>
 
           <dl class="space-y-2 text-sm sm:text-base flex-grow">
             <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">First Name:</dt>
+              <dt class="font-semibold">Name:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.first_name || 'N/A' }}
-              </dd>
-            </div>
-            <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Middle Name:</dt>
-              <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.middle_name || 'N/A' }}
-              </dd>
-            </div>
-            <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Last Name:</dt>
-              <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.last_name || 'N/A' }}
-              </dd>
-            </div>
-            <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Extension Name:</dt>
-              <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.extension_name || 'N/A' }}
+                {{ form.selectedSignatory?.full_name || 'N/A' }}
               </dd>
             </div>
             <div class="flex justify-between border-b border-gray-400 py-1">
               <dt class="font-semibold">Position:</dt>
               <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.driver_position || 'N/A' }}
-              </dd>
-            </div>
-            <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Designation:</dt>
-              <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.designation || 'N/A' }}
-              </dd>
-            </div>
-            <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Official Station:</dt>
-              <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.official_station || 'N/A' }}
-              </dd>
-            </div>
-            <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Email:</dt>
-              <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.email || 'N/A' }}
-              </dd>
-            </div>
-            <div class="flex justify-between border-b border-gray-400 py-1">
-              <dt class="font-semibold">Contact Number:</dt>
-              <dd class="text-green-600">
-                {{ driverFormStore.selectedDriver?.contact_number || 'N/A' }}
+                {{ form.selectedSignatory?.position || 'N/A' }}
               </dd>
             </div>
           </dl>
+          <div class="flex flex-col sm:flex-row mt-4 w-full gap-5">
+            <Button
+              class="self-start w-full sm:w-1/2"
+              label="Update"
+              size="small"
+              icon="pi pi-pen-to-square"
+              :disabled="!form.selectedSignatory"
+              :severity="form.selectedSignatory ? 'success' : 'secondary'"
+              @click="updateSignatoryInfo"
+            />
 
-          <Button
-            class="mt-4 self-end w-full sm:w-1/2"
-            label="Update"
-            size="small"
-            icon="pi pi-pen-to-square"
-            :disabled="!driverFormStore.selectedDriver"
-            :severity="driverFormStore.selectedDriver ? 'success' : 'secondary'"
-            @click="updateDriverInfo"
-          />
+            <Button
+              class="self-end w-full sm:w-1/2"
+              label="Delete"
+              size="small"
+              icon="pi pi-trash"
+              :disabled="!form.selectedSignatory"
+              :severity="form.selectedSignatory ? 'danger' : 'secondary'"
+              @click="handleDeleteSignatory"
+            />
+          </div>
         </div>
 
         <!-- Right Section - Table -->
@@ -111,7 +77,7 @@
           <div class="bg-white rounded-xl h-full relative flex flex-col">
             <!-- Loading Overlay -->
             <div
-              v-if="driverFormStore.loading2"
+              v-if="form.loading2"
               class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center z-10"
             >
               <i class="pi pi-spinner pi-spin text-blue-500 text-3xl" />
@@ -121,13 +87,13 @@
             <div
               class="sticky top-0 z-20 bg-white px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 gap-2"
             >
-              <h4 class="text-base sm:text-lg font-semibold">Drivers</h4>
+              <h4 class="text-base sm:text-lg font-semibold">Signatories</h4>
               <div
                 class="flex items-center border border-gray-300 rounded-lg px-3 py-1 w-full sm:w-auto"
               >
                 <i class="pi pi-search mr-2 text-gray-500" />
                 <input
-                  v-model="driverFormStore.searchInput"
+                  v-model="form.searchInput"
                   type="text"
                   placeholder="Search..."
                   class="outline-none border-none focus:ring-0 text-sm bg-transparent w-full"
@@ -152,17 +118,11 @@
                       <div class="flex items-center">
                         {{ col.header }}
                         <i
-                          v-if="
-                            driverFormStore.sortField === col.field &&
-                            driverFormStore.sortOrder === 1
-                          "
+                          v-if="form.sortField === col.field && form.sortOrder === 1"
                           class="pi pi-sort-amount-up-alt ml-2 text-xs"
                         />
                         <i
-                          v-else-if="
-                            driverFormStore.sortField === col.field &&
-                            driverFormStore.sortOrder === -1
-                          "
+                          v-else-if="form.sortField === col.field && form.sortOrder === -1"
                           class="pi pi-sort-amount-down ml-2 text-xs"
                         />
                         <i v-else class="pi pi-sort-alt ml-2 text-xs text-gray-400" />
@@ -172,18 +132,16 @@
                 </thead>
                 <tbody>
                   <tr
-                    v-for="item in drivers"
+                    v-for="item in signatories"
                     :key="item.id"
-                    @click="driverFormStore.selectedDriver = item"
+                    @click="form.selectedSignatory = item"
                     :class="[
                       'border-b hover:bg-gray-100 transition cursor-pointer',
-                      driverFormStore.selectedDriver?.id === item.id ? 'bg-blue-50' : '',
+                      form.selectedSignatory?.id === item.id ? 'bg-blue-50' : '',
                     ]"
                   >
-                    <td class="px-2 sm:px-4 py-2">{{ item.first_name }}</td>
-                    <td class="px-2 sm:px-4 py-2">{{ item.last_name }}</td>
+                    <td class="px-2 sm:px-4 py-2">{{ item.full_name }}</td>
                     <td class="px-2 sm:px-4 py-2">{{ item.position }}</td>
-                    <td class="px-2 sm:px-4 py-2">{{ item.contact_number }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -224,6 +182,35 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal -->
+    <Dialog
+      v-model:visible="form.visible"
+      modal
+      header="Confirm Action"
+      :style="{ width: '25rem' }"
+      @hide="handleClose"
+    >
+      <template #header>
+        <div class="inline-flex items-center justify-center gap-2">
+          <span class="font-bold whitespace-nowrap">Delete!!</span>
+        </div>
+      </template>
+      <span class="text-surface-500 dark:text-surface-400 block mb-8">
+        Are you sure you want to delete this signatory?
+      </span>
+
+      <template #footer>
+        <Button label="No" text variant="outlined" @click="handleClose()" autofocus />
+        <Button
+          label="Yes"
+          variant="outlined"
+          severity="success"
+          @click="handleConfirmDelete()"
+          autofocus
+        />
+      </template>
+    </Dialog>
   </div>
 </template>
 
@@ -231,30 +218,31 @@
 import { onMounted, computed } from 'vue'
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { useAuthStore } from '@/stores/auth'
-import { useDriverFormStore } from '@/stores/driverFormStore'
-import DriverInfo from '@/views/Admin/Management/Manage/DriverInfo.vue'
+import { useSignatoryFormStore } from '@/stores/signatoryFormStore'
+import SignatoryInfo from '@/views/Admin/Management/Manage/SignatoryInfo.vue'
 
-const driverFormStore = useDriverFormStore()
+const form = useSignatoryFormStore()
 const authStore = useAuthStore()
 
 onMounted(async () => {
+  form.loading = true
   try {
     await Promise.all([
       authStore.fetchUser(),
-      new Promise((resolve) => setTimeout(resolve, 1000)), // Delay for UX smoothness
+      new Promise((resolve) => setTimeout(resolve, 1500)), // Delay for UX smoothness
     ])
     loadRequests(1)
   } catch (error) {
     console.error('Error fetching data:', error)
   } finally {
-    driverFormStore.loading = false
+    form.loading = false
   }
 })
 
-const drivers = computed(() => driverFormStore.driverList)
-const totalRecords = computed(() => driverFormStore.totalRecords)
-const totalPages = computed(() => Math.ceil(totalRecords.value / driverFormStore.rows))
-const currentPage = computed(() => Math.floor(driverFormStore.first / driverFormStore.rows) + 1)
+const signatories = computed(() => form.signatoryList)
+const totalRecords = computed(() => form.totalRecords)
+const totalPages = computed(() => Math.ceil(totalRecords.value / form.rows))
+const currentPage = computed(() => Math.floor(form.first / form.rows) + 1)
 
 const visiblePages = computed(() => {
   const maxButtons = 5
@@ -267,54 +255,75 @@ const visiblePages = computed(() => {
 })
 
 const columns = [
-  { field: 'first_name', header: 'First Name' },
-  { field: 'last_name', header: 'Last Name' },
+  { field: 'full_name', header: 'Name' },
   { field: 'position', header: 'Position' },
-  { field: 'contact_number', header: 'Contact Number' },
 ]
 
-function insertNewDriver() {
-  driverFormStore.addDriver = true
-  driverFormStore.resetForm()
+function insertNewSignatory() {
+  form.addSignatory = true
+  form.resetForm()
 }
-function updateDriverInfo() {
-  const driver = driverFormStore.selectedDriver
-  driverFormStore.setDriver(driver)
+function updateSignatoryInfo() {
+  const signatory = form.selectedSignatory
+  form.setSignatory(signatory)
+}
+function handleDeleteSignatory() {
+  form.visible = true
+  form.deleteSignatoryFlag = true
+}
+function handleClose() {
+  form.visible = false
+  form.deleteSignatoryFlag = false
+}
+
+const handleConfirmDelete = () => {
+  form.submitting = true
+  setTimeout(async () => {
+    try {
+      await form.deleteSignatory()
+      alert('The signatory has been deleted!')
+    } catch (error) {
+      console.error('Request submission failed:', error)
+      alert('There was an error submitting the request. Please try again.')
+    } finally {
+      form.submitting = false
+      form.selectedSignatory = null
+      handleClose()
+      loadRequests(currentPage.value)
+    }
+  }, 1500)
 }
 
 function triggerSearch() {
-  driverFormStore.first = 0
+  form.first = 0
   loadRequests(1)
 }
 
 function sortBy(field) {
-  if (driverFormStore.sortField === field) {
-    driverFormStore.sortOrder = driverFormStore.sortOrder === 1 ? -1 : 1
+  if (form.sortField === field) {
+    form.sortOrder = form.sortOrder === 1 ? -1 : 1
   } else {
-    driverFormStore.sortField = field
-    driverFormStore.sortOrder = 1
+    form.sortField = field
+    form.sortOrder = 1
   }
   loadRequests(currentPage.value)
 }
 
 function goToPage(page) {
   if (page < 1 || page > totalPages.value) return
-  driverFormStore.first = (page - 1) * driverFormStore.rows
+  form.first = (page - 1) * form.rows
   loadRequests(page)
 }
 
 function loadRequests(page = currentPage.value) {
-  driverFormStore.loading2 = true
-  const search = driverFormStore.searchInput || ''
-  const sortBy = driverFormStore.sortField || ''
-  const sortDir =
-    driverFormStore.sortOrder === 1 ? 'asc' : driverFormStore.sortOrder === -1 ? 'desc' : ''
+  form.loading2 = true
+  const search = form.searchInput || ''
+  const sortBy = form.sortField || ''
+  const sortDir = form.sortOrder === 1 ? 'asc' : form.sortOrder === -1 ? 'desc' : ''
 
-  driverFormStore
-    .getDrivers(authStore.token, page, driverFormStore.rows, search, sortBy, sortDir)
-    .finally(() => {
-      driverFormStore.loading2 = false
-    })
+  form.getSignatories(authStore.token, page, form.rows, search, sortBy, sortDir).finally(() => {
+    form.loading2 = false
+  })
 }
 </script>
 

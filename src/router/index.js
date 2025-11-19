@@ -1,14 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useUsersStore } from '@/stores/users'
+
 import GuestLayout from '@/layouts/GuestLayout.vue'
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import Login from '@/views/Login.vue'
 import Dashboard from '@/views/Admin/Dashboard.vue'
 import Register from '@/views/Register.vue'
-import UserAccounts from '@/views/Admin/UserAccounts.vue'
+import UserAccounts from '@/views/Admin/Management/UserAccounts.vue'
 import ClientView from '@/views/Client/ClientView.vue'
+import PrintView from '@/views/Requests/PrintRequest.vue'
+
 import RequestVehicle from '@/views/Requests/RequestVehicle.vue'
 import RequestBuildingAndGroundsTA from '@/views/Requests/RequestBuildingAndGroundsTA.vue'
 import RequestConferenceRoom from '@/views/Requests/RequestConferenceRoom.vue'
@@ -29,17 +32,22 @@ import VehicleSchedule from '@/views/Calendar/VehicleSchedule.vue'
 import MaagapSchedule from '@/views/Calendar/MaagapSchedule.vue'
 import MagitingSchedule from '@/views/Calendar/MagitingSchedule.vue'
 import SeminarHallSchedule from '@/views/Calendar/SeminarSchedule.vue'
+
 import Drivers from '@/views/Admin/Management/Drivers.vue'
+import Vehicles from '@/views/Admin/Management/Vehicles.vue'
+import Signatories from '@/views/Admin/Management/Signatories.vue'
+
 import TARequest from '@/views/Admin/Requests/TechnicalAssistance.vue'
 import VehicleRequest from '@/views/Admin/Requests/Vehicle.vue'
 import MaagapRequest from '@/views/Admin/Requests/Maagap.vue'
 import MagitingRequest from '@/views/Admin/Requests/Magiting.vue'
 import SeminarRequest from '@/views/Admin/Requests/Seminar.vue'
-import AirTravelOrderRequest from '@/views/Admin/Requests/AirTravelOrder.vue'
+import AirTransportOrderRequest from '@/views/Admin/Requests/AirTransportOrder.vue'
 import EntryRequest from '@/views/Admin/Requests/Entry.vue'
 import ParkingRequest from '@/views/Admin/Requests/Parking.vue'
 import JanitorialRequest from '@/views/Admin/Requests/Janitorial.vue'
-import Vehicles from '@/views/Admin/Management/Vehicles.vue'
+
+import { useConferenceRequestFormStore } from '@/stores/conferenceRequestFormStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -107,6 +115,11 @@ const router = createRouter({
           name: 'vehicles',
           component: Vehicles,
         },
+        {
+          path: 'signatories',
+          name: 'signatories',
+          component: Signatories,
+        },
       ],
     },
     {
@@ -115,7 +128,7 @@ const router = createRouter({
       meta: { requiresAuth: true, role: ['superadmin', 'supervisor', 'manager'] },
       children: [
         {
-          path: 'ta',
+          path: 'technical-assistance',
           name: 'TARequest',
           component: TARequest,
         },
@@ -140,9 +153,9 @@ const router = createRouter({
           component: SeminarRequest,
         },
         {
-          path: 'ato',
-          name: 'AirTravelOrderRequest',
-          component: AirTravelOrderRequest,
+          path: 'transport-order',
+          name: 'AirTransportOrderRequest',
+          component: AirTransportOrderRequest,
         },
         {
           path: 'entry',
@@ -170,6 +183,11 @@ const router = createRouter({
           path: '',
           name: 'clientview',
           component: ClientView,
+        },
+        {
+          path: '/print-view/:printview',
+          name: 'printview',
+          component: PrintView,
         },
         {
           path: '/request-forms/buildingAndGroundsTARequest',
@@ -326,6 +344,12 @@ router.afterEach((to) => {
   const users = useUsersStore()
   if (to.name === 'useraccounts') {
     users.fetchAllUsers()
+  }
+
+  const resetRoutes = ['MaagapRequest', 'MagitingRequest', 'SeminarRequest']
+  if (resetRoutes.includes(to.name)) {
+    const requestConferenceStore = useConferenceRequestFormStore()
+    requestConferenceStore.resetRoutes()
   }
 })
 export default router
