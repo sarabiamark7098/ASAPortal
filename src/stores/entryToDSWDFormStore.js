@@ -13,6 +13,7 @@ export const usePremisesFormStore = defineStore('premisesForm', {
     requester_contact_number: '',
     requester_email: '',
     src: null,
+    preview: null,
     guests: [{ full_name: '', purpose: '' }],
     maxGuests: 20,
     errors: {
@@ -67,6 +68,7 @@ export const usePremisesFormStore = defineStore('premisesForm', {
       this.requester_contact_number = ''
       this.requester_email = ''
       this.src = null
+      this.preview = null
       this.guests = [{ full_name: '', purpose: '' }]
     },
 
@@ -93,14 +95,15 @@ export const usePremisesFormStore = defineStore('premisesForm', {
           requester_position: this.requester_position,
           requester_contact_number: this.requester_contact_number,
           requester_email: this.requester_email,
-          src: this.src,
           guests: this.guests,
           signatories: this.signatories,
+          files: [{ label: 'Signature', file: this.src }],
         }
 
         const response = await axios.post('/api/entry-requests', formData, {
           headers: {
             Authorization: `Bearer ${authStore.token}`,
+            'Content-Type': 'multipart/form-data',
           },
         })
         this.selectedRequest = response.data
@@ -144,6 +147,14 @@ export const usePremisesFormStore = defineStore('premisesForm', {
       })
       this.entryRequests = response.data.data
       this.totalRecords = response.data.total
+    },
+
+    formatDate(value) {
+      return value ? dayjs(value).format('MMMM DD, YYYY') : 'N/A'
+    },
+
+    formatTime(value) {
+      return value ? dayjs(`1970-01-01 ${value}`, 'HH:mm:ss').format('hh:mm A') : 'N/A'
     },
   },
 })

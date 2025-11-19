@@ -114,24 +114,7 @@ const baseMenuItems = [
   },
   {
     label: 'View Requests',
-    items: [
-      {
-        label: 'Request for TA Relative to Building and Grounds Management',
-        to: '/view-requests/buildingAndGroundsTARequest',
-      },
-      { label: 'Request for Use of Vehicle', to: '/view-requests/officialVehicleRequest' },
-      {
-        label: 'Request for Use of DSWD Conference Room',
-        to: '/view-requests/conferenceRoomRequest',
-      },
-      { label: 'Request for Air Transport Order', to: '/view-requests/airTransportOrderRequest' },
-      {
-        label: 'Request for Entry to DSWD Premises',
-        to: '/view-requests/entryToDSWDPremisesRequest',
-      },
-      { label: 'Request for Overnight Parking', to: '/view-requests/overnightParkingRequest' },
-      { label: 'Request for Janitorial Services', to: '/view-requests/janitorialServicesRequest' },
-    ],
+    to: '/view-requests',
   },
   {
     label: 'Calendar Views',
