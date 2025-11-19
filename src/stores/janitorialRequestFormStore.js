@@ -18,6 +18,7 @@ export const useJanitorialRequestFormStore = defineStore('janitorialRequestForm'
     requester_contact_number: '',
     requester_email: '',
     src: null,
+    preview: null,
 
     selectedRequest: '',
     loading: false,
@@ -82,6 +83,7 @@ export const useJanitorialRequestFormStore = defineStore('janitorialRequestForm'
       this.requester_contact_number = ''
       this.requester_email = ''
       this.src = null
+      this.preview = null
     },
 
     async submitForm() {
@@ -101,11 +103,18 @@ export const useJanitorialRequestFormStore = defineStore('janitorialRequestForm'
           requester_position: this.requester_position,
           requester_contact_number: this.requester_contact_number,
           requester_email: this.requester_email,
+          files: [
+            {
+              label: 'Signature',
+              file: this.src,
+            },
+          ],
         }
 
         const response = await axios.post('/api/janitorial-requests', formData, {
           headers: {
             Authorization: `Bearer ${authStore.token}`,
+            'Content-Type': 'multipart/form-data',
           },
         })
         return response.data

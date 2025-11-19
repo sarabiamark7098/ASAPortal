@@ -195,6 +195,19 @@ export const useAirTransportOrderFormStore = defineStore('airTransportOrderForm'
 
       try {
         this.submitting = true
+        const files = []
+        if (this.specialOrderFile) {
+          files.push({
+            label: 'Special Order',
+            file: this.specialOrderFile,
+          })
+        }
+        if (this.travelOrderFile) {
+          files.push({
+            label: 'Travel Order',
+            file: this.travelOrderFile,
+          })
+        }
         const formData = {
           requesting_office: this.requesting_office,
           fund_source: this.fund_source,
@@ -207,13 +220,13 @@ export const useAirTransportOrderFormStore = defineStore('airTransportOrderForm'
           passengers: formattedPassengers,
           flights: formattedFlights,
           signatories: this.signatories,
-          travelOrderFile: this.travelOrderFile,
-          specialOrderFile: this.specialOrderFile,
+          files: files,
         }
 
         const response = await axios.post('/api/air-transport-requests', formData, {
           headers: {
             Authorization: `Bearer ${authStore.token}`,
+            'Content-Type': 'multipart/form-data',
           },
         })
         this.selectedRequest = response.data

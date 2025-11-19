@@ -3,7 +3,7 @@ import { ref, onMounted, watch, nextTick } from 'vue'
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 
-import { useTransactionsFormStore } from '@/stores/transactionsStoreForm'
+import { useTransactionsFormStore } from '@/stores/transactionsFormStore'
 import FullScreenLoader from '@/components/FullScreenLoader.vue'
 import { useAuthStore } from '@/stores/auth'
 import dayjs from 'dayjs'
