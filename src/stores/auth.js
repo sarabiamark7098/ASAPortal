@@ -8,41 +8,68 @@ export const useAuthStore = defineStore('auth', {
     token: localStorage.getItem('token') || null,
     loading: false,
     error: null,
+    username: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    extensionName: '',
+    birthDate: '',
+    position: '',
+    division: null,
+    office: null,
+    contactNumber: '',
+    userRole: '',
   }),
 
   getters: {
     isAuthenticated: (state) => !!state.user,
-    email: (state) => state.user?.email || null,
+    userEmail: (state) => state.user?.email || null,
   },
 
   actions: {
     async fetchUser() {
+      if (!this.token || this.user) return
       this.loading = true
       try {
-        const res = await axios.get('/api/user', {
+        const res = await axios.get('/api/auth/user', {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
         })
         this.user = res.data
+        this.userRole = this.user?.roles?.[0] || ''
       } catch {
         this.user = null
       } finally {
         this.loading = false
       }
     },
+    hasRole(role) {
+      return this.user?.roles?.includes(role)
+    },
+    hasPermission(permission) {
+      return this.user?.permissions?.includes(permission)
+    },
 
     async login(credentials) {
       this.loading = true
-      console.log('Logging in with credentials:', credentials)
       try {
         await axios.get('/sanctum/csrf-cookie')
-        const response = await axios.post('/api/login', credentials)
+        const response = await axios.post('/api/auth/login', credentials)
         this.token = response.data.access_token
         localStorage.setItem('token', this.token)
         await this.fetchUser()
-        router.push('/dashboard') // ✅ Redirect after login
-        console.log('Login successful, user:', this.user)
+
+        // Redirect based on user role
+        const roles = this.user?.roles || []
+        if (roles.includes('client')) {
+          router.push({ name: 'clientview' })
+        } else {
+          router.push({ name: 'dashboard' })
+        }
       } catch (err) {
         this.error = err.response?.data?.message || 'Login failed'
         throw err
@@ -54,17 +81,37 @@ export const useAuthStore = defineStore('auth', {
     async logout() {
       this.loading = true
       try {
-        await axios.post('/api/logout', null, {
+        await axios.post('/api/auth/logout', null, {
           headers: {
-            Authorization: `Bearer ${this.token}`
-          }
+            Authorization: `Bearer ${this.token}`,
+          },
         })
         this.user = null
         this.token = null
-        localStorage.removeItem('token') 
+        localStorage.removeItem('token')
         router.push({ name: 'login' }) // ✅ Redirect after logout
       } catch {
         this.error = 'Logout failed'
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async register(userData) {
+      this.loading = true
+      try {
+        await axios.get('/sanctum/csrf-cookie')
+        await axios.post('/api/auth/register', userData)
+        const loginPayload = {
+          login: userData.email,
+          password: userData.password,
+        }
+        await this.login(loginPayload)
+      } catch (err) {
+        this.error =
+          err.response?.data?.errors || err.response?.data?.message || 'Registration failed'
+        console.error('Registration validation errors:', err.response?.data?.errors)
+        throw err
       } finally {
         this.loading = false
       }
